@@ -11,3 +11,5 @@ swagger:
   path: documentation
 mongodb:
   uri: mongodb://localhost:27017/tadaweb
+jwt:
+  secret: $2a$12$Jx1fXSuaVSJEZGfcxeJNWuUrMAJx6p7Mjqz4s56QgcfxGqR/SqfQG

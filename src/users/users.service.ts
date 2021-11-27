@@ -1,11 +1,16 @@
+import { AccessToken } from './entities/access-token.entity';
 import {
   ConflictException,
   Injectable,
   NotFoundException,
   UnprocessableEntityException,
 } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { catchError, defaultIfEmpty, Observable, of, throwError } from 'rxjs';
-import { filter, map, mergeMap } from 'rxjs/operators';
+import { filter, map, mergeMap, tap } from 'rxjs/operators';
+import { CreateUserDto } from './dto/create-user.dto';
+import { LoginUserDto } from './dto/login-user.dto copy';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { UserEntity } from './entities/user.entity';
 import { User } from './user.shema';
 import { UsersDao } from './users.dao';
@@ -17,13 +22,88 @@ export class UsersService {
    *
    * @param {UsersDao} _usersDao instance of the DAO
    */
-  constructor(private readonly _usersDao: UsersDao) {}
+  constructor(
+    private readonly _usersDao: UsersDao,
+    private readonly _jwtService: JwtService,
+  ) {}
 
-  logIn = () => {};
+  /**
+   * Returns one user of the list matching id in parameter
+   *
+   * @param {LoginUserDto} user of the user
+   *
+   * @returns {Observable<AccessToken>}
+   */
+  logIn = (user: LoginUserDto): Observable<AccessToken> =>
+    this._usersDao.logIn(user).pipe(
+      catchError((e) =>
+        throwError(() => new UnprocessableEntityException(e.message)),
+      ),
+      mergeMap((_: User) =>
+        !!_
+          ? of(
+              new AccessToken(
+                this._jwtService.sign({ email: _.email, sub: _._id }),
+              ),
+            )
+          : throwError(() => new NotFoundException(`Wrong email or password`)),
+      ),
+    );
 
-  signIn = () => {};
+  /**
+   * Returns one user of the list matching id in parameter
+   *
+   * @param {CreateUserDto} user of the user
+   *
+   * @returns {Observable<UserEntity>}
+   */
+  signIn = (user: CreateUserDto) =>
+    this._usersDao.create(user).pipe(
+      catchError((e) =>
+        e.code === 11000
+          ? throwError(
+              () =>
+                new ConflictException(
+                  `User with email '${user.email} already exists`,
+                ),
+            )
+          : throwError(() => new UnprocessableEntityException(e.message)),
+      ),
+      mergeMap((_: User) =>
+        !!_
+          ? of(
+              new AccessToken(
+                this._jwtService.sign({ email: _.email, sub: _._id }),
+              ),
+            )
+          : throwError(
+              () =>
+                new NotFoundException(`User with id '${_.email}' not found`),
+            ),
+      ),
+    );
 
-  update = () => {};
+  /**
+   * Returns one user of the list matching id in parameter
+   *
+   * @param {string} id of the user
+   * @param {UpdateUserDto} user of the user
+   *
+   * @returns {Observable<UserEntity>}
+   */
+  update = (id: string, user: UpdateUserDto): Observable<UserEntity> =>
+    this._usersDao.update(id, user).pipe(
+      catchError((e) =>
+        throwError(() => new UnprocessableEntityException(e.message)),
+      ),
+      mergeMap((_: User) =>
+        !!_
+          ? of(new UserEntity(_))
+          : throwError(
+              () => new NotFoundException(`User with id '${id}' not found`),
+            ),
+      ),
+    );
 
   /**
    * Returns one user of the list matching id in parameter

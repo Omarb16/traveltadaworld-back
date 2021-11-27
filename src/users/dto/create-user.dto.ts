@@ -1,33 +1,22 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Exclude, Expose, Type } from 'class-transformer';
+import { IsEmail, IsNotEmpty, IsString, Matches } from 'class-validator';
+import { UserEntity } from '../entities/user.entity';
 
-@Exclude()
-export class UserEntity {
-  @ApiProperty({
-    name: 'id',
-    description: 'Unique identifier in the database',
-    example: '5763cd4dc378a38ecd387737',
-  })
-  @Expose()
-  @Type(() => String)
-  _id: string;
-
+export class CreateUserDto {
   @ApiProperty({
     name: 'email',
     description: 'Email',
     example: 'Mclaughlin.Cochran@undefined.com',
   })
-  @Expose()
-  @Type(() => String)
+  @IsEmail()
   email: string;
 
   @ApiProperty({
-    name: 'email',
-    description: 'Email',
-    example: 'Mclaughlin.Cochran@undefined.com',
+    name: 'password',
+    description: 'Password',
+    example: 'P4ssw0rd',
   })
-  @Exclude()
-  @Type(() => String)
+  @Matches('^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$')
   password: string;
 
   @ApiProperty({
@@ -35,8 +24,8 @@ export class UserEntity {
     description: 'Fistname',
     example: 'Mclaughlin',
   })
-  @Expose()
-  @Type(() => String)
+  @IsString()
+  @IsNotEmpty()
   firstname: string;
 
   @ApiProperty({
@@ -44,17 +33,17 @@ export class UserEntity {
     description: 'Lastname',
     example: 'Mclaughlin',
   })
-  @Expose()
-  @Type(() => String)
-  lastname: String;
+  @IsString()
+  @IsNotEmpty()
+  lastname: string;
 
   @ApiProperty({
     name: 'photo',
     description: 'Photo URL',
     example: 'https://randomuser.me/portraits/men/55.jpg',
   })
-  @Expose()
-  @Type(() => String)
+  @IsString()
+  @IsNotEmpty()
   photo: string;
 
   @ApiProperty({
@@ -62,8 +51,8 @@ export class UserEntity {
     description: 'Birthdate in timestamp format',
     example: '101343600000',
   })
-  @Expose()
-  @Type(() => String)
+  @IsString()
+  @IsNotEmpty()
   birthDate: String;
 
   @ApiProperty({
@@ -71,8 +60,8 @@ export class UserEntity {
     description: 'Nationality',
     example: 'French',
   })
-  @Expose()
-  @Type(() => String)
+  @IsString()
+  @IsNotEmpty()
   nationality: string;
 
   constructor(partial: Partial<UserEntity>) {

@@ -2,7 +2,7 @@ import * as mongoose from 'mongoose';
 import { Document } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
-export type UserDocument = User & Document;
+export type TripDocument = Trip & Document;
 
 @Schema({
   toJSON: {
@@ -14,7 +14,7 @@ export type UserDocument = User & Document;
   },
   versionKey: false,
 })
-export class User {
+export class Trip {
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     auto: true,
@@ -26,21 +26,21 @@ export class User {
     required: true,
     trim: true,
   })
-  email: string;
+  title: string;
 
   @Prop({
     type: String,
     required: true,
     trim: true,
   })
-  firstname: string;
+  description: string;
 
   @Prop({
     type: String,
     required: true,
     trim: true,
   })
-  lastname: string;
+  destination: string;
 
   @Prop({
     type: String,
@@ -51,16 +51,39 @@ export class User {
 
   @Prop({
     type: Date,
-    required: true,
+    required: false,
   })
-  birthDate: String;
+  createdAt: String;
 
   @Prop({
     type: String,
-    required: true,
-    trim: true,
+    required: false,
   })
-  nationality: string;
+  createdBy: String;
+
+  @Prop({
+    type: Date,
+    required: false,
+  })
+  updateAt: String;
+
+  @Prop({
+    type: String,
+    required: false,
+  })
+  updateBy: String;
+
+  @Prop({
+    type: Date,
+    required: false,
+  })
+  deleteAt: String;
+
+  @Prop({
+    type: String,
+    required: false,
+  })
+  deleteBy: String;
 }
 
-export const UserSchema = SchemaFactory.createForClass(User);
+export const TripSchema = SchemaFactory.createForClass(Trip);

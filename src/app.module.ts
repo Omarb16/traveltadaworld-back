@@ -8,8 +8,7 @@ import * as Config from 'config';
   imports: [
     UsersModule,
     TripsModule,
-    //MongooseModule.forRoot(Config.get<string>('mongodb.uri')),
-    MongooseModule.forRoot('mongodb://localhost:27017/tadaweb'),
+    MongooseModule.forRoot(Config.get<string>('mongodb.uri')),
   ],
 })
 export class AppModule {}
