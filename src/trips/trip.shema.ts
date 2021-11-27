@@ -65,25 +65,13 @@ export class Trip {
     type: Date,
     required: false,
   })
-  updateAt: String;
+  updatedAt: String;
 
   @Prop({
     type: String,
     required: false,
   })
-  updateBy: String;
-
-  @Prop({
-    type: Date,
-    required: false,
-  })
-  deleteAt: String;
-
-  @Prop({
-    type: String,
-    required: false,
-  })
-  deleteBy: String;
+  updatedBy: String;
 }
 
 export const TripSchema = SchemaFactory.createForClass(Trip);

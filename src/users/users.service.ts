@@ -2,18 +2,20 @@ import { AccessToken } from './entities/access-token.entity';
 import {
   ConflictException,
   Injectable,
+  Logger,
   NotFoundException,
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { catchError, defaultIfEmpty, Observable, of, throwError } from 'rxjs';
 import { CreateUserDto } from './dto/create-user.dto';
-import { filter, map, mergeMap, tap } from 'rxjs/operators';
+import { map, mergeMap, tap } from 'rxjs/operators';
 import { JwtService } from '@nestjs/jwt';
 import { LoginUserDto } from './dto/login-user.dto copy';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './user.shema';
 import { UserEntity } from './entities/user.entity';
 import { UsersDao } from './users.dao';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -34,21 +36,24 @@ export class UsersService {
    *
    * @returns {Observable<AccessToken>}
    */
-  logIn = (user: LoginUserDto): Observable<AccessToken> =>
-    this._usersDao.logIn(user).pipe(
+  logIn = (user: LoginUserDto): Observable<AccessToken> => {
+    var passwordHash = bcrypt.hashSync(user.password, 10);
+    bcrypt.compareSync(user.password, 10);
+    return this._usersDao.logIn(user).pipe(
       catchError((e) =>
         throwError(() => new UnprocessableEntityException(e.message)),
       ),
-      mergeMap((_: User) =>
-        !!_
+      mergeMap((_: User) => {
+        return !!_
           ? of(
               new AccessToken(
                 this._jwtService.sign({ email: _.email, sub: _._id }),
               ),
             )
-          : throwError(() => new NotFoundException(`Wrong email or password`)),
-      ),
+          : throwError(() => new NotFoundException(`Wrong email or password`));
+      }),
     );
+  };
 
   /**
    * Returns one user of the list matching id in parameter
@@ -57,8 +62,10 @@ export class UsersService {
    *
    * @returns {Observable<UserEntity>}
    */
-  signIn = (user: CreateUserDto) =>
-    this._usersDao.create(user).pipe(
+  signIn = (user: CreateUserDto) => {
+    const hash = bcrypt.hashSync(user.password, 10);
+    user.password = hash;
+    return this._usersDao.create(user).pipe(
       catchError((e) =>
         e.code === 11000
           ? throwError(
@@ -69,8 +76,8 @@ export class UsersService {
             )
           : throwError(() => new UnprocessableEntityException(e.message)),
       ),
-      mergeMap((_: User) =>
-        !!_
+      mergeMap((_: User) => {
+        return !!_
           ? of(
               new AccessToken(
                 this._jwtService.sign({ email: _.email, sub: _._id }),
@@ -79,9 +86,10 @@ export class UsersService {
           : throwError(
               () =>
                 new NotFoundException(`User with id '${_.email}' not found`),
-            ),
-      ),
+            );
+      }),
     );
+  };
 
   /**
    * Returns one user of the list matching id in parameter

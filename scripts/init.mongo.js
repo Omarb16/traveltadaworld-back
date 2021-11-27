@@ -49,3 +49,34 @@ db.getCollection('users').insertMany([
 ]);
 
 db.getCollection('users').createIndex({ email: 1 }, { unique: true });
+
+db.getCollection('trips').insertMany([
+  {
+    title: 'Title',
+    description: 'Description',
+    destination: 'Destination',
+    photo: 'https://randomuser.me/portraits/women/59.jpg',
+    createdAt: ISODate('2021-11-27T23:00:00.000Z'),
+  },
+  {
+    title: 'Title',
+    description: 'Description',
+    destination: 'Destination',
+    photo: 'https://randomuser.me/portraits/women/59.jpg',
+    createdAt: ISODate('2021-11-27T23:00:00.000Z'),
+  },
+  {
+    title: 'Title',
+    description: 'Description',
+    destination: 'Destination',
+    photo: 'https://randomuser.me/portraits/women/59.jpg',
+    createdAt: ISODate('2021-11-27T23:00:00.000Z'),
+  },
+  {
+    title: 'Title',
+    description: 'Description',
+    destination: 'Destination',
+    photo: 'https://randomuser.me/portraits/women/59.jpg',
+    createdAt: ISODate('2021-11-27T23:00:00.000Z'),
+  },
+]);

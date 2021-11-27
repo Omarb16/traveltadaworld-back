@@ -21,7 +21,7 @@ export class UsersDao {
   ) {}
 
   /**
-   * Update a person in people list
+   * Log in an user
    *
    * @param {LoginUserDto} user
    *
@@ -37,7 +37,7 @@ export class UsersDao {
     );
 
   /**
-   * Update a person in people list
+   * Create a user in users list
    *
    * @param {CreateUserDto} user
    *
@@ -45,13 +45,12 @@ export class UsersDao {
    */
   create = (user: CreateUserDto): Observable<User | void> =>
     from(this._userModel.create(user)).pipe(
-      filter((doc: UserDocument) => !!doc),
       map((doc: UserDocument) => doc.toJSON()),
       defaultIfEmpty(undefined),
     );
 
   /**
-   * Update a user in people list
+   * Update a user in users list
    *
    * @param {string} id
    * @param {UpdateUserDto} user
@@ -71,7 +70,7 @@ export class UsersDao {
     );
 
   /**
-   * Call mongoose method, call toJSON on each result and returns PersonModel[] or undefined
+   * Call mongoose method, call toJSON on each result and returns UserModel or undefined
    *
    * @param {string} id
    *

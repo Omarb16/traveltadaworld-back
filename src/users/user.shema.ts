@@ -33,6 +33,13 @@ export class User {
     required: true,
     trim: true,
   })
+  password: string;
+
+  @Prop({
+    type: String,
+    required: true,
+    trim: true,
+  })
   firstname: string;
 
   @Prop({
@@ -61,6 +68,30 @@ export class User {
     trim: true,
   })
   nationality: string;
+
+  @Prop({
+    type: Date,
+    required: false,
+  })
+  createdAt: String;
+
+  @Prop({
+    type: String,
+    required: false,
+  })
+  createdBy: String;
+
+  @Prop({
+    type: Date,
+    required: false,
+  })
+  updatedAt: String;
+
+  @Prop({
+    type: String,
+    required: false,
+  })
+  updatedBy: String;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

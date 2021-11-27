@@ -1,3 +1,4 @@
+import { TripDto } from './dto/trip.dto';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -18,7 +19,7 @@ export class TripsDao {
   ) {}
 
   /**
-   * Call mongoose method, call toJSON on each result and returns PersonModel[] or undefined
+   * Call mongoose method, call toJSON on each result and returns TripModel or undefined
    *
    * @param {string} id
    *
@@ -31,7 +32,63 @@ export class TripsDao {
       defaultIfEmpty(undefined),
     );
 
-  findAll = () => {};
-  update = () => {};
-  delete = () => {};
+  /**
+   * Call mongoose method, call toJSON on each result and returns TripModel[] or undefined
+   *
+   *
+   * @return {Observable<Trip[] | void>}
+   */
+  findAll = (): Observable<Trip[] | void> =>
+    from(this._tripModel.find()).pipe(
+      filter((docs: TripDocument[]) => !!docs && docs.length > 0),
+      map((docs: TripDocument[]) => docs.map((_: TripDocument) => _.toJSON())),
+      defaultIfEmpty(undefined),
+    );
+
+  /**
+   * Call mongoose method, call toJSON on each result and returns TripModel[] or undefined
+   *
+   * @param {TripDto} trip
+   *
+   * @return {Observable<Trip | void>}
+   */
+  create = (trip: TripDto): Observable<Trip | void> =>
+    from(this._tripModel.create(trip)).pipe(
+      map((doc: TripDocument) => doc.toJSON()),
+      defaultIfEmpty(undefined),
+    );
+
+  /**
+   * Call mongoose method, call toJSON on each result and returns TripModel[] or undefined
+   *
+   * @param {string} id
+   * @param {TripDto} trip
+   *
+   * @return {Observable<Trip | void>}
+   */
+  update = (id: string, trip: TripDto): Observable<Trip> =>
+    from(
+      this._tripModel.findByIdAndUpdate(id, trip, {
+        new: true,
+        runValidators: true,
+      }),
+    ).pipe(
+      filter((doc: TripDocument) => !!doc),
+      map((doc: TripDocument) => doc.toJSON()),
+      defaultIfEmpty(undefined),
+    );
+
+  /**
+   * Call mongoose method, call toJSON on each result and returns TripModel[] or undefined
+   *
+   * @param {string} id
+   *
+   * @return {Observable<void>}
+   */
+  delete = (id: string): Observable<Trip | void> =>
+    from(this._tripModel.findByIdAndRemove(id)).pipe(
+      filter((doc: TripDocument) => !!doc),
+      map((doc: TripDocument) => doc.toJSON()),
+      defaultIfEmpty(undefined),
+    );
 }

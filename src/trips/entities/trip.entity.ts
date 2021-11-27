@@ -39,6 +39,42 @@ export class TripEntity {
   @Type(() => String)
   photo: string;
 
+  @ApiProperty({
+    name: 'createdAt',
+    description: 'Created At',
+    example: '2021-11-27T13:41:48.229Z',
+  })
+  @Exclude()
+  @Type(() => Date)
+  createdAt: String;
+
+  @ApiProperty({
+    name: 'createdBy',
+    description: 'Created By',
+    example: '61a1885b50cf46588632569a',
+  })
+  @Exclude()
+  @Type(() => String)
+  createdBy: String;
+
+  @ApiProperty({
+    name: 'updatedAt',
+    description: 'Updated At',
+    example: '2021-11-27T13:41:48.229Z',
+  })
+  @Exclude()
+  @Type(() => Date)
+  updatedAt: String;
+
+  @ApiProperty({
+    name: 'createdBy',
+    description: 'Created By',
+    example: '61a1885b50cf46588632569a',
+  })
+  @Exclude()
+  @Type(() => String)
+  updatedBy: String;
+
   constructor(partial: Partial<TripEntity>) {
     Object.assign(this, partial);
   }

@@ -73,8 +73,8 @@ export class UsersController {
   /**
    * Handler to answer in to POST /users route
    *
-   * @param {HandlerParams} params list of route params to take person id
-   * @param {UpdateUserDto} updatePersonDto data to update
+   * @param {HandlerParams} params list of route params to take user id
+   * @param {UpdateUserDto} updateUserDto data to update
    *
    * @returns Observable<UserEntity[] | void>
    */
@@ -87,15 +87,15 @@ export class UsersController {
   @Put(':id')
   update(
     @Param() params: HandlerParams,
-    @Body() updatePersonDto: UpdateUserDto,
+    @Body() updateUserDto: UpdateUserDto,
   ): Observable<UserEntity> {
-    return this._usersService.update(params.id, updatePersonDto);
+    return this._usersService.update(params.id, updateUserDto);
   }
 
   /**
    * Handler to answer in to POST /users/:id route
    *
-   * @param {HandlerParams} params list of route params to take person id
+   * @param {HandlerParams} params list of route params to take user id
    *
    * @returns Observable<UserEntity[] | void>
    */
