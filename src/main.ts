@@ -1,3 +1,4 @@
+import { TripsModule } from './trips/trips.module';
 import { NestFactory } from '@nestjs/core';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import {
@@ -33,7 +34,7 @@ async function bootstrap(config: AppConfig, swaggerConfig: SwaggerConfig) {
     .build();
 
   const usersDocument = SwaggerModule.createDocument(app, options, {
-    include: [UsersModule],
+    include: [UsersModule, TripsModule],
   });
 
   SwaggerModule.setup(swaggerConfig.path, app, usersDocument);

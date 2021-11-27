@@ -66,7 +66,7 @@ export class TripsDao {
    *
    * @return {Observable<Trip | void>}
    */
-  update = (id: string, trip: TripDto): Observable<Trip> =>
+  update = (id: string, trip: TripDto): Observable<Trip | void> =>
     from(
       this._tripModel.findByIdAndUpdate(id, trip, {
         new: true,
