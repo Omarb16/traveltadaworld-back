@@ -50,6 +50,8 @@ db.getCollection('users').insertMany([
 
 db.getCollection('users').createIndex({ email: 1 }, { unique: true });
 
+db.trips.drop();
+
 db.getCollection('trips').insertMany([
   {
     title: 'Title',

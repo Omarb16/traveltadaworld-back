@@ -8,12 +8,12 @@ import { Trip, TripDocument } from './trip.shema';
 
 @Injectable()
 export class TripsDao {
+  /**
+   * Class constructor
+   *
+   * @param {Model<TripDocument>} _tripModel instance of the model representing a Trip
+   */
   constructor(
-    /**
-     * Class constructor
-     *
-     * @param {Model<TripDocument>} _tripModel instance of the model representing a Trip
-     */
     @InjectModel(Trip.name)
     private readonly _tripModel: Model<TripDocument>,
   ) {}

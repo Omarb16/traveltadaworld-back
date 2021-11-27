@@ -1,5 +1,6 @@
 import { AccessToken } from './entities/access-token.entity';
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   Logger,
@@ -37,13 +38,17 @@ export class UsersService {
    * @returns {Observable<AccessToken>}
    */
   logIn = (user: LoginUserDto): Observable<AccessToken> => {
-    var passwordHash = bcrypt.hashSync(user.password, 10);
-    bcrypt.compareSync(user.password, 10);
     return this._usersDao.logIn(user).pipe(
       catchError((e) =>
         throwError(() => new UnprocessableEntityException(e.message)),
       ),
       mergeMap((_: User) => {
+        var check = bcrypt.compareSync(user.password, _.password);
+        if (!check) {
+          return throwError(
+            () => new BadRequestException(`Wrong email or password`),
+          );
+        }
         return !!_
           ? of(
               new AccessToken(
@@ -85,7 +90,7 @@ export class UsersService {
             )
           : throwError(
               () =>
-                new NotFoundException(`User with id '${_.email}' not found`),
+                new NotFoundException(`User with email '${_.email}' not found`),
             );
       }),
     );

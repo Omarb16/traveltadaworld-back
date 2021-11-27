@@ -10,12 +10,12 @@ import { filter, map } from 'rxjs/operators';
 
 @Injectable()
 export class UsersDao {
+  /**
+   * Class constructor
+   *
+   * @param {Model<UserDocument>} _userModel instance of the model representing an User
+   */
   constructor(
-    /**
-     * Class constructor
-     *
-     * @param {Model<UserDocument>} _userModel instance of the model representing an User
-     */
     @InjectModel(User.name)
     private readonly _userModel: Model<UserDocument>,
   ) {}
@@ -28,9 +28,7 @@ export class UsersDao {
    * @return {Observable<User | void>}
    */
   logIn = (user: LoginUserDto): Observable<User | void> =>
-    from(
-      this._userModel.findOne({ email: user.email, password: user.password }),
-    ).pipe(
+    from(this._userModel.findOne({ email: user.email })).pipe(
       filter((doc: UserDocument) => !!doc),
       map((doc: UserDocument) => doc.toJSON()),
       defaultIfEmpty(undefined),

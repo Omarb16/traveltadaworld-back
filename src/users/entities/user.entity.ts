@@ -8,7 +8,7 @@ export class UserEntity {
     description: 'Unique identifier in the database',
     example: '5763cd4dc378a38ecd387737',
   })
-  @Expose()
+  @Exclude()
   @Type(() => String)
   _id: string;
 
