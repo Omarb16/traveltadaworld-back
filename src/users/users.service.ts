@@ -5,14 +5,14 @@ import {
   NotFoundException,
   UnprocessableEntityException,
 } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 import { catchError, defaultIfEmpty, Observable, of, throwError } from 'rxjs';
-import { filter, map, mergeMap, tap } from 'rxjs/operators';
 import { CreateUserDto } from './dto/create-user.dto';
+import { filter, map, mergeMap, tap } from 'rxjs/operators';
+import { JwtService } from '@nestjs/jwt';
 import { LoginUserDto } from './dto/login-user.dto copy';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { UserEntity } from './entities/user.entity';
 import { User } from './user.shema';
+import { UserEntity } from './entities/user.entity';
 import { UsersDao } from './users.dao';
 
 @Injectable()

@@ -1,89 +1,45 @@
-import * as mongoose from 'mongoose';
-import { Document } from 'mongoose';
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { ApiProperty } from '@nestjs/swagger';
+import { Exclude, Expose, Type } from 'class-transformer';
 
-export type TripDocument = Trip & Document;
-
-@Schema({
-  toJSON: {
-    virtuals: true,
-    transform: (doc: any, ret: any) => {
-      // delete obsolete data
-      delete ret._id;
-    },
-  },
-  versionKey: false,
-})
-export class Trip {
-  @Prop({
-    type: mongoose.Schema.Types.ObjectId,
-    auto: true,
+@Exclude()
+export class TripEntity {
+  @ApiProperty({
+    name: 'title',
+    description: 'Title',
+    example: 'Title',
   })
-  _id: any;
-
-  @Prop({
-    type: String,
-    required: true,
-    trim: true,
-  })
+  @Expose()
+  @Type(() => String)
   title: string;
 
-  @Prop({
-    type: String,
-    required: true,
-    trim: true,
+  @ApiProperty({
+    name: 'description',
+    description: 'Description',
+    example: 'Description',
   })
+  @Expose()
+  @Type(() => String)
   description: string;
 
-  @Prop({
-    type: String,
-    required: true,
-    trim: true,
+  @ApiProperty({
+    name: 'destination',
+    description: 'Destination',
+    example: 'Destination',
   })
+  @Expose()
+  @Type(() => String)
   destination: string;
 
-  @Prop({
-    type: String,
-    required: true,
-    trim: true,
+  @ApiProperty({
+    name: 'photo',
+    description: 'Photo URL',
+    example: 'https://randomuser.me/portraits/men/55.jpg',
   })
+  @Expose()
+  @Type(() => String)
   photo: string;
 
-  @Prop({
-    type: Date,
-    required: false,
-  })
-  createdAt: String;
-
-  @Prop({
-    type: String,
-    required: false,
-  })
-  createdBy: String;
-
-  @Prop({
-    type: Date,
-    required: false,
-  })
-  updateAt: String;
-
-  @Prop({
-    type: String,
-    required: false,
-  })
-  updateBy: String;
-
-  @Prop({
-    type: Date,
-    required: false,
-  })
-  deleteAt: String;
-
-  @Prop({
-    type: String,
-    required: false,
-  })
-  deleteBy: String;
+  constructor(partial: Partial<TripEntity>) {
+    Object.assign(this, partial);
+  }
 }
-
-export const TripSchema = SchemaFactory.createForClass(Trip);

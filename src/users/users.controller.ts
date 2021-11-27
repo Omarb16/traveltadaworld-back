@@ -10,6 +10,7 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import {
@@ -22,6 +23,7 @@ import { HttpInterceptor } from 'src/interceptors/http.interceptor';
 import { UserEntity } from './entities/user.entity';
 import { HandlerParams } from 'src/validators/handler-params';
 import { Observable } from 'rxjs';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('users')
 @Controller('users')
@@ -30,7 +32,7 @@ import { Observable } from 'rxjs';
 export class UsersController {
   /**
    * Class constructor
-   * @param _peopleService
+   * @param _usersService
    */
   constructor(private readonly _usersService: UsersService) {}
 
@@ -81,6 +83,7 @@ export class UsersController {
     type: UserEntity,
   })
   @ApiBadRequestResponse({ description: 'Parameter provided is not good' })
+  @UseGuards(AuthGuard())
   @Put(':id')
   update(
     @Param() params: HandlerParams,
@@ -104,6 +107,7 @@ export class UsersController {
     description: 'User with the given "id" doesn\'t exist in the database',
   })
   @ApiBadRequestResponse({ description: 'Bad request' })
+  @UseGuards(AuthGuard())
   @Get(':id')
   find(@Param() params: HandlerParams): Observable<UserEntity> {
     return this._usersService.find(params.id);
