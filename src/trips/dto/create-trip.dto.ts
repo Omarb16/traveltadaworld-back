@@ -1,8 +1,8 @@
-import { TripEntity } from './../entities/trip.entity';
+import { TripEntity } from '../entities/trip.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString } from 'class-validator';
 
-export class TripDto {
+export class CreateTripDto {
   @ApiProperty({
     name: 'title',
     description: 'Title',
@@ -30,14 +30,28 @@ export class TripDto {
   @IsNotEmpty()
   destination: string;
 
+  // @ApiProperty({
+  //   name: 'photo',
+  //   description: 'Photo URL',
+  //   example: 'photo',
+  // })
+  // @IsString()
+  // @IsNotEmpty()
+  // photo: string;
+
   @ApiProperty({
-    name: 'photo',
-    description: 'Photo URL',
-    example: 'photo',
+    name: 'createdAt',
+    description: 'Created At',
+    example: '',
   })
-  @IsString()
-  @IsNotEmpty()
-  photo: string;
+  createdAt: string;
+
+  @ApiProperty({
+    name: 'createdBy',
+    description: 'Created By',
+    example: '61a24cfcbf197afd4214acae',
+  })
+  createdBy: string;
 
   constructor(partial: Partial<TripEntity>) {
     Object.assign(this, partial);

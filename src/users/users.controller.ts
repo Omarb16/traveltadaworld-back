@@ -12,9 +12,9 @@ import {
   UseGuards,
   UseInterceptors,
   Body,
-  NotFoundException,
   UploadedFile,
   Logger,
+  Headers,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -28,12 +28,7 @@ import { UserEntity } from './entities/user.entity';
 import { HandlerParams } from 'src/validators/handler-params';
 import { Observable } from 'rxjs';
 import { AuthGuard } from '@nestjs/passport';
-import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
-import { Express } from 'express';
-import { ok } from 'assert';
-import * as fs from 'fs';
-import * as path from 'path';
-import * as pump from 'pump';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('users')
 @ApiConsumes('application/json')
@@ -70,8 +65,11 @@ export class UsersController {
   })
   @ApiBadRequestResponse({ description: 'Parameter provided is not good' })
   @Post('signIn')
-  signIn(@Body() createUserDto: CreateUserDto) {
-    return this._usersService.signIn(createUserDto);
+  signIn(
+    @Body() createUserDto: CreateUserDto,
+    @Headers('authorization') auth: string,
+  ) {
+    return this._usersService.signIn(createUserDto, auth);
   }
 
   /**
@@ -109,8 +107,9 @@ export class UsersController {
   update(
     @Param() params: HandlerParams,
     @Body() updateUserDto: UpdateUserDto,
+    @Headers('authorization') auth: string,
   ): Observable<UserEntity> {
-    return this._usersService.update(params.id, updateUserDto);
+    return this._usersService.update(params.id, updateUserDto, auth);
   }
 
   /**

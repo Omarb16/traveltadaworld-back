@@ -67,7 +67,7 @@ export class CreateUserDto {
   })
   @IsString()
   @IsNotEmpty()
-  birthDate: String;
+  birthDate: string;
 
   @ApiProperty({
     name: 'address',
@@ -109,14 +109,14 @@ export class CreateUserDto {
     description: 'Created At',
     example: '',
   })
-  createdAt: String;
+  createdAt: string;
 
   @ApiProperty({
     name: 'createdBy',
     description: 'Created By',
     example: '61a24cfcbf197afd4214acae',
   })
-  createdBy: String;
+  createdBy: string;
 
   constructor(partial: Partial<UserEntity>) {
     Object.assign(this, partial);

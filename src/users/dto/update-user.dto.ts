@@ -18,15 +18,6 @@ export class UpdateUserDto {
   // photo: string;
 
   @ApiProperty({
-    name: 'userId',
-    description: 'userId',
-    example: 'userId',
-  })
-  @IsString()
-  @IsNotEmpty()
-  userId: string;
-
-  @ApiProperty({
     name: 'fistname',
     description: 'Fistname',
     example: 'Mclaughlin',
@@ -51,7 +42,7 @@ export class UpdateUserDto {
   })
   @IsString()
   @IsOptional()
-  birthDate: String;
+  birthDate: string;
 
   @ApiProperty({
     name: 'address',
@@ -94,14 +85,14 @@ export class UpdateUserDto {
     description: 'Updated At',
     example: '',
   })
-  updatedAt: String;
+  updatedAt: string;
 
   @ApiProperty({
     name: 'updatedBy',
     description: 'Updated By',
     example: '61a24cfcbf197afd4214acae',
   })
-  updatedBy: String;
+  updatedBy: string;
 
   constructor(partial: Partial<UserEntity>) {
     Object.assign(this, partial);

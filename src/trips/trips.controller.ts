@@ -1,4 +1,3 @@
-import { TripDto } from './dto/trip.dto';
 import { TripsService } from './trips.service';
 import { TripEntity } from './entities/trip.entity';
 import {
@@ -10,6 +9,7 @@ import {
   Param,
   Post,
   Put,
+  Headers,
   UseInterceptors,
 } from '@nestjs/common';
 import {
@@ -21,6 +21,8 @@ import {
 import { HttpInterceptor } from 'src/interceptors/http.interceptor';
 import { Observable } from 'rxjs';
 import { HandlerParams } from 'src/validators/handler-params';
+import { CreateTripDto } from './dto/create-trip.dto';
+import { UpdateTripDto } from './dto/update-trip.dto';
 
 @ApiTags('trips')
 @Controller('trips')
@@ -82,8 +84,11 @@ export class TripsController {
   })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @Post()
-  create(@Body() tripDto: TripDto): Observable<TripEntity> {
-    return this._tripsService.create(tripDto);
+  create(
+    @Body() tripDto: CreateTripDto,
+    @Headers('authorization') auth: string,
+  ): Observable<TripEntity> {
+    return this._tripsService.create(tripDto, auth);
   }
 
   /**
@@ -105,9 +110,10 @@ export class TripsController {
   @Put(':id')
   update(
     @Param() params: HandlerParams,
-    @Body() tripDto: TripDto,
+    @Body() tripDto: UpdateTripDto,
+    @Headers('authorization') auth: string,
   ): Observable<TripEntity> {
-    return this._tripsService.update(params.id, tripDto);
+    return this._tripsService.update(params.id, tripDto, auth);
   }
 
   /**

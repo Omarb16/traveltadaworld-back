@@ -46,7 +46,7 @@ export class UserEntity {
   })
   @Expose()
   @Type(() => String)
-  lastname: String;
+  lastname: string;
 
   @ApiProperty({
     name: 'photo',
@@ -64,16 +64,43 @@ export class UserEntity {
   })
   @Expose()
   @Type(() => String)
-  birthDate: String;
+  birthDate: string;
 
   @ApiProperty({
-    name: 'nationality',
-    description: 'Nationality',
-    example: 'French',
+    name: 'address',
+    description: 'Address',
+    example: 'Address',
   })
   @Expose()
   @Type(() => String)
-  nationality: string;
+  address: string;
+
+  @ApiProperty({
+    name: 'city',
+    description: 'City',
+    example: 'Nancy',
+  })
+  @Expose()
+  @Type(() => String)
+  city: string;
+
+  @ApiProperty({
+    name: 'postalCode',
+    description: 'Postal code',
+    example: '54500',
+  })
+  @Expose()
+  @Type(() => String)
+  postalCode: string;
+
+  @ApiProperty({
+    name: 'phone',
+    description: 'Phone',
+    example: '+33610012222',
+  })
+  @Expose()
+  @Type(() => String)
+  phone: string;
 
   @ApiProperty({
     name: 'createdAt',
@@ -82,7 +109,7 @@ export class UserEntity {
   })
   @Exclude()
   @Type(() => Date)
-  createdAt: String;
+  createdAt: string;
 
   @ApiProperty({
     name: 'createdBy',
@@ -91,7 +118,7 @@ export class UserEntity {
   })
   @Exclude()
   @Type(() => String)
-  createdBy: String;
+  createdBy: string;
 
   @ApiProperty({
     name: 'updatedAt',
@@ -100,7 +127,7 @@ export class UserEntity {
   })
   @Exclude()
   @Type(() => Date)
-  updatedAt: String;
+  updatedAt: string;
 
   @ApiProperty({
     name: 'createdBy',
@@ -109,7 +136,7 @@ export class UserEntity {
   })
   @Exclude()
   @Type(() => String)
-  updatedBy: String;
+  updatedBy: string;
 
   constructor(partial: Partial<UserEntity>) {
     Object.assign(this, partial);

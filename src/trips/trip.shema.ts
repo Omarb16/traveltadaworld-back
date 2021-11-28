@@ -53,25 +53,25 @@ export class Trip {
     type: Date,
     required: false,
   })
-  createdAt: String;
+  createdAt: string;
 
   @Prop({
     type: String,
     required: false,
   })
-  createdBy: String;
+  createdBy: string;
 
   @Prop({
     type: Date,
     required: false,
   })
-  updatedAt: String;
+  updatedAt: string;
 
   @Prop({
     type: String,
     required: false,
   })
-  updatedBy: String;
+  updatedBy: string;
 }
 
 export const TripSchema = SchemaFactory.createForClass(Trip);

@@ -69,10 +69,11 @@ export class UsersService {
    *
    * @returns {Observable<UserEntity>}
    */
-  signIn = (user: CreateUserDto) => {
+  signIn = (user: CreateUserDto, auth: string) => {
     const hash = bcrypt.hashSync(user.password, 10);
     user.password = hash;
     user.createdAt = moment().utc().format();
+    user.createdBy = this._jwtService.verify(auth.replace('Bearer ', '')).sub;
     return this._usersDao.create(user).pipe(
       catchError((e) =>
         e.code === 11000
@@ -108,9 +109,13 @@ export class UsersService {
    *
    * @returns {Observable<UserEntity>}
    */
-  update = (id: string, user: UpdateUserDto): Observable<UserEntity> => {
+  update = (
+    id: string,
+    user: UpdateUserDto,
+    auth: string,
+  ): Observable<UserEntity> => {
     user.updatedAt = moment().utc().format();
-    user.updatedBy = user.userId;
+    user.updatedBy = this._jwtService.verify(auth.replace('Bearer ', '')).sub;
     return this._usersDao.update(id, user).pipe(
       catchError((e) =>
         throwError(() => new UnprocessableEntityException(e.message)),

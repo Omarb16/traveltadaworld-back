@@ -38,7 +38,7 @@ export class AccessToken {
   })
   @Expose()
   @Type(() => String)
-  lastname: String;
+  lastname: string;
 
   constructor(partial: Partial<UserEntity>, access_token: string) {
     Object.assign(this, partial);

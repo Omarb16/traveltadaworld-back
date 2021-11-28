@@ -60,7 +60,7 @@ export class User {
     type: Date,
     required: true,
   })
-  birthDate: String;
+  birthDate: string;
 
   @Prop({
     type: String,
@@ -94,25 +94,25 @@ export class User {
     type: Date,
     required: false,
   })
-  createdAt: String;
+  createdAt: string;
 
   @Prop({
     type: String,
     required: false,
   })
-  createdBy: String;
+  createdBy: string;
 
   @Prop({
     type: Date,
     required: false,
   })
-  updatedAt: String;
+  updatedAt: string;
 
   @Prop({
     type: String,
     required: false,
   })
-  updatedBy: String;
+  updatedBy: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

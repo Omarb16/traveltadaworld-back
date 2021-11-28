@@ -1,9 +1,10 @@
-import { TripDto } from './dto/trip.dto';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { defaultIfEmpty, from, Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
+import { CreateTripDto } from './dto/create-trip.dto';
+import { UpdateTripDto } from './dto/update-trip.dto';
 import { Trip, TripDocument } from './trip.shema';
 
 @Injectable()
@@ -52,7 +53,7 @@ export class TripsDao {
    *
    * @return {Observable<Trip | void>}
    */
-  create = (trip: TripDto): Observable<Trip | void> =>
+  create = (trip: CreateTripDto): Observable<Trip | void> =>
     from(this._tripModel.create(trip)).pipe(
       map((doc: TripDocument) => doc.toJSON()),
       defaultIfEmpty(undefined),
@@ -66,7 +67,7 @@ export class TripsDao {
    *
    * @return {Observable<Trip | void>}
    */
-  update = (id: string, trip: TripDto): Observable<Trip | void> =>
+  update = (id: string, trip: UpdateTripDto): Observable<Trip | void> =>
     from(
       this._tripModel.findByIdAndUpdate(id, trip, {
         new: true,

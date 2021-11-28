@@ -46,7 +46,7 @@ export class TripEntity {
   })
   @Exclude()
   @Type(() => Date)
-  createdAt: String;
+  createdAt: string;
 
   @ApiProperty({
     name: 'createdBy',
@@ -55,7 +55,7 @@ export class TripEntity {
   })
   @Exclude()
   @Type(() => String)
-  createdBy: String;
+  createdBy: string;
 
   @ApiProperty({
     name: 'updatedAt',
@@ -64,7 +64,7 @@ export class TripEntity {
   })
   @Exclude()
   @Type(() => Date)
-  updatedAt: String;
+  updatedAt: string;
 
   @ApiProperty({
     name: 'createdBy',
@@ -73,7 +73,7 @@ export class TripEntity {
   })
   @Exclude()
   @Type(() => String)
-  updatedBy: String;
+  updatedBy: string;
 
   constructor(partial: Partial<TripEntity>) {
     Object.assign(this, partial);

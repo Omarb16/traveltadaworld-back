@@ -1,4 +1,6 @@
-import { TripDto } from './dto/trip.dto';
+import { JwtService } from '@nestjs/jwt';
+import { CreateTripDto } from './dto/create-trip.dto';
+import { UpdateTripDto } from './dto/update-trip.dto';
 import { TripEntity } from './entities/trip.entity';
 import { TripsDao } from './trips.dao';
 import {
@@ -17,6 +19,7 @@ import {
   throwError,
 } from 'rxjs';
 import { Trip } from './trip.shema';
+import * as moment from 'moment';
 
 @Injectable()
 export class TripsService {
@@ -25,7 +28,10 @@ export class TripsService {
    *
    * @param {TripsDao} _tripsDao instance of the DAO
    */
-  constructor(private readonly _tripsDao: TripsDao) {}
+  constructor(
+    private readonly _tripsDao: TripsDao,
+    private _jwtService: JwtService,
+  ) {}
 
   /**
    * Returns one trip of the list matching id in parameter
@@ -70,13 +76,16 @@ export class TripsService {
    *
    * @returns {Observable<TripEntity>}
    */
-  create = (trip: TripDto): Observable<TripEntity> =>
-    this._tripsDao.create(trip).pipe(
+  create = (trip: CreateTripDto, auth: string): Observable<TripEntity> => {
+    trip.createdAt = moment().utc().format();
+    trip.createdBy = this._jwtService.verify(auth.replace('Bearer ', '')).sub;
+    return this._tripsDao.create(trip).pipe(
       catchError((e) =>
         throwError(() => new UnprocessableEntityException(e.message)),
       ),
       map((_: Trip) => new TripEntity(_)),
     );
+  };
 
   /**
    * Returns one trip of the list matching id in parameter
@@ -86,8 +95,14 @@ export class TripsService {
    *
    * @returns {Observable<TripEntity>}
    */
-  update = (id: string, trip: TripDto): Observable<TripEntity> =>
-    this._tripsDao.update(id, trip).pipe(
+  update = (
+    id: string,
+    trip: UpdateTripDto,
+    auth: string,
+  ): Observable<TripEntity> => {
+    trip.updatedAt = moment().utc().format();
+    trip.updatedBy = this._jwtService.verify(auth.replace('Bearer ', '')).sub;
+    return this._tripsDao.update(id, trip).pipe(
       catchError((e) =>
         throwError(() => new UnprocessableEntityException(e.message)),
       ),
@@ -99,6 +114,7 @@ export class TripsService {
             ),
       ),
     );
+  };
 
   /**
    * Returns one trip of the list matching id in parameter
