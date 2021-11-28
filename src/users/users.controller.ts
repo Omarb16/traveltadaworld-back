@@ -11,6 +11,7 @@ import {
   Post,
   Put,
   Query,
+  UploadedFile,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -25,6 +26,7 @@ import { UserEntity } from './entities/user.entity';
 import { HandlerParams } from 'src/validators/handler-params';
 import { Observable } from 'rxjs';
 import { AuthGuard } from '@nestjs/passport';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('users')
 @Controller('users')
@@ -41,6 +43,7 @@ export class UsersController {
    * Handler to answer in to POST /users/signIn route
    *
    * @param {CreateUserDto} createUserDto data to create
+   * @param {Express.Multer.File} file file to upload
    *
    * @returns Observable<UserEntity[] | void>
    */
@@ -50,7 +53,13 @@ export class UsersController {
   })
   @ApiBadRequestResponse({ description: 'Parameter provided is not good' })
   @Post('signIn')
-  signIn(@Body() createUserDto: CreateUserDto) {
+  @UseInterceptors(FileInterceptor('file'))
+  signIn(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() createUserDto: CreateUserDto,
+  ) {
+    console.log(file);
+    console.log(createUserDto);
     return this._usersService.signIn(createUserDto);
   }
 
