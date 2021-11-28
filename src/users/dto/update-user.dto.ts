@@ -36,6 +36,15 @@ export class UpdateUserDto {
   lastname: string;
 
   @ApiProperty({
+    name: 'description',
+    description: 'Description',
+    example: 'Description',
+  })
+  @IsString()
+  @IsOptional()
+  description: string;
+
+  @ApiProperty({
     name: 'birthDate',
     description: 'Birthdate in timestamp format',
     example: '101343600000',

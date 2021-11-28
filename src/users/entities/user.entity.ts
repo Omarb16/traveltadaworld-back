@@ -49,6 +49,15 @@ export class UserEntity {
   lastname: string;
 
   @ApiProperty({
+    name: 'description',
+    description: 'Description',
+    example: 'Description',
+  })
+  @Expose()
+  @Type(() => String)
+  description: string;
+
+  @ApiProperty({
     name: 'photo',
     description: 'Photo URL',
     example: 'https://randomuser.me/portraits/men/55.jpg',

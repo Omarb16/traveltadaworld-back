@@ -54,6 +54,13 @@ export class User {
     required: false,
     trim: true,
   })
+  description: string;
+
+  @Prop({
+    type: String,
+    required: false,
+    trim: true,
+  })
   photo: string;
 
   @Prop({
