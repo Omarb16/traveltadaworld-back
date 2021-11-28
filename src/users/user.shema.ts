@@ -7,10 +7,10 @@ export type UserDocument = User & Document;
 @Schema({
   toJSON: {
     virtuals: true,
-    transform: (doc: any, ret: any) => {
-      // delete obsolete data
-      delete ret._id;
-    },
+    // transform: (doc: any, ret: any) => {
+    //   // delete obsolete data
+    //   delete ret._id;
+    // },
   },
   versionKey: false,
 })
@@ -51,7 +51,7 @@ export class User {
 
   @Prop({
     type: String,
-    required: true,
+    required: false,
     trim: true,
   })
   photo: string;
@@ -67,7 +67,28 @@ export class User {
     required: true,
     trim: true,
   })
-  nationality: string;
+  address: string;
+
+  @Prop({
+    type: String,
+    required: true,
+    trim: true,
+  })
+  city: string;
+
+  @Prop({
+    type: String,
+    required: true,
+    trim: true,
+  })
+  postalCode: string;
+
+  @Prop({
+    type: String,
+    required: true,
+    trim: true,
+  })
+  phone: string;
 
   @Prop({
     type: Date,

@@ -7,9 +7,9 @@ import {
   NotFoundException,
   UnprocessableEntityException,
 } from '@nestjs/common';
-import { catchError, defaultIfEmpty, Observable, of, throwError } from 'rxjs';
+import { mergeMap } from 'rxjs/operators';
+import { catchError, Observable, of, throwError } from 'rxjs';
 import { CreateUserDto } from './dto/create-user.dto';
-import { map, mergeMap, tap } from 'rxjs/operators';
 import { JwtService } from '@nestjs/jwt';
 import { LoginUserDto } from './dto/login-user.dto copy';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -17,6 +17,7 @@ import { User } from './user.shema';
 import { UserEntity } from './entities/user.entity';
 import { UsersDao } from './users.dao';
 import * as bcrypt from 'bcrypt';
+import * as moment from 'moment';
 
 @Injectable()
 export class UsersService {
@@ -52,6 +53,7 @@ export class UsersService {
         return !!_
           ? of(
               new AccessToken(
+                _,
                 this._jwtService.sign({ email: _.email, sub: _._id }),
               ),
             )
@@ -70,6 +72,7 @@ export class UsersService {
   signIn = (user: CreateUserDto) => {
     const hash = bcrypt.hashSync(user.password, 10);
     user.password = hash;
+    user.createdAt = moment().utc().format();
     return this._usersDao.create(user).pipe(
       catchError((e) =>
         e.code === 11000
@@ -85,6 +88,7 @@ export class UsersService {
         return !!_
           ? of(
               new AccessToken(
+                _,
                 this._jwtService.sign({ email: _.email, sub: _._id }),
               ),
             )
@@ -104,8 +108,10 @@ export class UsersService {
    *
    * @returns {Observable<UserEntity>}
    */
-  update = (id: string, user: UpdateUserDto): Observable<UserEntity> =>
-    this._usersDao.update(id, user).pipe(
+  update = (id: string, user: UpdateUserDto): Observable<UserEntity> => {
+    user.updatedAt = moment().utc().format();
+    user.updatedBy = user.userId;
+    return this._usersDao.update(id, user).pipe(
       catchError((e) =>
         throwError(() => new UnprocessableEntityException(e.message)),
       ),
@@ -117,6 +123,7 @@ export class UsersService {
             ),
       ),
     );
+  };
 
   /**
    * Returns one user of the list matching id in parameter

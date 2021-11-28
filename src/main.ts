@@ -10,11 +10,27 @@ import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { UsersModule } from './users/users.module';
 import * as Config from 'config';
+import fastifyMultipart from 'fastify-multipart';
 
 async function bootstrap(config: AppConfig, swaggerConfig: SwaggerConfig) {
+  const adapter = new FastifyAdapter({
+    logger: true,
+  });
+
+  adapter.register(fastifyMultipart, {
+    limits: {
+      fieldNameSize: 1000,
+      fieldSize: 20971520,
+      fields: 10,
+      fileSize: 100,
+      files: 1,
+      headerPairs: 2000,
+    },
+  });
+
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
-    new FastifyAdapter({ logger: true }),
+    adapter,
   );
 
   await app.enableCors({ origin: config.cors });

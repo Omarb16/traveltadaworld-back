@@ -3,19 +3,22 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersService } from './users.service';
 import {
-  Body,
   ClassSerializerInterceptor,
   Controller,
   Get,
   Param,
   Post,
   Put,
-  UploadedFile,
   UseGuards,
   UseInterceptors,
+  Body,
+  NotFoundException,
+  UploadedFile,
+  Logger,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
+  ApiConsumes,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiTags,
@@ -25,9 +28,15 @@ import { UserEntity } from './entities/user.entity';
 import { HandlerParams } from 'src/validators/handler-params';
 import { Observable } from 'rxjs';
 import { AuthGuard } from '@nestjs/passport';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { Express } from 'express';
+import { ok } from 'assert';
+import * as fs from 'fs';
+import * as path from 'path';
+import * as pump from 'pump';
 
 @ApiTags('users')
+@ApiConsumes('application/json')
 @Controller('users')
 @UseInterceptors(ClassSerializerInterceptor)
 @UseInterceptors(HttpInterceptor)
@@ -38,27 +47,30 @@ export class UsersController {
    */
   constructor(private readonly _usersService: UsersService) {}
 
+  @Post('upload')
+  @UseInterceptors(
+    FileInterceptor('document', {
+      dest: './uploads',
+    }),
+  )
+  uploadDocument(@UploadedFile() file) {
+    Logger.log('---------------------' + file.name);
+  }
+
   /**
    * Handler to answer in to POST /users/signIn route
    *
    * @param {CreateUserDto} createUserDto data to create
-   * @param {Express.Multer.File} file file to upload
    *
    * @returns Observable<UserEntity[] | void>
    */
   @ApiOkResponse({
-    description: 'Returns user id',
+    description: 'Returns user access token',
     type: UserEntity,
   })
   @ApiBadRequestResponse({ description: 'Parameter provided is not good' })
   @Post('signIn')
-  @UseInterceptors(FileInterceptor('file'))
-  signIn(
-    @UploadedFile() file: Express.Multer.File,
-    @Body() createUserDto: CreateUserDto,
-  ) {
-    console.log(file);
-    console.log(createUserDto);
+  signIn(@Body() createUserDto: CreateUserDto) {
     return this._usersService.signIn(createUserDto);
   }
 
