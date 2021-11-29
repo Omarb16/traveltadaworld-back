@@ -40,6 +40,15 @@ export class TripFunderEntity {
   city: string;
 
   @ApiProperty({
+    name: 'country',
+    description: 'country',
+    example: 'country',
+  })
+  @Expose()
+  @Type(() => String)
+  country: string;
+
+  @ApiProperty({
     name: 'travelers',
     description: 'Travelers',
     example: 'travelers',

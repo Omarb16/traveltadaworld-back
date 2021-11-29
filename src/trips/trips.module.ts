@@ -7,9 +7,12 @@ import { Trip, TripSchema } from './trip.shema';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import * as Config from 'config';
+import { UsersDao } from 'src/users/users.dao';
+import { User, UserSchema } from 'src/users/user.shema';
 
 @Module({
   imports: [
+    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
     MongooseModule.forFeature([{ name: Trip.name, schema: TripSchema }]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
@@ -17,6 +20,6 @@ import * as Config from 'config';
     }),
   ],
   controllers: [TripsController],
-  providers: [TripsService, Logger, TripsDao],
+  providers: [TripsService, Logger, TripsDao, UsersDao],
 })
 export class TripsModule {}

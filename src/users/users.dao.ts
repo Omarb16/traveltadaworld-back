@@ -45,10 +45,6 @@ export class UsersDao {
     const userModel = new this._userModel(user);
     return from(userModel.save()).pipe(
       map((doc: UserDocument) => doc.toJSON()),
-      tap((_: User) => {
-        _.createdBy = _._id;
-        userModel.save();
-      }),
       defaultIfEmpty(undefined),
     );
   };

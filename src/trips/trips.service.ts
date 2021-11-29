@@ -1,3 +1,4 @@
+import { UsersDao } from './../users/users.dao';
 import { TripQuery } from './../validators/trip-query';
 import { JwtService } from '@nestjs/jwt';
 import { CreateTripDto } from './dto/create-trip.dto';
@@ -12,6 +13,7 @@ import {
 import {
   catchError,
   defaultIfEmpty,
+  flatMap,
   map,
   mergeMap,
   Observable,
@@ -23,6 +25,7 @@ import * as moment from 'moment';
 import * as config from 'config';
 import { TripTravelerEntity } from './entities/trip-traveler.entity';
 import { TripFunderEntity } from './entities/trip-funder.entity';
+import { User } from 'src/users/user.shema';
 const fs = require('fs');
 
 @Injectable()
@@ -34,6 +37,7 @@ export class TripsService {
    */
   constructor(
     private readonly _tripsDao: TripsDao,
+    private readonly _userDao: UsersDao,
     private _jwtService: JwtService,
   ) {}
 
@@ -97,6 +101,17 @@ export class TripsService {
           return new TripFunderEntity(__);
         }),
       ),
+      map((_: TripFunderEntity[]) => {
+        return _.map((e) =>
+          e.travelers.forEach((f) =>
+            this._userDao.find(f).pipe(
+              map((res: User) => {
+                return res.firstname + ' ' + res.lastname;
+              }),
+            ),
+          ),
+        );
+      }),
       defaultIfEmpty(undefined),
     );
   };
@@ -113,20 +128,29 @@ export class TripsService {
       catchError((e) =>
         throwError(() => new UnprocessableEntityException(e.message)),
       ),
-      map((_: Trip[]) =>
-        _.map((__: Trip) => {
-          if (fs.existsSync('public/' + __.photo)) {
-            __.photo =
-              'http://' +
-              config.server.host +
-              ':' +
-              config.server.port +
-              '/public/' +
-              __.photo;
-          } else {
-            __.photo = null;
-          }
-          return new TripTravelerEntity(__);
+      map(
+        (_: Trip[]) =>
+          _.map(async (__: Trip) => {
+            if (fs.existsSync('public/' + __.photo)) {
+              __.photo =
+                'http://' +
+                config.server.host +
+                ':' +
+                config.server.port +
+                '/public/' +
+                __.photo;
+            } else {
+              __.photo = null;
+            }
+            return new TripTravelerEntity(__);
+          }),
+        map((_: TripTravelerEntity) => {
+          return this._userDao.find(_.createdBy).pipe(
+            map((res: User) => {
+              _.createdBy = res.firstname + ' ' + res.lastname;
+              return _;
+            }),
+          );
         }),
       ),
       defaultIfEmpty(undefined),

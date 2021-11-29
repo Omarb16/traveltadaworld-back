@@ -90,6 +90,8 @@ export class UsersService {
           : throwError(() => new UnprocessableEntityException(e.message)),
       ),
       mergeMap((_: User) => {
+        _.createdBy = _._id;
+        this._usersDao.update(_._id, _).subscribe();
         return !!_
           ? of(
               new AccessToken(
@@ -99,7 +101,9 @@ export class UsersService {
             )
           : throwError(
               () =>
-                new NotFoundException(`User with email ${_.email} not found`),
+                new NotFoundException(
+                  `User with email ${user.email} not found`,
+                ),
             );
       }),
     );
