@@ -3,7 +3,7 @@ import { Exclude, Expose, Type } from 'class-transformer';
 import { Traveler } from '../trip.shema';
 
 @Exclude()
-export class TripFunderEntity {
+export class TripDetailEntity {
   @ApiProperty({
     name: 'id',
     description: 'Unique identifier in the database',
@@ -32,6 +32,33 @@ export class TripFunderEntity {
   description: string;
 
   @ApiProperty({
+    name: 'travelers',
+    description: 'Travelers',
+    example: 'travelers',
+  })
+  @Expose()
+  @Type(() => Traveler)
+  travelers: Traveler[] = [];
+
+  @ApiProperty({
+    name: 'canDemand',
+    description: 'canDemand',
+    example: 'canDemand',
+  })
+  @Expose()
+  @Type(() => Boolean)
+  canDemand: boolean;
+
+  @ApiProperty({
+    name: 'canCancel',
+    description: 'canCancel',
+    example: 'canCancel',
+  })
+  @Expose()
+  @Type(() => Boolean)
+  canCancel: boolean;
+
+  @ApiProperty({
     name: 'city',
     description: 'city',
     example: 'city',
@@ -50,15 +77,6 @@ export class TripFunderEntity {
   country: string;
 
   @ApiProperty({
-    name: 'travelers',
-    description: 'Travelers',
-    example: 'travelers',
-  })
-  @Expose()
-  @Type(() => Traveler)
-  travelers: Traveler[];
-
-  @ApiProperty({
     name: 'photo',
     description: 'Photo URL',
     example: '',
@@ -72,7 +90,7 @@ export class TripFunderEntity {
     description: 'Created At',
     example: '2021-11-27T13:41:48.229Z',
   })
-  @Expose()
+  @Exclude()
   @Type(() => Date)
   createdAt: string;
 
@@ -81,11 +99,11 @@ export class TripFunderEntity {
     description: 'Created By',
     example: '61a1885b50cf46588632569a',
   })
-  @Expose()
+  @Exclude()
   @Type(() => String)
   createdBy: string;
 
-  constructor(partial: Partial<TripFunderEntity>) {
+  constructor(partial: Partial<TripDetailEntity>) {
     Object.assign(this, partial);
   }
 }

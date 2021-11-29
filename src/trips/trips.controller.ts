@@ -33,6 +33,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { editFileName, imageFileFilter } from 'src/validators/file-helper';
 import { TripTravelerEntity } from './entities/trip-traveler.entity';
+import { TripDetailEntity } from './entities/trip-detail.entity';
 
 @ApiTags('trips')
 @Controller('trips')
@@ -63,6 +64,29 @@ export class TripsController {
   @Get('find/:id')
   find(@Param() params: HandlerParams): Observable<TripEntity> {
     return this._tripsService.find(params.id);
+  }
+
+  /**
+   * Handler to answer in to GET /trips/:id route
+   *
+   * @param {HandlerParams} params list of route params to take person id
+   *
+   * @returns Observable<TripEntity| void>
+   */
+  @ApiOkResponse({
+    description: 'Return a trip',
+    type: TripEntity,
+  })
+  @ApiNotFoundResponse({
+    description: 'Trip with the given "id" doesn\'t exist in the database',
+  })
+  @ApiBadRequestResponse({ description: 'Bad request' })
+  @Get('finddetail/:id')
+  findDetail(
+    @Param() params: HandlerParams,
+    @Headers('authorization') auth: string,
+  ): Observable<TripDetailEntity> {
+    return this._tripsService.findDetail(params.id, auth);
   }
 
   /**
@@ -256,5 +280,55 @@ export class TripsController {
     @Headers('authorization') auth: string,
   ): Observable<TripEntity | void> {
     return this._tripsService.demand(params.id, auth);
+  }
+
+  /**
+   * Handler to answer in to POST /trips/:id route
+   *
+   * @param {HandlerParams} params list of route params to take person id
+   *
+   * @returns Observable<TripEntity[] | void>
+   */
+  @ApiOkResponse({
+    description: 'Return a trip',
+    type: TripEntity,
+  })
+  @ApiNotFoundResponse({
+    description: 'Trip with the given "id" doesn\'t exist in the database',
+  })
+  @ApiBadRequestResponse({ description: 'Bad request' })
+  @UseGuards(AuthGuard())
+  @Put('demand/:id')
+  accept(
+    @Param() params: HandlerParams,
+    @Headers('authorization') auth: string,
+    @Body() user: HandlerParams,
+  ): Observable<TripEntity | void> {
+    return this._tripsService.accept(params.id, auth, user.id);
+  }
+
+  /**
+   * Handler to answer in to POST /trips/:id route
+   *
+   * @param {HandlerParams} params list of route params to take person id
+   *
+   * @returns Observable<TripEntity[] | void>
+   */
+  @ApiOkResponse({
+    description: 'Return a trip',
+    type: TripEntity,
+  })
+  @ApiNotFoundResponse({
+    description: 'Trip with the given "id" doesn\'t exist in the database',
+  })
+  @ApiBadRequestResponse({ description: 'Bad request' })
+  @UseGuards(AuthGuard())
+  @Put('demand/:id')
+  decline(
+    @Param() params: HandlerParams,
+    @Headers('authorization') auth: string,
+    @Body() user: HandlerParams,
+  ): Observable<TripEntity | void> {
+    return this._tripsService.decline(params.id, auth, user.id);
   }
 }

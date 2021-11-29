@@ -7,6 +7,39 @@ export type TripDocument = Trip & Document;
 @Schema({
   toJSON: {
     virtuals: true,
+  },
+  versionKey: false,
+})
+export class Traveler {
+  @Prop({
+    type: String,
+    required: true,
+    trim: true,
+  })
+  traveler: string;
+
+  @Prop({
+    type: Boolean,
+    required: false,
+  })
+  accept?: boolean;
+
+  @Prop({
+    type: Boolean,
+    required: false,
+  })
+  decline?: boolean;
+
+  constructor(traveler: string) {
+    this.traveler = traveler;
+    this.accept = null;
+    this.decline = null;
+  }
+}
+
+@Schema({
+  toJSON: {
+    virtuals: true,
     transform: (doc: any, ret: any) => {
       // delete obsolete data
       delete ret._id;
@@ -57,10 +90,9 @@ export class Trip {
   photo: string;
 
   @Prop({
-    type: [String],
-    required: false,
+    type: Array,
   })
-  traveleres: string[];
+  travelers: Traveler[];
 
   @Prop({
     type: Date,

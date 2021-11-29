@@ -8,6 +8,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
+import { Traveler } from '../trip.shema';
 
 export class UpdateTripDto {
   @ApiProperty({
@@ -54,6 +55,14 @@ export class UpdateTripDto {
   @IsString()
   @IsOptional()
   photo: string;
+
+  @ApiProperty({
+    name: 'Travelers',
+    description: 'TravelersL',
+    example: '[]',
+  })
+  @IsOptional()
+  travelers: Traveler[];
 
   @ApiProperty({
     name: 'createdAt',

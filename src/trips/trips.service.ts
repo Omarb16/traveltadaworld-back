@@ -1,3 +1,4 @@
+import { TravelerEntity } from './entities/traveler.entity ';
 import { UsersDao } from './../users/users.dao';
 import { TripQuery } from './../validators/trip-query';
 import { JwtService } from '@nestjs/jwt';
@@ -6,6 +7,7 @@ import { UpdateTripDto } from './dto/update-trip.dto';
 import { TripEntity } from './entities/trip.entity';
 import { TripsDao } from './trips.dao';
 import {
+  BadRequestException,
   Injectable,
   NotFoundException,
   UnprocessableEntityException,
@@ -20,12 +22,13 @@ import {
   of,
   throwError,
 } from 'rxjs';
-import { Trip } from './trip.shema';
+import { Traveler, Trip } from './trip.shema';
 import * as moment from 'moment';
 import * as config from 'config';
 import { TripTravelerEntity } from './entities/trip-traveler.entity';
 import { TripFunderEntity } from './entities/trip-funder.entity';
 import { User } from 'src/users/user.shema';
+import { TripDetailEntity } from './entities/trip-detail.entity';
 const fs = require('fs');
 
 @Injectable()
@@ -40,6 +43,46 @@ export class TripsService {
     private readonly _userDao: UsersDao,
     private _jwtService: JwtService,
   ) {}
+
+  /**
+   * Returns one trip of the list matching id in parameter
+   *
+   * @param {string} id of the trip
+   *
+   * @returns {Observable<TripEntity>}
+   */
+  findDetail = (id: string, auth: string): Observable<TripDetailEntity> => {
+    var userId = this._jwtService.verify(auth.replace('Bearer ', '')).sub;
+    return this._tripsDao.find(id).pipe(
+      catchError((e) =>
+        throwError(() => new UnprocessableEntityException(e.message)),
+      ),
+      mergeMap((_: Trip) => {
+        console.log(_.travelers);
+        if (fs.existsSync('public/' + _.photo)) {
+          _.photo =
+            'http://' +
+            config.server.host +
+            ':' +
+            config.server.port +
+            '/public/' +
+            _.photo;
+        } else {
+          _.photo = null;
+        }
+        var t = new TripDetailEntity(_);
+        t.canDemand =
+          t.createdBy != userId &&
+          !t.travelers.some((e) => e.traveler == userId);
+        t.canCancel = t.travelers.some((e) => e.traveler == userId);
+        return !!_
+          ? of(t)
+          : throwError(
+              () => new NotFoundException(`Trip with id '${id}' not found`),
+            );
+      }),
+    );
+  };
 
   /**
    * Returns one trip of the list matching id in parameter
@@ -102,9 +145,9 @@ export class TripsService {
         }),
       ),
       map((_: TripFunderEntity[]) => {
-        return _.map((e) =>
-          e.travelers.forEach((f) =>
-            this._userDao.find(f).pipe(
+        return _.map((e: TripFunderEntity) =>
+          e.travelers.forEach((f: Traveler) =>
+            this._userDao.find(f.traveler).pipe(
               map((res: User) => {
                 return res.firstname + ' ' + res.lastname;
               }),
@@ -256,17 +299,25 @@ export class TripsService {
    */
   cancel = (id: string, auth: string): Observable<TripEntity> => {
     const userId = this._jwtService.verify(auth.replace('Bearer ', '')).sub;
-    return this._tripsDao.cancel(id, userId).pipe(
+    return this._tripsDao.find(id).pipe(
       catchError((e) =>
         throwError(() => new UnprocessableEntityException(e.message)),
       ),
-      mergeMap((_: Trip) =>
-        !!_
-          ? of(new TripEntity(_))
-          : throwError(
-              () => new NotFoundException(`Trip with id '${id}' not found`),
-            ),
-      ),
+      mergeMap((_: Trip) => {
+        if (_.createdBy !== userId) {
+          _.travelers = _.travelers.filter((e) => e.traveler != userId);
+          this._tripsDao
+            .update(id, new UpdateTripDto(_), _.createdBy)
+            .subscribe();
+          return !!_
+            ? of(undefined)
+            : throwError(
+                () => new NotFoundException(`Trip with id '${id}' not found`),
+              );
+        } else {
+          return throwError(() => new BadRequestException(`Bad Request`));
+        }
+      }),
     );
   };
 
@@ -302,17 +353,97 @@ export class TripsService {
    */
   demand = (id: string, auth: string): Observable<void> => {
     const userId = this._jwtService.verify(auth.replace('Bearer ', '')).sub;
-    return this._tripsDao.demand(id, userId).pipe(
+    return this._tripsDao.find(id).pipe(
       catchError((e) =>
         throwError(() => new UnprocessableEntityException(e.message)),
       ),
-      mergeMap((_: Trip) =>
-        !!_
-          ? of(undefined)
-          : throwError(
-              () => new NotFoundException(`Trip with id '${id}' not found`),
-            ),
+      mergeMap((_: Trip) => {
+        if (_.createdBy !== userId) {
+          _.travelers.push(new Traveler(userId));
+          this._tripsDao
+            .update(id, new UpdateTripDto(_), _.createdBy)
+            .subscribe();
+          return !!_
+            ? of(undefined)
+            : throwError(
+                () => new NotFoundException(`Trip with id '${id}' not found`),
+              );
+        } else {
+          return throwError(() => new BadRequestException(`Bad Request`));
+        }
+      }),
+    );
+  };
+
+  /**
+   * Returns one trip of the list matching id in parameter
+   *
+   * @param {string} id of the trip
+   *
+   * @returns {Observable<void>}
+   */
+  accept = (
+    id: string,
+    userAccepted: string,
+    auth: string,
+  ): Observable<void> => {
+    const userId = this._jwtService.verify(auth.replace('Bearer ', '')).sub;
+    return this._tripsDao.find(id).pipe(
+      catchError((e) =>
+        throwError(() => new UnprocessableEntityException(e.message)),
       ),
+      mergeMap((_: Trip) => {
+        if (_.createdBy === userId) {
+          var i = _.travelers.findIndex((e) => e.traveler === userAccepted);
+          _.travelers[i].accept = true;
+          this._tripsDao
+            .update(id, new UpdateTripDto(_), _.createdBy)
+            .subscribe();
+          return !!_
+            ? of(undefined)
+            : throwError(
+                () => new NotFoundException(`Trip with id '${id}' not found`),
+              );
+        } else {
+          return throwError(() => new BadRequestException(`Bad Request`));
+        }
+      }),
+    );
+  };
+
+  /**
+   * Returns one trip of the list matching id in parameter
+   *
+   * @param {string} id of the trip
+   *
+   * @returns {Observable<void>}
+   */
+  decline = (
+    id: string,
+    userDeclined: string,
+    auth: string,
+  ): Observable<void> => {
+    const userId = this._jwtService.verify(auth.replace('Bearer ', '')).sub;
+    return this._tripsDao.find(id).pipe(
+      catchError((e) =>
+        throwError(() => new UnprocessableEntityException(e.message)),
+      ),
+      mergeMap((_: Trip) => {
+        if (_.createdBy === userId) {
+          var i = _.travelers.findIndex((e) => e.traveler === userDeclined);
+          _.travelers[i].decline = true;
+          this._tripsDao
+            .update(id, new UpdateTripDto(_), _.createdBy)
+            .subscribe();
+          return !!_
+            ? of(undefined)
+            : throwError(
+                () => new NotFoundException(`Trip with id '${id}' not found`),
+              );
+        } else {
+          return throwError(() => new BadRequestException(`Bad Request`));
+        }
+      }),
     );
   };
 }

@@ -121,35 +121,6 @@ export class TripsDao {
    * Call mongoose method, call toJSON on each result and returns TripModel[] or undefined
    *
    * @param {string} id
-   * @param {TripDto} trip
-   *
-   * @return {Observable<Trip | void>}
-   */
-  cancel = (id: string, userId: string): Observable<Trip | void> => {
-    return from(this._tripModel.findById(id)).pipe(
-      filter((doc: TripDocument) => !!doc),
-      map((doc: TripDocument) => doc.toJSON()),
-      defaultIfEmpty(undefined),
-      tap((_: Trip) => {
-        _.traveleres = _.traveleres.filter((e) => e !== userId);
-        return from(
-          this._tripModel.findOneAndUpdate({ id, travelers: userId }, _, {
-            new: true,
-            runValidators: true,
-          }),
-        ).pipe(
-          filter((doc: TripDocument) => !!doc),
-          map((doc: TripDocument) => doc.toJSON()),
-          defaultIfEmpty(undefined),
-        );
-      }),
-    );
-  };
-
-  /**
-   * Call mongoose method, call toJSON on each result and returns TripModel[] or undefined
-   *
-   * @param {string} id
    *
    * @return {Observable<void>}
    */
@@ -160,33 +131,6 @@ export class TripsDao {
       filter((doc: TripDocument) => !!doc),
       map((doc: TripDocument) => doc.toJSON()),
       defaultIfEmpty(undefined),
-    );
-  };
-  /**
-   * Call mongoose method, call toJSON on each result and returns TripModel[] or undefined
-   *
-   * @param {string} id
-   *
-   * @return {Observable<void>}
-   */
-  demand = (id: string, userId: string): Observable<Trip | void> => {
-    return from(this._tripModel.findById(id)).pipe(
-      filter((doc: TripDocument) => !!doc),
-      map((doc: TripDocument) => doc.toJSON()),
-      defaultIfEmpty(undefined),
-      tap((_: Trip) => {
-        _.traveleres = _.traveleres.filter((e) => e !== userId);
-        return from(
-          this._tripModel.findOneAndUpdate({ id, travelers: userId }, _, {
-            new: true,
-            runValidators: true,
-          }),
-        ).pipe(
-          filter((doc: TripDocument) => !!doc),
-          map((doc: TripDocument) => doc.toJSON()),
-          defaultIfEmpty(undefined),
-        );
-      }),
     );
   };
 }
