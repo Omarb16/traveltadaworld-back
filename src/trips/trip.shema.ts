@@ -1,6 +1,6 @@
 import * as mongoose from 'mongoose';
 import { Document } from 'mongoose';
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Prop, raw, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 export type TripDocument = Trip & Document;
 
@@ -35,16 +35,25 @@ export class Trip {
   })
   description: string;
 
-  @Prop({
-    type: String,
-    required: true,
-    trim: true,
-  })
-  destination: string;
+  @Prop(
+    raw({
+      country: {
+        type: String,
+        required: true,
+        trim: true,
+      },
+      city: {
+        type: String,
+        required: true,
+        trim: true,
+      },
+    }),
+  )
+  destination: any;
 
   @Prop({
     type: String,
-    required: true,
+    required: false,
     trim: true,
   })
   photo: string;

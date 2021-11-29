@@ -1,6 +1,13 @@
 import { TripEntity } from '../entities/trip.entity';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString } from 'class-validator';
+import {
+  IsInstance,
+  IsNotEmpty,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
+import { Type } from 'class-transformer';
+import { DestinationDto } from './destination.dto';
 
 export class CreateTripDto {
   @ApiProperty({
@@ -26,8 +33,9 @@ export class CreateTripDto {
     description: 'destination',
     example: 'Destination',
   })
-  @IsString()
-  @IsNotEmpty()
+  @IsInstance(DestinationDto)
+  @ValidateNested()
+  @Type(() => DestinationDto)
   destination: string;
 
   // @ApiProperty({

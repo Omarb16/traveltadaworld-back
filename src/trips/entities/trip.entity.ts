@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose, Type } from 'class-transformer';
+import { DestinationEntity } from './destination.entity';
 
 @Exclude()
 export class TripEntity {
@@ -27,8 +28,8 @@ export class TripEntity {
     example: 'Destination',
   })
   @Expose()
-  @Type(() => String)
-  destination: string;
+  @Type(() => DestinationEntity)
+  destination: DestinationEntity;
 
   @ApiProperty({
     name: 'photo',
