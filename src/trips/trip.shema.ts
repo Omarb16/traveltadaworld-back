@@ -53,7 +53,7 @@ export class Trip {
 
   @Prop({
     type: String,
-    required: false,
+    required: true,
     trim: true,
   })
   photo: string;

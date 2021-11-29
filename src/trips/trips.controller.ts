@@ -13,6 +13,7 @@ import {
   UseInterceptors,
   UseGuards,
   Query,
+  UploadedFile,
   Logger,
 } from '@nestjs/common';
 import {
@@ -28,6 +29,9 @@ import { CreateTripDto } from './dto/create-trip.dto';
 import { UpdateTripDto } from './dto/update-trip.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { TripQuery } from 'src/validators/trip-query';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { editFileName, imageFileFilter } from 'src/validators/file-helper';
 
 @ApiTags('trips')
 @Controller('trips')
@@ -55,7 +59,7 @@ export class TripsController {
     description: 'Trip with the given "id" doesn\'t exist in the database',
   })
   @ApiBadRequestResponse({ description: 'Bad request' })
-  @Get(':id')
+  @Get('find/:id')
   find(@Param() params: HandlerParams): Observable<TripEntity> {
     return this._tripsService.find(params.id);
   }
@@ -108,12 +112,22 @@ export class TripsController {
   })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @UseGuards(AuthGuard())
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: './public',
+        filename: editFileName,
+      }),
+      fileFilter: imageFileFilter,
+    }),
+  )
   @Post()
   create(
     @Body() tripDto: CreateTripDto,
+    @UploadedFile() file: Express.Multer.File,
     @Headers('authorization') auth: string,
   ): Observable<TripEntity> {
-    return this._tripsService.create(tripDto, auth);
+    return this._tripsService.create(tripDto, file.filename, auth);
   }
 
   /**
@@ -133,13 +147,23 @@ export class TripsController {
   })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @UseGuards(AuthGuard())
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: './public',
+        filename: editFileName,
+      }),
+      fileFilter: imageFileFilter,
+    }),
+  )
   @Put(':id')
   update(
     @Param() params: HandlerParams,
     @Body() tripDto: UpdateTripDto,
+    @UploadedFile() file: Express.Multer.File,
     @Headers('authorization') auth: string,
   ): Observable<TripEntity> {
-    return this._tripsService.update(params.id, tripDto, auth);
+    return this._tripsService.update(params.id, tripDto, file.filename, auth);
   }
 
   /**

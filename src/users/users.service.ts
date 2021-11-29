@@ -17,6 +17,8 @@ import { UserEntity } from './entities/user.entity';
 import { UsersDao } from './users.dao';
 import * as bcrypt from 'bcrypt';
 import * as moment from 'moment';
+import * as config from 'config';
+const fs = require('fs');
 
 @Injectable()
 export class UsersService {
@@ -71,17 +73,18 @@ export class UsersService {
    *
    * @returns {Observable<UserEntity>}
    */
-  signIn = (user: CreateUserDto) => {
+  signIn = (user: CreateUserDto, filename: string) => {
     const hash = bcrypt.hashSync(user.password, 10);
     user.password = hash;
     user.createdAt = moment().utc().format();
+    user.photo = filename;
     return this._usersDao.create(user).pipe(
       catchError((e) =>
         e.code === 11000
           ? throwError(
               () =>
                 new ConflictException(
-                  `User with email '${user.email} already exists`,
+                  `User with email ${user.email} already exists`,
                 ),
             )
           : throwError(() => new UnprocessableEntityException(e.message)),
@@ -96,7 +99,7 @@ export class UsersService {
             )
           : throwError(
               () =>
-                new NotFoundException(`User with email '${_.email}' not found`),
+                new NotFoundException(`User with email ${_.email} not found`),
             );
       }),
     );
@@ -113,9 +116,11 @@ export class UsersService {
   update = (
     id: string,
     user: UpdateUserDto,
+    filename: string,
     auth: string,
   ): Observable<UserEntity> => {
     user.updatedAt = moment().utc().format();
+    user.photo = filename;
     user.updatedBy = this._jwtService.verify(auth.replace('Bearer ', '')).sub;
     return this._usersDao.update(id, user).pipe(
       catchError((e) =>
@@ -138,17 +143,30 @@ export class UsersService {
    *
    * @returns {Observable<UserEntity>}
    */
-  find = (id: string): Observable<UserEntity> =>
-    this._usersDao.find(id).pipe(
+  find = (id: string): Observable<UserEntity> => {
+    return this._usersDao.find(id).pipe(
       catchError((e) =>
         throwError(() => new UnprocessableEntityException(e.message)),
       ),
-      mergeMap((_: User) =>
-        !!_
+      mergeMap((_: User) => {
+        if (fs.existsSync('public/' + _.photo)) {
+          _.photo =
+            'http://' +
+            config.server.host +
+            ':' +
+            config.server.port +
+            '/public/' +
+            _.photo;
+        } else {
+          _.photo = null;
+        }
+
+        return !!_
           ? of(new UserEntity(_))
           : throwError(
               () => new NotFoundException(`User with id '${id}' not found`),
-            ),
-      ),
+            );
+      }),
     );
+  };
 }

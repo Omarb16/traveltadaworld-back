@@ -8,15 +8,6 @@ import {
 import { UserEntity } from '../entities/user.entity';
 
 export class UpdateUserDto {
-  // @ApiProperty({
-  //   name: 'photo',
-  //   description: 'Photo URL',
-  //   example: 'https://randomuser.me/portraits/men/55.jpg',
-  // })
-  // @IsString()
-  // @IsOptional()
-  // photo: string;
-
   @ApiProperty({
     name: 'fistname',
     description: 'Fistname',
@@ -34,6 +25,15 @@ export class UpdateUserDto {
   @IsString()
   @IsNotEmpty()
   lastname: string;
+
+  @ApiProperty({
+    name: 'photo',
+    description: 'Photo URL',
+    example: '',
+  })
+  @IsString()
+  @IsOptional()
+  photo: string;
 
   @ApiProperty({
     name: 'description',

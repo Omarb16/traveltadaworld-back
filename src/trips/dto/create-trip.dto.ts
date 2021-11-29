@@ -3,6 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
   IsInstance,
   IsNotEmpty,
+  IsOptional,
   IsString,
   ValidateNested,
 } from 'class-validator';
@@ -38,20 +39,22 @@ export class CreateTripDto {
   @Type(() => DestinationDto)
   destination: string;
 
-  // @ApiProperty({
-  //   name: 'photo',
-  //   description: 'Photo URL',
-  //   example: 'photo',
-  // })
-  // @IsString()
-  // @IsNotEmpty()
-  // photo: string;
+  @ApiProperty({
+    name: 'photo',
+    description: 'Photo URL',
+    example: '',
+  })
+  @IsString()
+  @IsOptional()
+  photo: string;
 
   @ApiProperty({
     name: 'createdAt',
     description: 'Created At',
     example: '',
   })
+  @IsString()
+  @IsOptional()
   createdAt: string;
 
   @ApiProperty({
@@ -59,6 +62,8 @@ export class CreateTripDto {
     description: 'Created By',
     example: '61a24cfcbf197afd4214acae',
   })
+  @IsString()
+  @IsOptional()
   createdBy: string;
 
   constructor(partial: Partial<TripEntity>) {

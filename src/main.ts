@@ -1,37 +1,16 @@
 import { TripsModule } from './trips/trips.module';
 import { NestFactory } from '@nestjs/core';
 import { Logger, ValidationPipe } from '@nestjs/common';
-import {
-  FastifyAdapter,
-  NestFastifyApplication,
-} from '@nestjs/platform-fastify';
 import { AppConfig, SwaggerConfig } from './app.types';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { UsersModule } from './users/users.module';
 import * as Config from 'config';
-import fastifyMultipart from 'fastify-multipart';
+import * as express from 'express';
+import { join } from 'path';
 
 async function bootstrap(config: AppConfig, swaggerConfig: SwaggerConfig) {
-  const adapter = new FastifyAdapter({
-    logger: true,
-  });
-
-  adapter.register(fastifyMultipart, {
-    limits: {
-      fieldNameSize: 1000,
-      fieldSize: 20971520,
-      fields: 10,
-      fileSize: 100,
-      files: 1,
-      headerPairs: 2000,
-    },
-  });
-
-  const app = await NestFactory.create<NestFastifyApplication>(
-    AppModule,
-    adapter,
-  );
+  const app = await NestFactory.create(AppModule);
 
   await app.enableCors({ origin: config.cors });
 
@@ -54,6 +33,8 @@ async function bootstrap(config: AppConfig, swaggerConfig: SwaggerConfig) {
   });
 
   SwaggerModule.setup(swaggerConfig.path, app, usersDocument);
+
+  app.use('/public', express.static(join(__dirname, '..', 'public')));
 
   await app.listen(config.port, config.host);
   Logger.log(

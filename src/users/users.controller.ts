@@ -29,6 +29,8 @@ import { HandlerParams } from 'src/validators/handler-params';
 import { Observable } from 'rxjs';
 import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { editFileName, imageFileFilter } from 'src/validators/file-helper';
 
 @ApiTags('users')
 @ApiConsumes('application/json')
@@ -42,16 +44,6 @@ export class UsersController {
    */
   constructor(private readonly _usersService: UsersService) {}
 
-  @Post('upload')
-  @UseInterceptors(
-    FileInterceptor('document', {
-      dest: './uploads',
-    }),
-  )
-  uploadDocument(@UploadedFile() file) {
-    Logger.log('---------------------' + file.name);
-  }
-
   /**
    * Handler to answer in to POST /users/signIn route
    *
@@ -64,9 +56,23 @@ export class UsersController {
     type: UserEntity,
   })
   @ApiBadRequestResponse({ description: 'Parameter provided is not good' })
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: './public',
+        filename: editFileName,
+      }),
+      fileFilter: imageFileFilter,
+    }),
+  )
   @Post('signIn')
-  signIn(@Body() createUserDto: CreateUserDto) {
-    return this._usersService.signIn(createUserDto);
+  signIn(
+    @Body() createUserDto: CreateUserDto,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    console.log(file);
+    return this._usersService.signIn(createUserDto, file.filename);
   }
 
   /**
@@ -100,13 +106,29 @@ export class UsersController {
   })
   @ApiBadRequestResponse({ description: 'Parameter provided is not good' })
   @UseGuards(AuthGuard())
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: './public',
+        filename: editFileName,
+      }),
+      fileFilter: imageFileFilter,
+    }),
+  )
   @Put(':id')
   update(
     @Param() params: HandlerParams,
     @Body() updateUserDto: UpdateUserDto,
+    @UploadedFile() file: Express.Multer.File,
     @Headers('authorization') auth: string,
   ): Observable<UserEntity> {
-    return this._usersService.update(params.id, updateUserDto, auth);
+    return this._usersService.update(
+      params.id,
+      updateUserDto,
+      file.filename,
+      auth,
+    );
   }
 
   /**

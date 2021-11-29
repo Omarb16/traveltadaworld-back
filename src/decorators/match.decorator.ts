@@ -7,6 +7,8 @@ import {
 } from 'class-validator';
 
 export function Match(property: string, validationOptions?: ValidationOptions) {
+  validationOptions = {};
+  validationOptions.message = 'Password missmatch';
   return (object: any, propertyName: string) => {
     registerDecorator({
       target: object.constructor,

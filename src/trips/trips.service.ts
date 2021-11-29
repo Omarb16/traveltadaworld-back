@@ -5,7 +5,6 @@ import { UpdateTripDto } from './dto/update-trip.dto';
 import { TripEntity } from './entities/trip.entity';
 import { TripsDao } from './trips.dao';
 import {
-  ConflictException,
   Injectable,
   NotFoundException,
   UnprocessableEntityException,
@@ -21,6 +20,8 @@ import {
 } from 'rxjs';
 import { Trip } from './trip.shema';
 import * as moment from 'moment';
+import * as config from 'config';
+const fs = require('fs');
 
 @Injectable()
 export class TripsService {
@@ -46,13 +47,24 @@ export class TripsService {
       catchError((e) =>
         throwError(() => new UnprocessableEntityException(e.message)),
       ),
-      mergeMap((_: Trip) =>
-        !!_
+      mergeMap((_: Trip) => {
+        if (fs.existsSync('public/' + _.photo)) {
+          _.photo =
+            'http://' +
+            config.server.host +
+            ':' +
+            config.server.port +
+            '/public/' +
+            _.photo;
+        } else {
+          _.photo = null;
+        }
+        return !!_
           ? of(new TripEntity(_))
           : throwError(
               () => new NotFoundException(`Trip with id '${id}' not found`),
-            ),
-      ),
+            );
+      }),
     );
 
   /**
@@ -62,12 +74,27 @@ export class TripsService {
    * @returns {Observable<TripEntity[]>}
    */
   findUserTrips = (auth: string): Observable<TripEntity[]> => {
-    const userId = this._jwtService.verify(auth.replace('Bearer ', '')).sub;
+    const userId = this._jwtService.decode(auth.replace('Bearer ', '')).sub;
     return this._tripsDao.findUserTrips(userId).pipe(
       catchError((e) =>
         throwError(() => new UnprocessableEntityException(e.message)),
       ),
-      map((_: Trip[]) => _.map((__: Trip) => new TripEntity(__))),
+      map((_: Trip[]) =>
+        _.map((__: Trip) => {
+          if (fs.existsSync('public/' + __.photo)) {
+            __.photo =
+              'http://' +
+              config.server.host +
+              ':' +
+              config.server.port +
+              '/public/' +
+              __.photo;
+          } else {
+            __.photo = null;
+          }
+          return new TripEntity(__);
+        }),
+      ),
       defaultIfEmpty(undefined),
     );
   };
@@ -83,7 +110,22 @@ export class TripsService {
       catchError((e) =>
         throwError(() => new UnprocessableEntityException(e.message)),
       ),
-      map((_: Trip[]) => _.map((__: Trip) => new TripEntity(__))),
+      map((_: Trip[]) =>
+        _.map((__: Trip) => {
+          if (fs.existsSync('public/' + __.photo)) {
+            __.photo =
+              'http://' +
+              config.server.host +
+              ':' +
+              config.server.port +
+              '/public/' +
+              __.photo;
+          } else {
+            __.photo = null;
+          }
+          return new TripEntity(__);
+        }),
+      ),
       defaultIfEmpty(undefined),
     );
 
@@ -94,9 +136,14 @@ export class TripsService {
    *
    * @returns {Observable<TripEntity>}
    */
-  create = (trip: CreateTripDto, auth: string): Observable<TripEntity> => {
+  create = (
+    trip: CreateTripDto,
+    filename: string,
+    auth: string,
+  ): Observable<TripEntity> => {
     trip.createdAt = moment().utc().format();
     trip.createdBy = this._jwtService.verify(auth.replace('Bearer ', '')).sub;
+    trip.photo = filename;
     return this._tripsDao.create(trip).pipe(
       catchError((e) =>
         throwError(() => new UnprocessableEntityException(e.message)),
@@ -116,10 +163,12 @@ export class TripsService {
   update = (
     id: string,
     trip: UpdateTripDto,
+    filename: string,
     auth: string,
   ): Observable<TripEntity> => {
-    trip.updatedAt = moment().utc().format();
     const userId = this._jwtService.verify(auth.replace('Bearer ', '')).sub;
+    trip.photo = filename;
+    trip.updatedAt = moment().utc().format();
     trip.updatedBy = userId;
     return this._tripsDao.update(id, trip, userId).pipe(
       catchError((e) =>

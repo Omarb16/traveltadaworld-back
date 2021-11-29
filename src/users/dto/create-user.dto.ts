@@ -11,12 +11,6 @@ import { Match } from 'src/decorators/match.decorator';
 import { UserEntity } from '../entities/user.entity';
 
 export class CreateUserDto {
-  // @ApiProperty({
-  //   type: 'string',
-  //   format: 'binary',
-  // })
-  // file: Express.Multer.File;
-
   @ApiProperty({
     name: 'email',
     description: 'Email',
@@ -44,6 +38,12 @@ export class CreateUserDto {
   repassword: string;
 
   @ApiProperty({
+    type: 'string',
+    format: 'binary',
+  })
+  file: Express.Multer.File;
+
+  @ApiProperty({
     name: 'firstname',
     description: 'Firstname',
     example: 'Mclaughlin',
@@ -60,6 +60,15 @@ export class CreateUserDto {
   @IsString()
   @IsNotEmpty()
   lastname: string;
+
+  @ApiProperty({
+    name: 'photo',
+    description: 'Photo URL',
+    example: '',
+  })
+  @IsString()
+  @IsOptional()
+  photo: string;
 
   @ApiProperty({
     name: 'birthDate',

@@ -8,6 +8,7 @@ import { UsersService } from './users.service';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import * as Config from 'config';
+import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
   imports: [
