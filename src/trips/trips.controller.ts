@@ -163,7 +163,7 @@ export class TripsController {
     @UploadedFile() file: Express.Multer.File,
     @Headers('authorization') auth: string,
   ): Observable<TripEntity> {
-    return this._tripsService.update(params.id, tripDto, file.filename, auth);
+    return this._tripsService.update(params.id, tripDto, file, auth);
   }
 
   /**

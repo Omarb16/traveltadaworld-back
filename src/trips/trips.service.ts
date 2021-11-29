@@ -163,11 +163,15 @@ export class TripsService {
   update = (
     id: string,
     trip: UpdateTripDto,
-    filename: string,
+    file: Express.Multer.File,
     auth: string,
   ): Observable<TripEntity> => {
     const userId = this._jwtService.verify(auth.replace('Bearer ', '')).sub;
-    trip.photo = filename;
+    if (file) {
+      trip.photo = file.filename;
+    } else {
+      delete trip.photo;
+    }
     trip.updatedAt = moment().utc().format();
     trip.updatedBy = userId;
     return this._tripsDao.update(id, trip, userId).pipe(

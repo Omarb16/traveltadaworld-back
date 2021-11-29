@@ -116,11 +116,15 @@ export class UsersService {
   update = (
     id: string,
     user: UpdateUserDto,
-    filename: string,
+    file: Express.Multer.File,
     auth: string,
   ): Observable<UserEntity> => {
     user.updatedAt = moment().utc().format();
-    user.photo = filename;
+    if (file) {
+      user.photo = file.filename;
+    } else {
+      delete user.photo;
+    }
     user.updatedBy = this._jwtService.verify(auth.replace('Bearer ', '')).sub;
     return this._usersDao.update(id, user).pipe(
       catchError((e) =>

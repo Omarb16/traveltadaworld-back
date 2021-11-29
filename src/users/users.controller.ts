@@ -123,12 +123,7 @@ export class UsersController {
     @UploadedFile() file: Express.Multer.File,
     @Headers('authorization') auth: string,
   ): Observable<UserEntity> {
-    return this._usersService.update(
-      params.id,
-      updateUserDto,
-      file.filename,
-      auth,
-    );
+    return this._usersService.update(params.id, updateUserDto, file, auth);
   }
 
   /**
