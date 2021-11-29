@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
   IsEmail,
   IsNotEmpty,
+  IsOptional,
   IsPhoneNumber,
   IsString,
   Matches,
@@ -109,6 +110,8 @@ export class CreateUserDto {
     description: 'Created At',
     example: '',
   })
+  @IsOptional()
+  @IsString()
   createdAt: string;
 
   @ApiProperty({
@@ -116,6 +119,8 @@ export class CreateUserDto {
     description: 'Created By',
     example: '61a24cfcbf197afd4214acae',
   })
+  @IsOptional()
+  @IsString()
   createdBy: string;
 
   constructor(partial: Partial<UserEntity>) {

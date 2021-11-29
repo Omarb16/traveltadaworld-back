@@ -65,11 +65,8 @@ export class UsersController {
   })
   @ApiBadRequestResponse({ description: 'Parameter provided is not good' })
   @Post('signIn')
-  signIn(
-    @Body() createUserDto: CreateUserDto,
-    @Headers('authorization') auth: string,
-  ) {
-    return this._usersService.signIn(createUserDto, auth);
+  signIn(@Body() createUserDto: CreateUserDto) {
+    return this._usersService.signIn(createUserDto);
   }
 
   /**

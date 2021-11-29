@@ -3,7 +3,6 @@ import {
   BadRequestException,
   ConflictException,
   Injectable,
-  Logger,
   NotFoundException,
   UnprocessableEntityException,
 } from '@nestjs/common';
@@ -69,11 +68,10 @@ export class UsersService {
    *
    * @returns {Observable<UserEntity>}
    */
-  signIn = (user: CreateUserDto, auth: string) => {
+  signIn = (user: CreateUserDto) => {
     const hash = bcrypt.hashSync(user.password, 10);
     user.password = hash;
     user.createdAt = moment().utc().format();
-    user.createdBy = this._jwtService.verify(auth.replace('Bearer ', '')).sub;
     return this._usersDao.create(user).pipe(
       catchError((e) =>
         e.code === 11000

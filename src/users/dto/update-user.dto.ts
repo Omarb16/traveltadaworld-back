@@ -90,10 +90,21 @@ export class UpdateUserDto {
   phone: string;
 
   @ApiProperty({
+    name: 'createdBy',
+    description: 'Created By',
+    example: '61a24cfcbf197afd4214acae',
+  })
+  @IsOptional()
+  @IsString()
+  createdBy: string;
+
+  @ApiProperty({
     name: 'updatedAt',
     description: 'Updated At',
     example: '',
   })
+  @IsOptional()
+  @IsString()
   updatedAt: string;
 
   @ApiProperty({
@@ -101,6 +112,8 @@ export class UpdateUserDto {
     description: 'Updated By',
     example: '61a24cfcbf197afd4214acae',
   })
+  @IsOptional()
+  @IsString()
   updatedBy: string;
 
   constructor(partial: Partial<UserEntity>) {

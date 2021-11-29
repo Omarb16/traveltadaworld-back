@@ -47,8 +47,6 @@ export class TripsDao {
       search['destination.city'] = { $regex: query.city, $options: 'i' };
     if (query.country)
       search['destination.country'] = { $regex: query.country, $options: 'i' };
-
-    Logger.log(search);
     return from(this._tripModel.find(search)).pipe(
       filter((docs: TripDocument[]) => !!docs && docs.length > 0),
       map((docs: TripDocument[]) => docs.map((_: TripDocument) => _.toJSON())),

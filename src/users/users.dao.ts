@@ -6,7 +6,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User, UserDocument } from './user.shema';
 import { defaultIfEmpty, from, Observable } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import { filter, map, switchMap, tap } from 'rxjs/operators';
 
 @Injectable()
 export class UsersDao {
@@ -41,12 +41,17 @@ export class UsersDao {
    *
    * @return {Observable<User | void>}
    */
-  create = (user: CreateUserDto): Observable<User | void> =>
-    from(this._userModel.create(user)).pipe(
+  create = (user: CreateUserDto): Observable<User | void> => {
+    const userModel = new this._userModel(user);
+    return from(userModel.save()).pipe(
       map((doc: UserDocument) => doc.toJSON()),
+      tap((_: User) => {
+        _.createdBy = _._id;
+        userModel.save();
+      }),
       defaultIfEmpty(undefined),
     );
-
+  };
   /**
    * Update a user in users list
    *
