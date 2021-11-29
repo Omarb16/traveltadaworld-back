@@ -46,6 +46,13 @@ export class TripsDao {
       defaultIfEmpty(undefined),
     );
 
+  findUserTrips = (userId: string): Observable<Trip[] | void> =>
+    from(this._tripModel.find({ createdBy: userId })).pipe(
+      filter((docs: TripDocument[]) => !!docs && docs.length > 0),
+      map((docs: TripDocument[]) => docs.map((_: TripDocument) => _.toJSON())),
+      defaultIfEmpty(undefined),
+    );
+
   /**
    * Call mongoose method, call toJSON on each result and returns TripModel[] or undefined
    *
@@ -67,9 +74,13 @@ export class TripsDao {
    *
    * @return {Observable<Trip | void>}
    */
-  update = (id: string, trip: UpdateTripDto): Observable<Trip | void> =>
+  update = (
+    id: string,
+    trip: UpdateTripDto,
+    userId: string,
+  ): Observable<Trip | void> =>
     from(
-      this._tripModel.findByIdAndUpdate(id, trip, {
+      this._tripModel.findOneAndUpdate({ id, createdBy: userId }, trip, {
         new: true,
         runValidators: true,
       }),
@@ -86,8 +97,8 @@ export class TripsDao {
    *
    * @return {Observable<void>}
    */
-  delete = (id: string): Observable<Trip | void> =>
-    from(this._tripModel.findByIdAndRemove(id)).pipe(
+  delete = (id: string, userId: string): Observable<Trip | void> =>
+    from(this._tripModel.findOneAndRemove({ id, createdBy: userId })).pipe(
       filter((doc: TripDocument) => !!doc),
       map((doc: TripDocument) => doc.toJSON()),
       defaultIfEmpty(undefined),

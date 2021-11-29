@@ -60,6 +60,23 @@ export class TripsService {
    *
    * @returns {Observable<TripEntity[]>}
    */
+  findUserTrips = (auth: string): Observable<TripEntity[]> => {
+    const userId = this._jwtService.verify(auth.replace('Bearer ', '')).sub;
+    return this._tripsDao.findUserTrips(userId).pipe(
+      catchError((e) =>
+        throwError(() => new UnprocessableEntityException(e.message)),
+      ),
+      map((_: Trip[]) => _.map((__: Trip) => new TripEntity(__))),
+      defaultIfEmpty(undefined),
+    );
+  };
+
+  /**
+   * Returns one trip of the list matching id in parameter
+   *
+   *
+   * @returns {Observable<TripEntity[]>}
+   */
   findAll = (): Observable<TripEntity[]> =>
     this._tripsDao.findAll().pipe(
       catchError((e) =>
@@ -101,8 +118,9 @@ export class TripsService {
     auth: string,
   ): Observable<TripEntity> => {
     trip.updatedAt = moment().utc().format();
-    trip.updatedBy = this._jwtService.verify(auth.replace('Bearer ', '')).sub;
-    return this._tripsDao.update(id, trip).pipe(
+    const userId = this._jwtService.verify(auth.replace('Bearer ', '')).sub;
+    trip.updatedBy = userId;
+    return this._tripsDao.update(id, trip, userId).pipe(
       catchError((e) =>
         throwError(() => new UnprocessableEntityException(e.message)),
       ),
@@ -123,8 +141,9 @@ export class TripsService {
    *
    * @returns {Observable<void>}
    */
-  delete = (id: string): Observable<void> =>
-    this._tripsDao.delete(id).pipe(
+  delete = (id: string, auth: string): Observable<void> => {
+    const userId = this._jwtService.verify(auth.replace('Bearer ', '')).sub;
+    return this._tripsDao.delete(id, userId).pipe(
       catchError((e) =>
         throwError(() => new UnprocessableEntityException(e.message)),
       ),
@@ -136,4 +155,5 @@ export class TripsService {
             ),
       ),
     );
+  };
 }

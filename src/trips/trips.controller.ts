@@ -11,6 +11,7 @@ import {
   Put,
   Headers,
   UseInterceptors,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -23,6 +24,7 @@ import { Observable } from 'rxjs';
 import { HandlerParams } from 'src/validators/handler-params';
 import { CreateTripDto } from './dto/create-trip.dto';
 import { UpdateTripDto } from './dto/update-trip.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('trips')
 @Controller('trips')
@@ -72,6 +74,25 @@ export class TripsController {
   }
 
   /**
+   * Handler to answer in to GET /trips route
+   *
+   * @returns Observable<TripEntity[] | void>
+   */
+  @ApiOkResponse({
+    description: 'Return trips',
+    type: TripEntity,
+    isArray: true,
+  })
+  @ApiBadRequestResponse({ description: 'Bad request' })
+  @UseGuards(AuthGuard())
+  @Get('usertrips')
+  findUserTrips(
+    @Headers('authorization') auth: string,
+  ): Observable<TripEntity[]> {
+    return this._tripsService.findUserTrips(auth);
+  }
+
+  /**
    * Handler to answer in to POST /trips/:id route
    *
    * @param {TripDto} trip data to create
@@ -83,6 +104,7 @@ export class TripsController {
     type: TripEntity,
   })
   @ApiBadRequestResponse({ description: 'Bad request' })
+  @UseGuards(AuthGuard())
   @Post()
   create(
     @Body() tripDto: CreateTripDto,
@@ -107,6 +129,7 @@ export class TripsController {
     description: 'Trip with the given "id" doesn\'t exist in the database',
   })
   @ApiBadRequestResponse({ description: 'Bad request' })
+  @UseGuards(AuthGuard())
   @Put(':id')
   update(
     @Param() params: HandlerParams,
@@ -131,8 +154,12 @@ export class TripsController {
     description: 'Trip with the given "id" doesn\'t exist in the database',
   })
   @ApiBadRequestResponse({ description: 'Bad request' })
+  @UseGuards(AuthGuard())
   @Delete(':id')
-  delete(@Param() params: HandlerParams): Observable<void> {
-    return this._tripsService.delete(params.id);
+  delete(
+    @Param() params: HandlerParams,
+    @Headers('authorization') auth: string,
+  ): Observable<void> {
+    return this._tripsService.delete(params.id, auth);
   }
 }
