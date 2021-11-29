@@ -100,6 +100,25 @@ export class TripsController {
   }
 
   /**
+   * Handler to answer in to GET /trips route
+   *
+   * @returns Observable<TripEntity[] | void>
+   */
+  @ApiOkResponse({
+    description: 'Return trips',
+    type: TripEntity,
+    isArray: true,
+  })
+  @ApiBadRequestResponse({ description: 'Bad request' })
+  @UseGuards(AuthGuard())
+  @Get('travlertrips')
+  findTravelerTrips(
+    @Headers('authorization') auth: string,
+  ): Observable<TripEntity[]> {
+    return this._tripsService.findTravelerTrips(auth);
+  }
+
+  /**
    * Handler to answer in to POST /trips/:id route
    *
    * @param {TripDto} trip data to create

@@ -98,6 +98,15 @@ export class CreateUserDto {
   city: string;
 
   @ApiProperty({
+    name: 'country',
+    description: 'Country',
+    example: 'France',
+  })
+  @IsString()
+  @IsOptional()
+  country: string;
+
+  @ApiProperty({
     name: 'postalCode',
     description: 'Postal code',
     example: '54500',

@@ -88,6 +88,13 @@ export class User {
     required: true,
     trim: true,
   })
+  country: string;
+
+  @Prop({
+    type: String,
+    required: true,
+    trim: true,
+  })
   postalCode: string;
 
   @Prop({

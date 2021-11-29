@@ -94,6 +94,15 @@ export class UserEntity {
   city: string;
 
   @ApiProperty({
+    name: 'country',
+    description: 'Country',
+    example: 'France',
+  })
+  @Expose()
+  @Type(() => String)
+  country: string;
+
+  @ApiProperty({
     name: 'postalCode',
     description: 'Postal code',
     example: '54500',

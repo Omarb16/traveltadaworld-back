@@ -54,8 +54,27 @@ export class TripsDao {
     );
   };
 
+  /**
+   * Call mongoose method, call toJSON on each result and returns TripModel[] or undefined
+   *
+   *
+   * @return {Observable<Trip[] | void>}
+   */
   findUserTrips = (userId: string): Observable<Trip[] | void> =>
     from(this._tripModel.find({ createdBy: userId })).pipe(
+      filter((docs: TripDocument[]) => !!docs && docs.length > 0),
+      map((docs: TripDocument[]) => docs.map((_: TripDocument) => _.toJSON())),
+      defaultIfEmpty([]),
+    );
+
+  /**
+   * Call mongoose method, call toJSON on each result and returns TripModel[] or undefined
+   *
+   *
+   * @return {Observable<Trip[] | void>}
+   */
+  findTravelerTrips = (userId: string): Observable<Trip[] | void> =>
+    from(this._tripModel.find({ travlers: userId })).pipe(
       filter((docs: TripDocument[]) => !!docs && docs.length > 0),
       map((docs: TripDocument[]) => docs.map((_: TripDocument) => _.toJSON())),
       defaultIfEmpty([]),

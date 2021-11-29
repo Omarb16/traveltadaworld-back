@@ -105,6 +105,38 @@ export class TripsService {
    *
    * @returns {Observable<TripEntity[]>}
    */
+  findTravelerTrips = (auth: string): Observable<TripEntity[]> => {
+    const userId = this._jwtService.decode(auth.replace('Bearer ', '')).sub;
+    return this._tripsDao.findTravelerTrips(userId).pipe(
+      catchError((e) =>
+        throwError(() => new UnprocessableEntityException(e.message)),
+      ),
+      map((_: Trip[]) =>
+        _.map((__: Trip) => {
+          if (fs.existsSync('public/' + __.photo)) {
+            __.photo =
+              'http://' +
+              config.server.host +
+              ':' +
+              config.server.port +
+              '/public/' +
+              __.photo;
+          } else {
+            __.photo = null;
+          }
+          return new TripEntity(__);
+        }),
+      ),
+      defaultIfEmpty(undefined),
+    );
+  };
+
+  /**
+   * Returns one trip of the list matching id in parameter
+   *
+   *
+   * @returns {Observable<TripEntity[]>}
+   */
   findAll = (query: TripQuery): Observable<TripEntity[]> =>
     this._tripsDao.findAll(query).pipe(
       catchError((e) =>
