@@ -1,22 +1,24 @@
-import { TripEntity } from '../entities/trip.entity';
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsInstance,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
-  ValidateNested,
-} from 'class-validator';
-import { Type } from 'class-transformer';
+import { Exclude, Expose, Type } from 'class-transformer';
 
-export class CreateTripDto {
+@Exclude()
+export class TripTravelerEntity {
+  @ApiProperty({
+    name: 'id',
+    description: 'Unique identifier in the database',
+    example: '5763cd4dc378a38ecd387737',
+  })
+  @Expose()
+  @Type(() => String)
+  id: string;
+
   @ApiProperty({
     name: 'title',
     description: 'Title',
     example: 'Title',
   })
-  @IsString()
-  @IsNotEmpty()
+  @Expose()
+  @Type(() => String)
   title: string;
 
   @ApiProperty({
@@ -24,8 +26,8 @@ export class CreateTripDto {
     description: 'Description',
     example: 'Description',
   })
-  @IsString()
-  @IsNotEmpty()
+  @Expose()
+  @Type(() => String)
   description: string;
 
   @ApiProperty({
@@ -33,8 +35,8 @@ export class CreateTripDto {
     description: 'city',
     example: 'city',
   })
-  @IsString()
-  @IsNotEmpty()
+  @Expose()
+  @Type(() => String)
   city: string;
 
   @ApiProperty({
@@ -42,8 +44,8 @@ export class CreateTripDto {
     description: 'country',
     example: 'country',
   })
-  @IsString()
-  @IsNotEmpty()
+  @Expose()
+  @Type(() => String)
   country: string;
 
   @ApiProperty({
@@ -51,29 +53,29 @@ export class CreateTripDto {
     description: 'Photo URL',
     example: '',
   })
-  @IsString()
-  @IsOptional()
+  @Expose()
+  @Type(() => String)
   photo: string;
 
   @ApiProperty({
     name: 'createdAt',
     description: 'Created At',
-    example: '',
+    example: '2021-11-27T13:41:48.229Z',
   })
-  @IsString()
-  @IsOptional()
+  @Expose()
+  @Type(() => Date)
   createdAt: string;
 
   @ApiProperty({
     name: 'createdBy',
     description: 'Created By',
-    example: '61a24cfcbf197afd4214acae',
+    example: '61a1885b50cf46588632569a',
   })
-  @IsString()
-  @IsOptional()
+  @Expose()
+  @Type(() => String)
   createdBy: string;
 
-  constructor(partial: Partial<TripEntity>) {
+  constructor(partial: Partial<TripTravelerEntity>) {
     Object.assign(this, partial);
   }
 }

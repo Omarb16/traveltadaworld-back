@@ -3,7 +3,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { defaultIfEmpty, from, Observable } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import { filter, map, tap } from 'rxjs/operators';
 import { CreateTripDto } from './dto/create-trip.dto';
 import { UpdateTripDto } from './dto/update-trip.dto';
 import { Trip, TripDocument } from './trip.shema';
@@ -43,10 +43,9 @@ export class TripsDao {
   findAll = (query: TripQuery): Observable<Trip[] | void> => {
     var search = {};
     if (query.title) search['title'] = { $regex: query.title, $options: 'i' };
-    if (query.city)
-      search['destination.city'] = { $regex: query.city, $options: 'i' };
+    if (query.city) search['city'] = { $regex: query.city, $options: 'i' };
     if (query.country)
-      search['destination.country'] = { $regex: query.country, $options: 'i' };
+      search['country'] = { $regex: query.country, $options: 'i' };
     return from(this._tripModel.find(search)).pipe(
       filter((docs: TripDocument[]) => !!docs && docs.length > 0),
       map((docs: TripDocument[]) => docs.map((_: TripDocument) => _.toJSON())),
@@ -74,7 +73,7 @@ export class TripsDao {
    * @return {Observable<Trip[] | void>}
    */
   findTravelerTrips = (userId: string): Observable<Trip[] | void> =>
-    from(this._tripModel.find({ travlers: userId })).pipe(
+    from(this._tripModel.find({ travelers: userId })).pipe(
       filter((docs: TripDocument[]) => !!docs && docs.length > 0),
       map((docs: TripDocument[]) => docs.map((_: TripDocument) => _.toJSON())),
       defaultIfEmpty([]),
@@ -121,6 +120,35 @@ export class TripsDao {
    * Call mongoose method, call toJSON on each result and returns TripModel[] or undefined
    *
    * @param {string} id
+   * @param {TripDto} trip
+   *
+   * @return {Observable<Trip | void>}
+   */
+  cancel = (id: string, userId: string): Observable<Trip | void> => {
+    return from(this._tripModel.findById(id)).pipe(
+      filter((doc: TripDocument) => !!doc),
+      map((doc: TripDocument) => doc.toJSON()),
+      defaultIfEmpty(undefined),
+      tap((_: Trip) => {
+        _.traveleres = _.traveleres.filter((e) => e !== userId);
+        return from(
+          this._tripModel.findOneAndUpdate({ id, travelers: userId }, _, {
+            new: true,
+            runValidators: true,
+          }),
+        ).pipe(
+          filter((doc: TripDocument) => !!doc),
+          map((doc: TripDocument) => doc.toJSON()),
+          defaultIfEmpty(undefined),
+        );
+      }),
+    );
+  };
+
+  /**
+   * Call mongoose method, call toJSON on each result and returns TripModel[] or undefined
+   *
+   * @param {string} id
    *
    * @return {Observable<void>}
    */
@@ -130,4 +158,32 @@ export class TripsDao {
       map((doc: TripDocument) => doc.toJSON()),
       defaultIfEmpty(undefined),
     );
+
+  /**
+   * Call mongoose method, call toJSON on each result and returns TripModel[] or undefined
+   *
+   * @param {string} id
+   *
+   * @return {Observable<void>}
+   */
+  demand = (id: string, userId: string): Observable<Trip | void> => {
+    return from(this._tripModel.findById(id)).pipe(
+      filter((doc: TripDocument) => !!doc),
+      map((doc: TripDocument) => doc.toJSON()),
+      defaultIfEmpty(undefined),
+      tap((_: Trip) => {
+        _.traveleres = _.traveleres.filter((e) => e !== userId);
+        return from(
+          this._tripModel.findOneAndUpdate({ id, travelers: userId }, _, {
+            new: true,
+            runValidators: true,
+          }),
+        ).pipe(
+          filter((doc: TripDocument) => !!doc),
+          map((doc: TripDocument) => doc.toJSON()),
+          defaultIfEmpty(undefined),
+        );
+      }),
+    );
+  };
 }

@@ -35,21 +35,19 @@ export class Trip {
   })
   description: string;
 
-  @Prop(
-    raw({
-      country: {
-        type: String,
-        required: true,
-        trim: true,
-      },
-      city: {
-        type: String,
-        required: true,
-        trim: true,
-      },
-    }),
-  )
-  destination: any;
+  @Prop({
+    type: String,
+    required: true,
+    trim: true,
+  })
+  city: string;
+
+  @Prop({
+    type: String,
+    required: true,
+    trim: true,
+  })
+  country: string;
 
   @Prop({
     type: String,
@@ -57,6 +55,12 @@ export class Trip {
     trim: true,
   })
   photo: string;
+
+  @Prop({
+    type: [String],
+    required: false,
+  })
+  traveleres: string[];
 
   @Prop({
     type: Date,

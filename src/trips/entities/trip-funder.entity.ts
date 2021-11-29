@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose, Type } from 'class-transformer';
 
 @Exclude()
-export class TripEntity {
+export class TripFunderEntity {
   @ApiProperty({
     name: 'id',
     description: 'Unique identifier in the database',
@@ -40,13 +40,13 @@ export class TripEntity {
   city: string;
 
   @ApiProperty({
-    name: 'country',
-    description: 'country',
-    example: 'country',
+    name: 'travelers',
+    description: 'Travelers',
+    example: 'travelers',
   })
   @Expose()
   @Type(() => String)
-  country: string;
+  travelers: string[];
 
   @ApiProperty({
     name: 'photo',
@@ -62,7 +62,7 @@ export class TripEntity {
     description: 'Created At',
     example: '2021-11-27T13:41:48.229Z',
   })
-  @Exclude()
+  @Expose()
   @Type(() => Date)
   createdAt: string;
 
@@ -71,29 +71,11 @@ export class TripEntity {
     description: 'Created By',
     example: '61a1885b50cf46588632569a',
   })
-  @Exclude()
+  @Expose()
   @Type(() => String)
   createdBy: string;
 
-  @ApiProperty({
-    name: 'updatedAt',
-    description: 'Updated At',
-    example: '2021-11-27T13:41:48.229Z',
-  })
-  @Exclude()
-  @Type(() => Date)
-  updatedAt: string;
-
-  @ApiProperty({
-    name: 'createdBy',
-    description: 'Created By',
-    example: '61a1885b50cf46588632569a',
-  })
-  @Exclude()
-  @Type(() => String)
-  updatedBy: string;
-
-  constructor(partial: Partial<TripEntity>) {
+  constructor(partial: Partial<TripFunderEntity>) {
     Object.assign(this, partial);
   }
 }

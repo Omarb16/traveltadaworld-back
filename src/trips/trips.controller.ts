@@ -1,3 +1,4 @@
+import { TripFunderEntity } from './entities/trip-funder.entity';
 import { TripsService } from './trips.service';
 import { TripEntity } from './entities/trip.entity';
 import {
@@ -14,7 +15,6 @@ import {
   UseGuards,
   Query,
   UploadedFile,
-  Logger,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -32,6 +32,7 @@ import { TripQuery } from 'src/validators/trip-query';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { editFileName, imageFileFilter } from 'src/validators/file-helper';
+import { TripTravelerEntity } from './entities/trip-traveler.entity';
 
 @ApiTags('trips')
 @Controller('trips')
@@ -95,7 +96,7 @@ export class TripsController {
   @Get('usertrips')
   findUserTrips(
     @Headers('authorization') auth: string,
-  ): Observable<TripEntity[]> {
+  ): Observable<TripFunderEntity[]> {
     return this._tripsService.findUserTrips(auth);
   }
 
@@ -111,10 +112,10 @@ export class TripsController {
   })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @UseGuards(AuthGuard())
-  @Get('travlertrips')
+  @Get('travelertrips')
   findTravelerTrips(
     @Headers('authorization') auth: string,
-  ): Observable<TripEntity[]> {
+  ): Observable<TripTravelerEntity[]> {
     return this._tripsService.findTravelerTrips(auth);
   }
 
@@ -175,7 +176,7 @@ export class TripsController {
       fileFilter: imageFileFilter,
     }),
   )
-  @Put(':id')
+  @Put('update/:id')
   update(
     @Param() params: HandlerParams,
     @Body() tripDto: UpdateTripDto,
@@ -201,11 +202,59 @@ export class TripsController {
   })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @UseGuards(AuthGuard())
-  @Delete(':id')
+  @Delete('delete/:id')
   delete(
     @Param() params: HandlerParams,
     @Headers('authorization') auth: string,
   ): Observable<void> {
     return this._tripsService.delete(params.id, auth);
+  }
+
+  /**
+   * Handler to answer in to POST /trips/:id route
+   *
+   * @param {HandlerParams} params list of route params to take person id
+   *
+   * @returns Observable<TripEntity[] | void>
+   */
+  @ApiOkResponse({
+    description: 'Return a trip',
+    type: TripEntity,
+  })
+  @ApiNotFoundResponse({
+    description: 'Trip with the given "id" doesn\'t exist in the database',
+  })
+  @ApiBadRequestResponse({ description: 'Bad request' })
+  @UseGuards(AuthGuard())
+  @Delete('cancel/:id')
+  cancel(
+    @Param() params: HandlerParams,
+    @Headers('authorization') auth: string,
+  ): Observable<TripEntity> {
+    return this._tripsService.cancel(params.id, auth);
+  }
+
+  /**
+   * Handler to answer in to POST /trips/:id route
+   *
+   * @param {HandlerParams} params list of route params to take person id
+   *
+   * @returns Observable<TripEntity[] | void>
+   */
+  @ApiOkResponse({
+    description: 'Return a trip',
+    type: TripEntity,
+  })
+  @ApiNotFoundResponse({
+    description: 'Trip with the given "id" doesn\'t exist in the database',
+  })
+  @ApiBadRequestResponse({ description: 'Bad request' })
+  @UseGuards(AuthGuard())
+  @Put('demand/:id')
+  demand(
+    @Param() params: HandlerParams,
+    @Headers('authorization') auth: string,
+  ): Observable<TripEntity | void> {
+    return this._tripsService.demand(params.id, auth);
   }
 }

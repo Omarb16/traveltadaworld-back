@@ -21,6 +21,8 @@ import {
 import { Trip } from './trip.shema';
 import * as moment from 'moment';
 import * as config from 'config';
+import { TripTravelerEntity } from './entities/trip-traveler.entity';
+import { TripFunderEntity } from './entities/trip-funder.entity';
 const fs = require('fs');
 
 @Injectable()
@@ -73,7 +75,7 @@ export class TripsService {
    *
    * @returns {Observable<TripEntity[]>}
    */
-  findUserTrips = (auth: string): Observable<TripEntity[]> => {
+  findUserTrips = (auth: string): Observable<TripFunderEntity[]> => {
     const userId = this._jwtService.decode(auth.replace('Bearer ', '')).sub;
     return this._tripsDao.findUserTrips(userId).pipe(
       catchError((e) =>
@@ -92,7 +94,7 @@ export class TripsService {
           } else {
             __.photo = null;
           }
-          return new TripEntity(__);
+          return new TripFunderEntity(__);
         }),
       ),
       defaultIfEmpty(undefined),
@@ -105,7 +107,7 @@ export class TripsService {
    *
    * @returns {Observable<TripEntity[]>}
    */
-  findTravelerTrips = (auth: string): Observable<TripEntity[]> => {
+  findTravelerTrips = (auth: string): Observable<TripTravelerEntity[]> => {
     const userId = this._jwtService.decode(auth.replace('Bearer ', '')).sub;
     return this._tripsDao.findTravelerTrips(userId).pipe(
       catchError((e) =>
@@ -124,7 +126,7 @@ export class TripsService {
           } else {
             __.photo = null;
           }
-          return new TripEntity(__);
+          return new TripTravelerEntity(__);
         }),
       ),
       defaultIfEmpty(undefined),
@@ -174,8 +176,8 @@ export class TripsService {
     auth: string,
   ): Observable<TripEntity> => {
     trip.createdAt = moment().utc().format();
-    trip.createdBy = this._jwtService.verify(auth.replace('Bearer ', '')).sub;
     trip.photo = filename;
+    trip.createdBy = this._jwtService.verify(auth.replace('Bearer ', '')).sub;
     return this._tripsDao.create(trip).pipe(
       catchError((e) =>
         throwError(() => new UnprocessableEntityException(e.message)),
@@ -224,12 +226,59 @@ export class TripsService {
    * Returns one trip of the list matching id in parameter
    *
    * @param {string} id of the trip
+   * @param {TripDto} trip of the trip
+   *
+   * @returns {Observable<TripEntity>}
+   */
+  cancel = (id: string, auth: string): Observable<TripEntity> => {
+    const userId = this._jwtService.verify(auth.replace('Bearer ', '')).sub;
+    return this._tripsDao.cancel(id, userId).pipe(
+      catchError((e) =>
+        throwError(() => new UnprocessableEntityException(e.message)),
+      ),
+      mergeMap((_: Trip) =>
+        !!_
+          ? of(new TripEntity(_))
+          : throwError(
+              () => new NotFoundException(`Trip with id '${id}' not found`),
+            ),
+      ),
+    );
+  };
+
+  /**
+   * Returns one trip of the list matching id in parameter
+   *
+   * @param {string} id of the trip
    *
    * @returns {Observable<void>}
    */
   delete = (id: string, auth: string): Observable<void> => {
     const userId = this._jwtService.verify(auth.replace('Bearer ', '')).sub;
     return this._tripsDao.delete(id, userId).pipe(
+      catchError((e) =>
+        throwError(() => new UnprocessableEntityException(e.message)),
+      ),
+      mergeMap((_: Trip) =>
+        !!_
+          ? of(undefined)
+          : throwError(
+              () => new NotFoundException(`Trip with id '${id}' not found`),
+            ),
+      ),
+    );
+  };
+
+  /**
+   * Returns one trip of the list matching id in parameter
+   *
+   * @param {string} id of the trip
+   *
+   * @returns {Observable<void>}
+   */
+  demand = (id: string, auth: string): Observable<void> => {
+    const userId = this._jwtService.verify(auth.replace('Bearer ', '')).sub;
+    return this._tripsDao.demand(id, userId).pipe(
       catchError((e) =>
         throwError(() => new UnprocessableEntityException(e.message)),
       ),

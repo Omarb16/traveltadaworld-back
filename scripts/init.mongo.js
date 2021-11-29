@@ -81,40 +81,29 @@ db.getCollection('trips').insertMany([
   {
     title: 'Title',
     description: 'Descreiption',
-    destination: {
-      city: 'Lyon',
-      country: 'France',
-    },
+    city: 'Lyon',
+    country: 'France',
     photo: 'https://randomuser.me/portraits/women/59.jpg',
   },
   {
     title: 'afvbrb',
     description: 'zzafadv',
-
-    destination: {
-      city: 'Paris',
-      country: 'France',
-    },
+    city: 'Paris',
+    country: 'France',
     photo: 'https://randomuser.me/portraits/women/59.jpg',
   },
   {
     title: 'Titlzvrbne',
     description: 'vvvdce',
-
-    destination: {
-      city: 'Madrid',
-      country: 'Espagne',
-    },
+    city: 'Madrid',
+    country: 'Espagne',
     photo: 'https://randomuser.me/portraits/women/59.jpg',
   },
   {
     title: 'zee',
     description: 'Description',
-
-    destination: {
-      city: 'Nancy',
-      country: 'France',
-    },
+    city: 'Nancy',
+    country: 'France',
     photo: 'https://randomuser.me/portraits/women/59.jpg',
   },
 ]);

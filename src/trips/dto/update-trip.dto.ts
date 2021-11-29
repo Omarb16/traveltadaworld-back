@@ -8,7 +8,6 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { DestinationDto } from './destination.dto';
 
 export class UpdateTripDto {
   @ApiProperty({
@@ -30,14 +29,22 @@ export class UpdateTripDto {
   description: string;
 
   @ApiProperty({
-    name: 'destination',
-    description: 'destination',
-    example: 'Destination',
+    name: 'city',
+    description: 'city',
+    example: 'city',
   })
-  @IsInstance(DestinationDto)
-  @ValidateNested()
-  @Type(() => DestinationDto)
-  destination: string;
+  @IsString()
+  @IsNotEmpty()
+  city: string;
+
+  @ApiProperty({
+    name: 'country',
+    description: 'country',
+    example: 'country',
+  })
+  @IsString()
+  @IsNotEmpty()
+  country: string;
 
   @ApiProperty({
     name: 'photo',
