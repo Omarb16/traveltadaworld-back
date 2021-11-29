@@ -43,7 +43,10 @@ export class UsersService {
         throwError(() => new UnprocessableEntityException(e.message)),
       ),
       mergeMap((_: User) => {
-        var check = bcrypt.compareSync(user.password, _.password);
+        var check = bcrypt.compareSync(
+          user.password,
+          _?.password ? _?.password : '',
+        );
         if (!check) {
           return throwError(
             () => new BadRequestException(`Wrong email or password`),

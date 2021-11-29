@@ -5,15 +5,6 @@ import { UserEntity } from './user.entity';
 @Exclude()
 export class AccessToken {
   @ApiProperty({
-    name: 'id',
-    description: 'Unique identifier in the database',
-    example: '5763cd4dc378a38ecd387737',
-  })
-  @Expose()
-  @Type(() => String)
-  id: string;
-
-  @ApiProperty({
     name: 'access_token',
     description: 'Access Token',
     example: '',
