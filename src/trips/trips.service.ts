@@ -1,3 +1,4 @@
+import { TripQuery } from './../validators/trip-query';
 import { JwtService } from '@nestjs/jwt';
 import { CreateTripDto } from './dto/create-trip.dto';
 import { UpdateTripDto } from './dto/update-trip.dto';
@@ -77,8 +78,8 @@ export class TripsService {
    *
    * @returns {Observable<TripEntity[]>}
    */
-  findAll = (): Observable<TripEntity[]> =>
-    this._tripsDao.findAll().pipe(
+  findAll = (query: TripQuery): Observable<TripEntity[]> =>
+    this._tripsDao.findAll(query).pipe(
       catchError((e) =>
         throwError(() => new UnprocessableEntityException(e.message)),
       ),

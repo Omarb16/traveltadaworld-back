@@ -1,4 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { TripQuery } from './../validators/trip-query';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { defaultIfEmpty, from, Observable } from 'rxjs';
@@ -39,18 +40,27 @@ export class TripsDao {
    *
    * @return {Observable<Trip[] | void>}
    */
-  findAll = (): Observable<Trip[] | void> =>
-    from(this._tripModel.find()).pipe(
+  findAll = (query: TripQuery): Observable<Trip[] | void> => {
+    var search = {};
+    if (query.title) search['title'] = { $regex: query.title, $options: 'i' };
+    if (query.city)
+      search['destination.city'] = { $regex: query.city, $options: 'i' };
+    if (query.country)
+      search['destination.country'] = { $regex: query.country, $options: 'i' };
+
+    Logger.log(search);
+    return from(this._tripModel.find(search)).pipe(
       filter((docs: TripDocument[]) => !!docs && docs.length > 0),
       map((docs: TripDocument[]) => docs.map((_: TripDocument) => _.toJSON())),
-      defaultIfEmpty(undefined),
+      defaultIfEmpty([]),
     );
+  };
 
   findUserTrips = (userId: string): Observable<Trip[] | void> =>
     from(this._tripModel.find({ createdBy: userId })).pipe(
       filter((docs: TripDocument[]) => !!docs && docs.length > 0),
       map((docs: TripDocument[]) => docs.map((_: TripDocument) => _.toJSON())),
-      defaultIfEmpty(undefined),
+      defaultIfEmpty([]),
     );
 
   /**

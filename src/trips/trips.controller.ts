@@ -12,6 +12,8 @@ import {
   Headers,
   UseInterceptors,
   UseGuards,
+  Query,
+  Logger,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -25,6 +27,7 @@ import { HandlerParams } from 'src/validators/handler-params';
 import { CreateTripDto } from './dto/create-trip.dto';
 import { UpdateTripDto } from './dto/update-trip.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { TripQuery } from 'src/validators/trip-query';
 
 @ApiTags('trips')
 @Controller('trips')
@@ -69,8 +72,8 @@ export class TripsController {
   })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @Get()
-  findAll(): Observable<TripEntity[]> {
-    return this._tripsService.findAll();
+  findAll(@Query() query: TripQuery): Observable<TripEntity[]> {
+    return this._tripsService.findAll(query);
   }
 
   /**
