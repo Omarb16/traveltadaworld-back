@@ -128,7 +128,7 @@ export class TripEntity {
   })
   @Expose()
   @Type(() => Number)
-  price: number;
+  price: string;
 
   @ApiProperty({
     name: 'createdBy',

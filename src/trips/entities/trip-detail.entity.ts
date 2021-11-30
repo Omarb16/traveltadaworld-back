@@ -99,7 +99,7 @@ export class TripDetailEntity {
     description: 'Created By',
     example: '61a1885b50cf46588632569a',
   })
-  @Exclude()
+  @Expose()
   @Type(() => String)
   createdBy: string;
 
@@ -128,7 +128,7 @@ export class TripDetailEntity {
   })
   @Expose()
   @Type(() => Number)
-  price: number;
+  price: string;
 
   @ApiProperty({
     name: 'createdBy',

@@ -136,10 +136,10 @@ export class Trip {
   dateEnd: string;
 
   @Prop({
-    type: Number,
+    type: String,
     required: false,
   })
-  price: number;
+  price: string;
 
   @Prop({
     type: String,

@@ -57,7 +57,6 @@ export class NotificationsService {
   update = (
     id: string,
     notification: UpdateNotificationDto,
-    auth: string,
   ): Observable<NotificationEntity> => {
     return this._notificationsDao.update(id, notification).pipe(
       catchError((e) =>

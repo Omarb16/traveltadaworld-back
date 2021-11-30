@@ -106,9 +106,9 @@ export class UpdateTripDto {
     description: 'Created By',
     example: '61a1885b50cf46588632569a',
   })
-  @IsNumber()
+  @IsString()
   @IsNotEmpty()
-  price: number;
+  price: string;
 
   @ApiProperty({
     name: 'createdBy',

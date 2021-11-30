@@ -92,7 +92,7 @@ export class TripFunderEntity {
     description: 'Created By',
     example: '61a1885b50cf46588632569a',
   })
-  @Exclude()
+  @Expose()
   @Type(() => String)
   createdNameBy: string;
 
@@ -121,7 +121,7 @@ export class TripFunderEntity {
   })
   @Expose()
   @Type(() => Number)
-  price: number;
+  price: string;
 
   @ApiProperty({
     name: 'createdBy',

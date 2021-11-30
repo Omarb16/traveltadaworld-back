@@ -11,6 +11,7 @@ import {
   UseInterceptors,
   Body,
   Headers,
+  Delete,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -50,8 +51,12 @@ export class NotificationsController {
     type: NotificationEntity,
   })
   @ApiBadRequestResponse({ description: 'Parameter provided is not good' })
+  @UseGuards(AuthGuard())
   @Post()
-  logIn(@Body() createNotificationDto: CreateNotificationDto) {
+  create(
+    @Body() createNotificationDto: CreateNotificationDto,
+  ): Observable<NotificationEntity> {
+    console.log(CreateNotificationDto);
     return this._notificationsService.create(createNotificationDto);
   }
 
@@ -73,13 +78,8 @@ export class NotificationsController {
   update(
     @Param() params: HandlerParams,
     @Body() updateNotificationDto: UpdateNotificationDto,
-    @Headers('authorization') auth: string,
   ): Observable<NotificationEntity> {
-    return this._notificationsService.update(
-      params.id,
-      updateNotificationDto,
-      auth,
-    );
+    return this._notificationsService.update(params.id, updateNotificationDto);
   }
 
   /**
@@ -121,7 +121,7 @@ export class NotificationsController {
   })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @UseGuards(AuthGuard())
-  @Get(':id')
+  @Delete(':id')
   delete(@Param() params: HandlerParams): Observable<NotificationEntity> {
     return this._notificationsService.delete(params.id);
   }
