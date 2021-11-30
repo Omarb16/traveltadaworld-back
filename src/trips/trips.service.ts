@@ -1,4 +1,4 @@
-import { TravelerEntity } from './entities/traveler.entity ';
+import { switchMap } from 'rxjs/operators';
 import { UsersDao } from './../users/users.dao';
 import { TripQuery } from './../validators/trip-query';
 import { JwtService } from '@nestjs/jwt';
@@ -15,7 +15,6 @@ import {
 import {
   catchError,
   defaultIfEmpty,
-  flatMap,
   map,
   mergeMap,
   Observable,
@@ -27,7 +26,6 @@ import * as moment from 'moment';
 import * as config from 'config';
 import { TripTravelerEntity } from './entities/trip-traveler.entity';
 import { TripFunderEntity } from './entities/trip-funder.entity';
-import { User } from 'src/users/user.shema';
 import { TripDetailEntity } from './entities/trip-detail.entity';
 const fs = require('fs');
 
@@ -58,7 +56,6 @@ export class TripsService {
         throwError(() => new UnprocessableEntityException(e.message)),
       ),
       mergeMap((_: Trip) => {
-        console.log(_.travelers);
         if (fs.existsSync('public/' + _.photo)) {
           _.photo =
             'http://' +
@@ -142,6 +139,13 @@ export class TripsService {
             __.photo = null;
           }
           return new TripFunderEntity(__);
+          // return this._userDao.find(t.createdBy).pipe(
+          //   map((user: User) => {
+          //     t.createdBy = user.firstname + ' ' + user.lastname;
+          //     console.log(t);
+          //     return t;
+          //   }),
+          // );
         }),
       ),
       defaultIfEmpty(undefined),
@@ -161,7 +165,7 @@ export class TripsService {
         throwError(() => new UnprocessableEntityException(e.message)),
       ),
       map((_: Trip[]) =>
-        _.map(async (__: Trip) => {
+        _.map((__: Trip) => {
           if (fs.existsSync('public/' + __.photo)) {
             __.photo =
               'http://' +
@@ -173,12 +177,14 @@ export class TripsService {
           } else {
             __.photo = null;
           }
-          return this._userDao.find(__.createdBy).pipe(
-            map((user: User) => {
-              __.createdBy = user.firstname + ' ' + user.lastname;
-              return new TripTravelerEntity(__);
-            }),
-          );
+          return new TripTravelerEntity(__);
+          // return this._userDao.find(t.createdBy).pipe(
+          //   map((user: User) => {
+          //     t.createdBy = user.firstname + ' ' + user.lastname;
+          //     console.log(t);
+          //     return t;
+          //   }),
+          // );
         }),
       ),
       defaultIfEmpty(undefined),
@@ -315,7 +321,7 @@ export class TripsService {
    */
   delete = (id: string, auth: string): Observable<void> => {
     const userId = this._jwtService.verify(auth.replace('Bearer ', '')).sub;
-    return this._tripsDao.delete(id, userId).pipe(
+    return this._tripsDao.delete(id).pipe(
       catchError((e) =>
         throwError(() => new UnprocessableEntityException(e.message)),
       ),

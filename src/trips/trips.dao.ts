@@ -74,7 +74,7 @@ export class TripsDao {
    */
   findTravelerTrips = (userId: string): Observable<Trip[] | void> =>
     from(
-      this._tripModel.find({ travelers: { $all: [new Traveler(userId)] } }),
+      this._tripModel.find({ travelers: { $elemMatch: { traveler: userId } } }),
     ).pipe(
       filter((docs: TripDocument[]) => !!docs && docs.length > 0),
       map((docs: TripDocument[]) => docs.map((_: TripDocument) => _.toJSON())),
@@ -126,10 +126,8 @@ export class TripsDao {
    *
    * @return {Observable<void>}
    */
-  delete = (id: string, userId: string): Observable<Trip | void> => {
-    return from(
-      this._tripModel.findOneAndRemove({ id, createdBy: userId }),
-    ).pipe(
+  delete = (id: string): Observable<Trip | void> => {
+    return from(this._tripModel.findByIdAndRemove(id)).pipe(
       filter((doc: TripDocument) => !!doc),
       map((doc: TripDocument) => doc.toJSON()),
       defaultIfEmpty(undefined),

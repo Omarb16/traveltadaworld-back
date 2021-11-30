@@ -298,7 +298,7 @@ export class TripsController {
   })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @UseGuards(AuthGuard())
-  @Put('demand/:id')
+  @Put('accept/:id')
   accept(
     @Param() params: HandlerParams,
     @Headers('authorization') auth: string,
@@ -323,7 +323,7 @@ export class TripsController {
   })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @UseGuards(AuthGuard())
-  @Put('demand/:id')
+  @Put('decline/:id')
   decline(
     @Param() params: HandlerParams,
     @Headers('authorization') auth: string,
