@@ -1,51 +1,16 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
-  IsEmail,
   IsNotEmpty,
   IsOptional,
   IsPhoneNumber,
   IsString,
-  Matches,
 } from 'class-validator';
-import { Match } from 'src/decorators/match.decorator';
 import { NotificationEntity } from '../entities/notification.entity';
 
-export class CreateNotificationDto {
+export class UpdateNotificationDto {
   @ApiProperty({
-    name: 'email',
-    description: 'Email',
-    example: 'Mclaughlin.Cochran@undefined.com',
-  })
-  @IsEmail()
-  email: string;
-
-  @ApiProperty({
-    name: 'password',
-    description: 'Password',
-    example: 'aaAA12**',
-  })
-  @Matches('^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$')
-  password: string;
-
-  @ApiProperty({
-    name: 'repassword',
-    description: 'RePassword',
-    example: 'aaAA12**',
-  })
-  @IsString()
-  @IsNotEmpty()
-  @Match('password')
-  repassword: string;
-
-  @ApiProperty({
-    type: 'string',
-    format: 'binary',
-  })
-  file: Express.Multer.File;
-
-  @ApiProperty({
-    name: 'firstname',
-    description: 'Firstname',
+    name: 'fistname',
+    description: 'Fistname',
     example: 'Mclaughlin',
   })
   @IsString()
@@ -71,12 +36,21 @@ export class CreateNotificationDto {
   photo: string;
 
   @ApiProperty({
+    name: 'description',
+    description: 'Description',
+    example: 'Description',
+  })
+  @IsString()
+  @IsOptional()
+  description: string;
+
+  @ApiProperty({
     name: 'birthDate',
     description: 'Birthdate in timestamp format',
     example: '101343600000',
   })
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   birthDate: string;
 
   @ApiProperty({
@@ -85,7 +59,7 @@ export class CreateNotificationDto {
     example: 'Address',
   })
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   address: string;
 
   @ApiProperty({
@@ -94,7 +68,7 @@ export class CreateNotificationDto {
     example: 'Nancy',
   })
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   city: string;
 
   @ApiProperty({
@@ -112,7 +86,7 @@ export class CreateNotificationDto {
     example: '54500',
   })
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   postalCode: string;
 
   @ApiProperty({
@@ -121,16 +95,8 @@ export class CreateNotificationDto {
     example: '+33610012222',
   })
   @IsPhoneNumber()
-  phone: string;
-
-  @ApiProperty({
-    name: 'createdAt',
-    description: 'Created At',
-    example: '',
-  })
   @IsOptional()
-  @IsString()
-  createdAt: string;
+  phone: string;
 
   @ApiProperty({
     name: 'createdBy',
@@ -140,6 +106,24 @@ export class CreateNotificationDto {
   @IsOptional()
   @IsString()
   createdBy: string;
+
+  @ApiProperty({
+    name: 'updatedAt',
+    description: 'Updated At',
+    example: '',
+  })
+  @IsOptional()
+  @IsString()
+  updatedAt: string;
+
+  @ApiProperty({
+    name: 'updatedBy',
+    description: 'Updated By',
+    example: '61a24cfcbf197afd4214acae',
+  })
+  @IsOptional()
+  @IsString()
+  updatedBy: string;
 
   constructor(partial: Partial<NotificationEntity>) {
     Object.assign(this, partial);

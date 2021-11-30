@@ -3,6 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
   IsInstance,
   IsNotEmpty,
+  IsNumber,
   IsOptional,
   IsString,
   ValidateNested,
@@ -81,6 +82,42 @@ export class UpdateTripDto {
   @IsString()
   @IsOptional()
   updatedBy: string;
+
+  @ApiProperty({
+    name: 'createdBy',
+    description: 'Created By',
+    example: '61a1885b50cf46588632569a',
+  })
+  @IsString()
+  @IsNotEmpty()
+  dateBegin: string;
+
+  @ApiProperty({
+    name: 'createdBy',
+    description: 'Created By',
+    example: '61a1885b50cf46588632569a',
+  })
+  @IsString()
+  @IsNotEmpty()
+  dateEnd: string;
+
+  @ApiProperty({
+    name: 'createdBy',
+    description: 'Created By',
+    example: '61a1885b50cf46588632569a',
+  })
+  @IsNumber()
+  @IsNotEmpty()
+  price: number;
+
+  @ApiProperty({
+    name: 'createdBy',
+    description: 'Created By',
+    example: '61a1885b50cf46588632569a',
+  })
+  @IsString()
+  @IsNotEmpty()
+  detail: string;
 
   constructor(partial: Partial<TripEntity>) {
     Object.assign(this, partial);

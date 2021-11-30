@@ -122,6 +122,30 @@ export class Trip {
     required: false,
   })
   updatedBy: string;
+
+  @Prop({
+    type: String,
+    required: false,
+  })
+  dateBegin: string;
+
+  @Prop({
+    type: String,
+    required: false,
+  })
+  dateEnd: string;
+
+  @Prop({
+    type: Number,
+    required: false,
+  })
+  price: number;
+
+  @Prop({
+    type: String,
+    required: false,
+  })
+  detail: string;
 }
 
 export const TripSchema = SchemaFactory.createForClass(Trip);

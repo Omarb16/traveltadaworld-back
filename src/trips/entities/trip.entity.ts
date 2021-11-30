@@ -103,6 +103,42 @@ export class TripEntity {
   @Type(() => String)
   updatedBy: string;
 
+  @ApiProperty({
+    name: 'createdBy',
+    description: 'Created By',
+    example: '61a1885b50cf46588632569a',
+  })
+  @Expose()
+  @Type(() => String)
+  dateBegin: string;
+
+  @ApiProperty({
+    name: 'createdBy',
+    description: 'Created By',
+    example: '61a1885b50cf46588632569a',
+  })
+  @Expose()
+  @Type(() => String)
+  dateEnd: string;
+
+  @ApiProperty({
+    name: 'createdBy',
+    description: 'Created By',
+    example: '61a1885b50cf46588632569a',
+  })
+  @Expose()
+  @Type(() => Number)
+  price: number;
+
+  @ApiProperty({
+    name: 'createdBy',
+    description: 'Created By',
+    example: '61a1885b50cf46588632569a',
+  })
+  @Expose()
+  @Type(() => String)
+  detail: string;
+
   constructor(partial: Partial<TripEntity>) {
     Object.assign(this, partial);
   }

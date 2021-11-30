@@ -1,6 +1,6 @@
 import * as mongoose from 'mongoose';
 import { Document } from 'mongoose';
-import { Prop, raw, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 export type NotificationDocument = Notification & Document;
 
@@ -24,31 +24,30 @@ export class Notification {
   })
   title: string;
 
-
   @Prop({
     type: String,
-    required: false,
+    required: true,
     trim: true,
   })
-  description: string;
+  content: string;
 
   @Prop({
     type: Boolean,
-    required: false,
+    required: true,
+    trim: true,
   })
-  delete?: boolean;
+  seen: boolean;
 
   @Prop({
     type: String,
-    required: false,
+    required: true,
+    trim: true,
   })
-  createdBy: string;
+  userId: string;
 
-  constructor() {
-    this.delete = null;
-
+  constructor(partial: Partial<Notification>) {
+    Object.assign(this, partial);
   }
-
 }
 
-export const TripSchema = SchemaFactory.createForClass(Notification);
+export const NotificationSchema = SchemaFactory.createForClass(Notification);

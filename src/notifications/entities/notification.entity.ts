@@ -1,5 +1,5 @@
-import { Exclude, Expose, Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
+import { Exclude, Expose, Type } from 'class-transformer';
 
 @Exclude()
 export class NotificationEntity {
@@ -14,21 +14,39 @@ export class NotificationEntity {
 
   @ApiProperty({
     name: 'title',
-    description: 'Title',
-    example: 'Title',
+    description: 'title',
+    example: 'title',
   })
   @Expose()
   @Type(() => String)
   title: string;
 
   @ApiProperty({
-    name: 'description',
-    description: 'Description',
-    example: 'Description',
+    name: 'title',
+    description: 'title',
+    example: 'title',
   })
   @Expose()
   @Type(() => String)
-  description: string;
+  content: string;
+
+  @ApiProperty({
+    name: 'title',
+    description: 'title',
+    example: 'title',
+  })
+  @Expose()
+  @Type(() => Boolean)
+  seen: boolean;
+
+  @ApiProperty({
+    name: 'title',
+    description: 'title',
+    example: 'title',
+  })
+  @Expose()
+  @Type(() => String)
+  userId: string;
 
   constructor(partial: Partial<NotificationEntity>) {
     Object.assign(this, partial);

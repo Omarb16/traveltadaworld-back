@@ -14,7 +14,6 @@ import { User, UserSchema } from 'src/users/user.shema';
   imports: [
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
     MongooseModule.forFeature([{ name: Trip.name, schema: TripSchema }]),
-    MongooseModule.forFeature([{ name: Trip.name, schema: TripSchema }]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
       secret: Config.get<string>('jwt.secret'),
