@@ -119,6 +119,7 @@ export class TripsService {
    *
    *
    * @returns {Observable<TripEntity[]>}
+   *
    */
   findUserTrips = (auth: string): Observable<TripFunderEntity[]> => {
     const userId = this._jwtService.decode(auth.replace('Bearer ', '')).sub;
