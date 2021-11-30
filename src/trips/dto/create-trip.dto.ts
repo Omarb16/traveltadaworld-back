@@ -2,12 +2,13 @@ import { TripEntity } from '../entities/trip.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsInstance,
+  isNotEmpty,
   IsNotEmpty,
   IsOptional,
   IsString,
   ValidateNested,
 } from 'class-validator';
-import { Type } from 'class-transformer';
+import { User } from 'src/users/user.shema';
 
 export class CreateTripDto {
   @ApiProperty({
@@ -72,6 +73,15 @@ export class CreateTripDto {
   @IsString()
   @IsOptional()
   createdBy: string;
+
+  @ApiProperty({
+    name: 'createdBy',
+    description: 'Created By',
+    example: '61a24cfcbf197afd4214acae',
+  })
+  @IsString()
+  @IsNotEmpty()
+  createdNameBy: string;
 
   constructor(partial: Partial<TripEntity>) {
     Object.assign(this, partial);

@@ -1,5 +1,7 @@
+import { Traveler } from './../trip.shema';
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose, Type } from 'class-transformer';
+import { TravelerEntity } from './traveler.entity ';
 
 @Exclude()
 export class TripTravelerEntity {
@@ -74,6 +76,15 @@ export class TripTravelerEntity {
   @Expose()
   @Type(() => String)
   createdBy: string;
+
+  @ApiProperty({
+    name: 'createdBy',
+    description: 'Created By',
+    example: '61a1885b50cf46588632569a',
+  })
+  @Expose()
+  @Type(() => TravelerEntity)
+  travelers: TravelerEntity[];
 
   constructor(partial: Partial<TripTravelerEntity>) {
     Object.assign(this, partial);

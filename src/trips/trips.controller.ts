@@ -1,3 +1,4 @@
+import { HandlerName } from './../validators/handler-name';
 import { TripFunderEntity } from './entities/trip-funder.entity';
 import { TripsService } from './trips.service';
 import { TripEntity } from './entities/trip.entity';
@@ -277,9 +278,10 @@ export class TripsController {
   @Put('demand/:id')
   demand(
     @Param() params: HandlerParams,
+    @Body() body: HandlerName,
     @Headers('authorization') auth: string,
   ): Observable<TripEntity | void> {
-    return this._tripsService.demand(params.id, auth);
+    return this._tripsService.demand(params.id, body.name, auth);
   }
 
   /**

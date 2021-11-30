@@ -1,3 +1,4 @@
+import { User } from './../users/user.shema';
 import { TripQuery } from './../validators/trip-query';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
@@ -7,6 +8,7 @@ import { filter, map, tap } from 'rxjs/operators';
 import { CreateTripDto } from './dto/create-trip.dto';
 import { UpdateTripDto } from './dto/update-trip.dto';
 import { Trip, TripDocument, Traveler } from './trip.shema';
+const ObjectId = require('mongodb').ObjectID;
 
 @Injectable()
 export class TripsDao {
@@ -59,7 +61,7 @@ export class TripsDao {
    *
    * @return {Observable<Trip[] | void>}
    */
-  findUserTrips = (userId: string): Observable<Trip[] | void> =>
+  findUserTrips = (userId: string): Observable<Trip[]> =>
     from(this._tripModel.find({ createdBy: userId })).pipe(
       filter((docs: TripDocument[]) => !!docs && docs.length > 0),
       map((docs: TripDocument[]) => docs.map((_: TripDocument) => _.toJSON())),
@@ -74,7 +76,11 @@ export class TripsDao {
    */
   findTravelerTrips = (userId: string): Observable<Trip[] | void> =>
     from(
-      this._tripModel.find({ travelers: { $elemMatch: { traveler: userId } } }),
+      this._tripModel.find({
+        travelers: {
+          $elemMatch: { user: userId, decline: null },
+        },
+      }),
     ).pipe(
       filter((docs: TripDocument[]) => !!docs && docs.length > 0),
       map((docs: TripDocument[]) => docs.map((_: TripDocument) => _.toJSON())),
@@ -109,7 +115,7 @@ export class TripsDao {
     userId: string,
   ): Observable<Trip | void> =>
     from(
-      this._tripModel.findOneAndUpdate({ id, createdBy: userId }, trip, {
+      this._tripModel.findOneAndUpdate({ _id: id, createdBy: userId }, trip, {
         new: true,
         runValidators: true,
       }),
@@ -126,8 +132,8 @@ export class TripsDao {
    *
    * @return {Observable<void>}
    */
-  delete = (id: string): Observable<Trip | void> => {
-    return from(this._tripModel.findByIdAndRemove(id)).pipe(
+  delete = (id: string, userId: string): Observable<Trip | void> => {
+    return from(this._tripModel.findOneAndRemove({ _id: id })).pipe(
       filter((doc: TripDocument) => !!doc),
       map((doc: TripDocument) => doc.toJSON()),
       defaultIfEmpty(undefined),

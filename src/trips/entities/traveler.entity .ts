@@ -1,5 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose, Type } from 'class-transformer';
+import { User } from 'src/users/user.shema';
+import * as mongoose from 'mongoose';
 
 @Exclude()
 export class TravelerEntity {
@@ -10,7 +12,16 @@ export class TravelerEntity {
   })
   @Expose()
   @Type(() => String)
-  traveler: string;
+  user: string;
+
+  @ApiProperty({
+    name: 'travler',
+    description: 'travler',
+    example: 'travler',
+  })
+  @Expose()
+  @Type(() => String)
+  name: string;
 
   @ApiProperty({
     name: 'accept',
@@ -19,7 +30,7 @@ export class TravelerEntity {
   })
   @Expose()
   @Type(() => Boolean)
-  accept: boolean;
+  accept?: boolean;
 
   @ApiProperty({
     name: 'decline',
@@ -28,7 +39,7 @@ export class TravelerEntity {
   })
   @Expose()
   @Type(() => Boolean)
-  decline: boolean;
+  decline?: boolean;
 
   constructor(partial: Partial<TravelerEntity>) {
     Object.assign(this, partial);

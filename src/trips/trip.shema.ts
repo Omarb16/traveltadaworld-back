@@ -1,22 +1,21 @@
+import { User, UserSchema } from './../users/user.shema';
 import * as mongoose from 'mongoose';
 import { Document } from 'mongoose';
 import { Prop, raw, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 export type TripDocument = Trip & Document;
 
-@Schema({
-  toJSON: {
-    virtuals: true,
-  },
-  versionKey: false,
-})
+@Schema()
 export class Traveler {
   @Prop({
     type: String,
-    required: true,
-    trim: true,
   })
-  traveler: string;
+  user: string;
+
+  @Prop({
+    type: String,
+  })
+  name: string;
 
   @Prop({
     type: Boolean,
@@ -30,12 +29,12 @@ export class Traveler {
   })
   decline?: boolean;
 
-  constructor(traveler: string) {
-    this.traveler = traveler;
-    this.accept = null;
-    this.decline = null;
+  constructor(partial: Partial<Traveler>) {
+    Object.assign(this, partial);
   }
 }
+
+export const TravelerSchema = SchemaFactory.createForClass(Traveler);
 
 @Schema({
   toJSON: {
@@ -90,7 +89,7 @@ export class Trip {
   photo: string;
 
   @Prop({
-    type: Array,
+    type: [TravelerSchema],
   })
   travelers: Traveler[];
 
@@ -105,6 +104,12 @@ export class Trip {
     required: false,
   })
   createdBy: string;
+
+  @Prop({
+    type: String,
+    required: false,
+  })
+  createdNameBy: string;
 
   @Prop({
     type: Date,

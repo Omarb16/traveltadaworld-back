@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose, Type } from 'class-transformer';
+import { User } from 'src/users/user.shema';
 
 @Exclude()
 export class TripEntity {
@@ -74,6 +75,15 @@ export class TripEntity {
   @Exclude()
   @Type(() => String)
   createdBy: string;
+
+  @ApiProperty({
+    name: 'createdBy',
+    description: 'Created By',
+    example: '61a1885b50cf46588632569a',
+  })
+  @Exclude()
+  @Type(() => String)
+  createdNameBy: string;
 
   @ApiProperty({
     name: 'updatedAt',

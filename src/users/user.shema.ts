@@ -7,10 +7,6 @@ export type UserDocument = User & Document;
 @Schema({
   toJSON: {
     virtuals: true,
-    // transform: (doc: any, ret: any) => {
-    //   // delete obsolete data
-    //   delete ret._id;
-    // },
   },
   versionKey: false,
 })
@@ -127,6 +123,10 @@ export class User {
     required: false,
   })
   updatedBy: string;
+
+  constructor(partial: Partial<User>) {
+    Object.assign(this, partial);
+  }
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
