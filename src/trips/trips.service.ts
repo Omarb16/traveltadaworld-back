@@ -376,7 +376,6 @@ export class TripsService {
     userAccepted: string,
     auth: string,
   ): Observable<void> => {
-    Logger.log(auth);
     const userId = this._jwtService.decode(auth.replace('Bearer ', '')).sub;
     return this._tripsDao.find(id).pipe(
       catchError((e) =>

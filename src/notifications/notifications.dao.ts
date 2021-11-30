@@ -65,8 +65,8 @@ export class NotificationsDao {
    *
    * @return {Observable<Notification | void>}
    */
-  find = (id: string): Observable<Notification | void> =>
-    from(this._notificationModel.findById(id)).pipe(
+  find = (userId: string): Observable<Notification[] | void> =>
+    from(this._notificationModel.find({ userId })).pipe(
       filter((doc: NotificationDocument) => !!doc),
       map((doc: NotificationDocument) => doc.toJSON()),
       defaultIfEmpty(undefined),
@@ -80,7 +80,24 @@ export class NotificationsDao {
    * @return {Observable<void>}
    */
   delete = (id: string, userId: string): Observable<Notification | void> => {
-    return from(this._notificationModel.findOneAndRemove({ _id: id })).pipe(
+    return from(
+      this._notificationModel.findOneAndRemove({ _id: id, userId }),
+    ).pipe(
+      filter((doc: NotificationDocument) => !!doc),
+      map((doc: NotificationDocument) => doc.toJSON()),
+      defaultIfEmpty(undefined),
+    );
+  };
+
+  /**
+   * Call mongoose method, call toJSON on each result and returns TripModel[] or undefined
+   *
+   * @param {string} id
+   *
+   * @return {Observable<void>}
+   */
+  count = (userId: string): Observable<Notification | void> => {
+    return from(this._notificationModel.count({ userId })).pipe(
       filter((doc: NotificationDocument) => !!doc),
       map((doc: NotificationDocument) => doc.toJSON()),
       defaultIfEmpty(undefined),
