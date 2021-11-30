@@ -126,7 +126,7 @@ export class TripsService {
       catchError((e) =>
         throwError(() => new UnprocessableEntityException(e.message)),
       ),
-      mergeMap((_: Trip[]) =>
+      map((_: Trip[]) =>
         _.map((__: Trip) => {
           if (fs.existsSync('public/' + __.photo)) {
             __.photo =
@@ -141,7 +141,6 @@ export class TripsService {
           }
           if (__.travelers)
             __.travelers = __.travelers.filter((e) => e.decline == null);
-          console.log(__);
           return new TripFunderEntity(__);
         }),
       ),
@@ -161,7 +160,7 @@ export class TripsService {
       catchError((e) =>
         throwError(() => new UnprocessableEntityException(e.message)),
       ),
-      mergeMap((_: Trip[]) =>
+      map((_: Trip[]) =>
         _.map((__: Trip) => {
           if (fs.existsSync('public/' + __.photo)) {
             __.photo =

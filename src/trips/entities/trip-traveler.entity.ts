@@ -83,8 +83,8 @@ export class TripTravelerEntity {
     example: '61a1885b50cf46588632569a',
   })
   @Expose()
-  @Type(() => TravelerEntity)
-  travelers: TravelerEntity[];
+  @Type(() => String)
+  createdNameBy: string;
 
   constructor(partial: Partial<TripTravelerEntity>) {
     Object.assign(this, partial);
