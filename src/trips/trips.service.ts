@@ -50,7 +50,7 @@ export class TripsService {
    * @returns {Observable<TripEntity>}
    */
   findDetail = (id: string, auth: string): Observable<TripDetailEntity> => {
-    var userId = this._jwtService.verify(auth.replace('Bearer ', '')).sub;
+    var userId = this._jwtService.decode(auth.replace('Bearer ', '')).sub;
     return this._tripsDao.find(id).pipe(
       catchError((e) =>
         throwError(() => new UnprocessableEntityException(e.message)),
@@ -235,7 +235,7 @@ export class TripsService {
   ): Observable<TripEntity> => {
     trip.createdAt = moment().utc().format();
     trip.photo = filename;
-    trip.createdBy = this._jwtService.verify(auth.replace('Bearer ', '')).sub;
+    trip.createdBy = this._jwtService.decode(auth.replace('Bearer ', '')).sub;
     return this._tripsDao.create(trip).pipe(
       catchError((e) =>
         throwError(() => new UnprocessableEntityException(e.message)),
@@ -258,7 +258,7 @@ export class TripsService {
     file: Express.Multer.File,
     auth: string,
   ): Observable<TripEntity> => {
-    const userId = this._jwtService.verify(auth.replace('Bearer ', '')).sub;
+    const userId = this._jwtService.decode(auth.replace('Bearer ', '')).sub;
     if (file) {
       trip.photo = file.filename;
     } else {
@@ -289,7 +289,7 @@ export class TripsService {
    * @returns {Observable<TripEntity>}
    */
   cancel = (id: string, auth: string): Observable<TripEntity> => {
-    const userId = this._jwtService.verify(auth.replace('Bearer ', '')).sub;
+    const userId = this._jwtService.decode(auth.replace('Bearer ', '')).sub;
     return this._tripsDao.find(id).pipe(
       catchError((e) =>
         throwError(() => new UnprocessableEntityException(e.message)),
@@ -320,7 +320,7 @@ export class TripsService {
    * @returns {Observable<void>}
    */
   delete = (id: string, auth: string): Observable<void> => {
-    const userId = this._jwtService.verify(auth.replace('Bearer ', '')).sub;
+    const userId = this._jwtService.decode(auth.replace('Bearer ', '')).sub;
     return this._tripsDao.delete(id).pipe(
       catchError((e) =>
         throwError(() => new UnprocessableEntityException(e.message)),
@@ -343,7 +343,7 @@ export class TripsService {
    * @returns {Observable<void>}
    */
   demand = (id: string, auth: string): Observable<void> => {
-    const userId = this._jwtService.verify(auth.replace('Bearer ', '')).sub;
+    const userId = this._jwtService.decode(auth.replace('Bearer ', '')).sub;
     return this._tripsDao.find(id).pipe(
       catchError((e) =>
         throwError(() => new UnprocessableEntityException(e.message)),
@@ -378,7 +378,8 @@ export class TripsService {
     userAccepted: string,
     auth: string,
   ): Observable<void> => {
-    const userId = this._jwtService.verify(auth.replace('Bearer ', '')).sub;
+    console.log(auth);
+    const userId = this._jwtService.decode(auth.replace('Bearer ', '')).sub;
     return this._tripsDao.find(id).pipe(
       catchError((e) =>
         throwError(() => new UnprocessableEntityException(e.message)),
@@ -414,7 +415,7 @@ export class TripsService {
     userDeclined: string,
     auth: string,
   ): Observable<void> => {
-    const userId = this._jwtService.verify(auth.replace('Bearer ', '')).sub;
+    const userId = this._jwtService.decode(auth.replace('Bearer ', '')).sub;
     return this._tripsDao.find(id).pipe(
       catchError((e) =>
         throwError(() => new UnprocessableEntityException(e.message)),

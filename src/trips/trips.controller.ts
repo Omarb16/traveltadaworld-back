@@ -301,10 +301,10 @@ export class TripsController {
   @Put('accept/:id')
   accept(
     @Param() params: HandlerParams,
-    @Headers('authorization') auth: string,
     @Body() user: HandlerParams,
+    @Headers('authorization') auth: string,
   ): Observable<TripEntity | void> {
-    return this._tripsService.accept(params.id, auth, user.id);
+    return this._tripsService.accept(params.id, user.id, auth);
   }
 
   /**
@@ -326,9 +326,9 @@ export class TripsController {
   @Put('decline/:id')
   decline(
     @Param() params: HandlerParams,
-    @Headers('authorization') auth: string,
     @Body() user: HandlerParams,
+    @Headers('authorization') auth: string,
   ): Observable<TripEntity | void> {
-    return this._tripsService.decline(params.id, auth, user.id);
+    return this._tripsService.decline(params.id, user.id, auth);
   }
 }

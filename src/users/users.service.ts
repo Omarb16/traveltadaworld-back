@@ -129,7 +129,7 @@ export class UsersService {
     } else {
       delete user.photo;
     }
-    user.updatedBy = this._jwtService.verify(auth.replace('Bearer ', '')).sub;
+    user.updatedBy = this._jwtService.decode(auth.replace('Bearer ', '')).sub;
     return this._usersDao.update(id, user).pipe(
       catchError((e) =>
         throwError(() => new UnprocessableEntityException(e.message)),
