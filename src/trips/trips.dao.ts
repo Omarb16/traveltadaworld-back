@@ -6,7 +6,7 @@ import { defaultIfEmpty, from, Observable } from 'rxjs';
 import { filter, map, tap } from 'rxjs/operators';
 import { CreateTripDto } from './dto/create-trip.dto';
 import { UpdateTripDto } from './dto/update-trip.dto';
-import { Trip, TripDocument } from './trip.shema';
+import { Trip, TripDocument, Traveler } from './trip.shema';
 
 @Injectable()
 export class TripsDao {
@@ -73,7 +73,9 @@ export class TripsDao {
    * @return {Observable<Trip[] | void>}
    */
   findTravelerTrips = (userId: string): Observable<Trip[] | void> =>
-    from(this._tripModel.find({ travelers: { $all: [userId] } })).pipe(
+    from(
+      this._tripModel.find({ travelers: { $all: [new Traveler(userId)] } }),
+    ).pipe(
       filter((docs: TripDocument[]) => !!docs && docs.length > 0),
       map((docs: TripDocument[]) => docs.map((_: TripDocument) => _.toJSON())),
       defaultIfEmpty([]),

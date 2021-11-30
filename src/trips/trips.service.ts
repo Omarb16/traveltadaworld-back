@@ -144,17 +144,6 @@ export class TripsService {
           return new TripFunderEntity(__);
         }),
       ),
-      map((_: TripFunderEntity[]) => {
-        return _.map((e: TripFunderEntity) =>
-          e.travelers.forEach((f: Traveler) =>
-            this._userDao.find(f.traveler).pipe(
-              map((res: User) => {
-                return res.firstname + ' ' + res.lastname;
-              }),
-            ),
-          ),
-        );
-      }),
       defaultIfEmpty(undefined),
     );
   };
@@ -171,27 +160,23 @@ export class TripsService {
       catchError((e) =>
         throwError(() => new UnprocessableEntityException(e.message)),
       ),
-      map(
-        (_: Trip[]) =>
-          _.map(async (__: Trip) => {
-            if (fs.existsSync('public/' + __.photo)) {
-              __.photo =
-                'http://' +
-                config.server.host +
-                ':' +
-                config.server.port +
-                '/public/' +
-                __.photo;
-            } else {
-              __.photo = null;
-            }
-            return new TripTravelerEntity(__);
-          }),
-        map((_: TripTravelerEntity) => {
-          return this._userDao.find(_.createdBy).pipe(
-            map((res: User) => {
-              _.createdBy = res.firstname + ' ' + res.lastname;
-              return _;
+      map((_: Trip[]) =>
+        _.map(async (__: Trip) => {
+          if (fs.existsSync('public/' + __.photo)) {
+            __.photo =
+              'http://' +
+              config.server.host +
+              ':' +
+              config.server.port +
+              '/public/' +
+              __.photo;
+          } else {
+            __.photo = null;
+          }
+          return this._userDao.find(__.createdBy).pipe(
+            map((user: User) => {
+              __.createdBy = user.firstname + ' ' + user.lastname;
+              return new TripTravelerEntity(__);
             }),
           );
         }),
