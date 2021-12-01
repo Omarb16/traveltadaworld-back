@@ -1,19 +1,25 @@
-import { IsMongoId, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import {
+  IsMongoId,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+  IsOptional,
+} from 'class-validator';
 
 export class SortPagin {
   @IsString()
   @IsNotEmpty()
   active: string;
 
+  @IsOptional()
   @IsString()
-  @IsNotEmpty()
   direction: string;
 
-  @IsNumber()
+  @IsString()
   @IsNotEmpty()
   skip: number;
 
-  @IsNumber()
+  @IsString()
   @IsNotEmpty()
-  take: number;
+  limit: number;
 }

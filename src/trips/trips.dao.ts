@@ -1,5 +1,4 @@
 import { SortPagin } from './../validators/sort-pagin';
-import { User } from './../users/user.shema';
 import { TripQuery } from './../validators/trip-query';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
@@ -81,21 +80,6 @@ export class TripsDao {
    *
    * @return {Observable<Trip[] | void>}
    */
-  findUserTrips = (query:SortPagin,userId: string): Observable<Trip[]> =>
-    from(
-      this._tripModel.find({ createdBy: userId }).sort({ createdAt: -1 }),
-    ).pipe(
-      filter((docs: TripDocument[]) => !!docs && docs.length > 0),
-      map((docs: TripDocument[]) => docs.map((_: TripDocument) => _.toJSON())),
-      defaultIfEmpty([]),
-    );
-
-  /**
-   * Call mongoose method, call toJSON on each result and returns TripModel[] or undefined
-   *
-   *
-   * @return {Observable<Trip[] | void>}
-   */
   countUserTrips = (userId: string): Observable<number> =>
     from(this._tripModel.count({ createdBy: userId })).pipe(
       defaultIfEmpty(undefined),
@@ -122,20 +106,51 @@ export class TripsDao {
    *
    * @return {Observable<Trip[] | void>}
    */
-  findTravelerTrips = (query:SortPagin,userId: string): Observable<Trip[] | void> =>
-    from(
+  findTravelerTrips = (
+    query: SortPagin,
+    userId: string,
+  ): Observable<Trip[] | void> => {
+    var sort = {};
+    sort[query.active] = query.direction == 'asc' ? 1 : -1;
+    return from(
       this._tripModel
         .find({
           travelers: {
             $elemMatch: { user: userId, decline: null },
           },
         })
-        .sort({ createdAt: -1 }),
+        .sort(sort)
+        .skip(query.skip)
+        .limit(query.limit),
     ).pipe(
       filter((docs: TripDocument[]) => !!docs && docs.length > 0),
       map((docs: TripDocument[]) => docs.map((_: TripDocument) => _.toJSON())),
       defaultIfEmpty([]),
     );
+  };
+
+  /**
+   * Call mongoose method, call toJSON on each result and returns TripModel[] or undefined
+   *
+   *
+   * @return {Observable<Trip[] | void>}
+   */
+  findUserTrips = (query: SortPagin, userId: string): Observable<Trip[]> => {
+    var sort = {};
+    sort[query.active] = query.direction == 'asc' ? 1 : -1;
+    console.log(query);
+    return from(
+      this._tripModel
+        .find({ createdBy: userId })
+        .sort(sort)
+        .skip(+query.skip)
+        .limit(+query.limit),
+    ).pipe(
+      filter((docs: TripDocument[]) => !!docs && docs.length > 0),
+      map((docs: TripDocument[]) => docs.map((_: TripDocument) => _.toJSON())),
+      defaultIfEmpty([]),
+    );
+  };
 
   /**
    * Call mongoose method, call toJSON on each result and returns TripModel[] or undefined
