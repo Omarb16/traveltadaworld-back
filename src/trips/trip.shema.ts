@@ -95,19 +95,19 @@ export class Trip {
 
   @Prop({
     type: Date,
-    required: false,
+    required: true,
   })
   createdAt: string;
 
   @Prop({
     type: String,
-    required: false,
+    required: true,
   })
   createdBy: string;
 
   @Prop({
     type: String,
-    required: false,
+    required: true,
   })
   createdNameBy: string;
 
@@ -125,25 +125,25 @@ export class Trip {
 
   @Prop({
     type: String,
-    required: false,
+    required: true,
   })
   dateBegin: string;
 
   @Prop({
     type: String,
-    required: false,
+    required: true,
   })
   dateEnd: string;
 
   @Prop({
     type: String,
-    required: false,
+    required: true,
   })
   price: string;
 
   @Prop({
     type: String,
-    required: false,
+    required: true,
   })
   detail: string;
 }

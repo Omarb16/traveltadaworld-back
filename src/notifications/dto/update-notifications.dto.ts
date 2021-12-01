@@ -39,6 +39,15 @@ export class UpdateNotificationDto {
   @IsNotEmpty()
   userId: string;
 
+  @ApiProperty({
+    name: 'title',
+    description: 'title',
+    example: 'title',
+  })
+  @IsString()
+  @IsNotEmpty()
+  createdAt: string;
+
   constructor(partial: Partial<NotificationEntity>) {
     Object.assign(this, partial);
   }

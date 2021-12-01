@@ -48,7 +48,7 @@ export class TripsDao {
     if (query.city) search['city'] = { $regex: query.city, $options: 'i' };
     if (query.country)
       search['country'] = { $regex: query.country, $options: 'i' };
-    return from(this._tripModel.find(search)).pipe(
+    return from(this._tripModel.find(search).sort({ createdAt: -1 })).pipe(
       filter((docs: TripDocument[]) => !!docs && docs.length > 0),
       map((docs: TripDocument[]) => docs.map((_: TripDocument) => _.toJSON())),
       defaultIfEmpty([]),
@@ -62,7 +62,9 @@ export class TripsDao {
    * @return {Observable<Trip[] | void>}
    */
   findUserTrips = (userId: string): Observable<Trip[]> =>
-    from(this._tripModel.find({ createdBy: userId })).pipe(
+    from(
+      this._tripModel.find({ createdBy: userId }).sort({ createdAt: -1 }),
+    ).pipe(
       filter((docs: TripDocument[]) => !!docs && docs.length > 0),
       map((docs: TripDocument[]) => docs.map((_: TripDocument) => _.toJSON())),
       defaultIfEmpty([]),
@@ -76,11 +78,13 @@ export class TripsDao {
    */
   findTravelerTrips = (userId: string): Observable<Trip[] | void> =>
     from(
-      this._tripModel.find({
-        travelers: {
-          $elemMatch: { user: userId, decline: null },
-        },
-      }),
+      this._tripModel
+        .find({
+          travelers: {
+            $elemMatch: { user: userId, decline: null },
+          },
+        })
+        .sort({ createdAt: -1 }),
     ).pipe(
       filter((docs: TripDocument[]) => !!docs && docs.length > 0),
       map((docs: TripDocument[]) => docs.map((_: TripDocument) => _.toJSON())),

@@ -48,6 +48,15 @@ export class NotificationEntity {
   @Type(() => String)
   userId: string;
 
+  @ApiProperty({
+    name: 'title',
+    description: 'title',
+    example: 'title',
+  })
+  @Expose()
+  @Type(() => String)
+  createdAt: string;
+
   constructor(partial: Partial<NotificationEntity>) {
     Object.assign(this, partial);
   }

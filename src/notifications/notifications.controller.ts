@@ -149,9 +149,7 @@ export class NotificationsController {
   @ApiBadRequestResponse({ description: 'Bad request' })
   @UseGuards(AuthGuard())
   @Get('/count')
-  count(
-    @Headers('authorization') auth: string,
-  ): Observable<NotificationEntity> {
+  count(@Headers('authorization') auth: string): Observable<Number> {
     return this._notificationsService.count(auth);
   }
 }

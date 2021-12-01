@@ -66,10 +66,12 @@ export class NotificationsDao {
    * @return {Observable<Notification | void>}
    */
   find = (userId: string): Observable<Notification[] | void> =>
-    from(this._notificationModel.find({ userId })).pipe(
-      filter((doc: NotificationDocument) => !!doc),
-      map((doc: NotificationDocument) => doc.toJSON()),
-      defaultIfEmpty(undefined),
+    from(this._notificationModel.find({ userId }).sort({ createdAt: -1 })).pipe(
+      filter((docs: NotificationDocument[]) => !!docs && docs.length > 0),
+      map((docs: NotificationDocument[]) =>
+        docs.map((_: NotificationDocument) => _.toJSON()),
+      ),
+      defaultIfEmpty([]),
     );
 
   /**
@@ -96,10 +98,8 @@ export class NotificationsDao {
    *
    * @return {Observable<void>}
    */
-  count = (userId: string): Observable<Notification | void> => {
-    return from(this._notificationModel.count({ userId })).pipe(
-      filter((doc: NotificationDocument) => !!doc),
-      map((doc: NotificationDocument) => doc.toJSON()),
+  count = (userId: string): Observable<Number> => {
+    return from(this._notificationModel.count({ userId, seen: false })).pipe(
       defaultIfEmpty(undefined),
     );
   };

@@ -63,6 +63,7 @@ export class NotificationsService {
     notification: UpdateNotificationDto,
   ): Observable<NotificationEntity> => {
     notification.seen = true;
+    console.log(notification);
     return this._notificationsDao.update(id, notification).pipe(
       catchError((e) =>
         throwError(() => new UnprocessableEntityException(e.message)),
@@ -124,17 +125,14 @@ export class NotificationsService {
    *
    * @returns {Observable<NotificationEntity>}
    */
-  count = (auth: string): Observable<NotificationEntity> => {
+  count = (auth: string): Observable<Number> => {
     const userId = this._jwtService.decode(auth.replace('Bearer ', '')).sub;
-    return this._notificationsDao.count(userId).pipe(
-      catchError((e) =>
-        throwError(() => new UnprocessableEntityException(e.message)),
-      ),
-      mergeMap((_: Notification) => {
-        return !!_
-          ? of(new NotificationEntity(_))
-          : throwError(() => new NotFoundException(`Not found`));
-      }),
-    );
+    return this._notificationsDao
+      .count(userId)
+      .pipe(
+        catchError((e) =>
+          throwError(() => new UnprocessableEntityException(e.message)),
+        ),
+      );
   };
 }

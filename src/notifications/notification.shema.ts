@@ -45,6 +45,13 @@ export class Notification {
   })
   userId: string;
 
+  @Prop({
+    type: String,
+    required: false,
+    trim: true,
+  })
+  createdAt: string;
+
   constructor(partial: Partial<Notification>) {
     Object.assign(this, partial);
   }

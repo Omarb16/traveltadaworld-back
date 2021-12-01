@@ -81,7 +81,7 @@ export class TripEntity {
     description: 'Created By',
     example: '61a1885b50cf46588632569a',
   })
-  @Exclude()
+  @Expose()
   @Type(() => String)
   createdNameBy: string;
 
