@@ -89,11 +89,13 @@ export class UsersDao {
    *
    * @return {Observable<void>}
    */
-  delete = (userId: string): Observable<User | void> => {
-    return from(this._userModel.findOneAndRemove({ _id: userId })).pipe(
-        filter((doc: UserDocument) => !!doc),
-        map((doc: UserDocument) => doc.toJSON()),
-        defaultIfEmpty(undefined),
+  delete = (id: string, userId: string): Observable<User | void> => {
+    return from(
+      this._userModel.findOneAndRemove({ _id: id, createdBy: userId }),
+    ).pipe(
+      filter((doc: UserDocument) => !!doc),
+      map((doc: UserDocument) => doc.toJSON()),
+      defaultIfEmpty(undefined),
     );
   };
 }

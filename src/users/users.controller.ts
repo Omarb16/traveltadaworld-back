@@ -147,8 +147,6 @@ export class UsersController {
     return this._usersService.find(params.id);
   }
 
-
-
   /**
    * Handler to answer in to POST /user/:id route
    *
@@ -167,8 +165,9 @@ export class UsersController {
   @UseGuards(AuthGuard())
   @Delete('delete/:id')
   delete(
-      @Param() params: HandlerParams,
+    @Param() params: HandlerParams,
+    @Headers('authorization') auth: string,
   ): Observable<void> {
-    return this._usersService.delete(params.id);
+    return this._usersService.delete(params.id, auth);
   }
 }

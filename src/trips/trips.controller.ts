@@ -1,3 +1,4 @@
+import { SortPagin } from './../validators/sort-pagin';
 import { HandlerName } from './../validators/handler-name';
 import { TripFunderEntity } from './entities/trip-funder.entity';
 import { TripsService } from './trips.service';
@@ -120,9 +121,30 @@ export class TripsController {
   @UseGuards(AuthGuard())
   @Get('usertrips')
   findUserTrips(
+    @Query() query: SortPagin,
     @Headers('authorization') auth: string,
   ): Observable<TripFunderEntity[]> {
-    return this._tripsService.findUserTrips(auth);
+    return this._tripsService.findUserTrips(query, auth);
+  }
+
+  /**
+   * Handler to answer in to GET /trips route
+   *
+   * @returns Observable<TripEntity[] | void>
+   */
+  @ApiOkResponse({
+    description: 'Return trips',
+    type: TripEntity,
+    isArray: true,
+  })
+  @ApiBadRequestResponse({ description: 'Bad request' })
+  @UseGuards(AuthGuard())
+  @Get('travelertrips')
+  findTravelerTrips(
+    @Query() query: SortPagin,
+    @Headers('authorization') auth: string,
+  ): Observable<TripTravelerEntity[]> {
+    return this._tripsService.findTravelerTrips(query, auth);
   }
 
   /**
@@ -174,25 +196,6 @@ export class TripsController {
   @Get('firsttree')
   findFirstTree(): Observable<TripEntity[]> {
     return this._tripsService.findFirstTree();
-  }
-
-  /**
-   * Handler to answer in to GET /trips route
-   *
-   * @returns Observable<TripEntity[] | void>
-   */
-  @ApiOkResponse({
-    description: 'Return trips',
-    type: TripEntity,
-    isArray: true,
-  })
-  @ApiBadRequestResponse({ description: 'Bad request' })
-  @UseGuards(AuthGuard())
-  @Get('travelertrips')
-  findTravelerTrips(
-    @Headers('authorization') auth: string,
-  ): Observable<TripTravelerEntity[]> {
-    return this._tripsService.findTravelerTrips(auth);
   }
 
   /**

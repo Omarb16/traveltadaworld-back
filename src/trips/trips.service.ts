@@ -1,3 +1,4 @@
+import { SortPagin } from './../validators/sort-pagin';
 import { UsersDao } from './../users/users.dao';
 import { TripQuery } from './../validators/trip-query';
 import { JwtService } from '@nestjs/jwt';
@@ -121,9 +122,12 @@ export class TripsService {
    * @returns {Observable<TripEntity[]>}
    *
    */
-  findUserTrips = (auth: string): Observable<TripFunderEntity[]> => {
+  findUserTrips = (
+    query: SortPagin,
+    auth: string,
+  ): Observable<TripFunderEntity[]> => {
     const userId = this._jwtService.decode(auth.replace('Bearer ', '')).sub;
-    return this._tripsDao.findUserTrips(userId).pipe(
+    return this._tripsDao.findUserTrips(query, userId).pipe(
       catchError((e) =>
         throwError(() => new UnprocessableEntityException(e.message)),
       ),
@@ -155,9 +159,12 @@ export class TripsService {
    *
    * @returns {Observable<TripEntity[]>}
    */
-  findTravelerTrips = (auth: string): Observable<TripTravelerEntity[]> => {
+  findTravelerTrips = (
+    query: SortPagin,
+    auth: string,
+  ): Observable<TripTravelerEntity[]> => {
     const userId = this._jwtService.decode(auth.replace('Bearer ', '')).sub;
-    return this._tripsDao.findTravelerTrips(userId).pipe(
+    return this._tripsDao.findTravelerTrips(query, userId).pipe(
       catchError((e) =>
         throwError(() => new UnprocessableEntityException(e.message)),
       ),

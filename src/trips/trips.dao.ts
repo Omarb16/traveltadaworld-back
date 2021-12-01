@@ -1,3 +1,4 @@
+import { SortPagin } from './../validators/sort-pagin';
 import { User } from './../users/user.shema';
 import { TripQuery } from './../validators/trip-query';
 import { Injectable, Logger } from '@nestjs/common';
@@ -80,7 +81,7 @@ export class TripsDao {
    *
    * @return {Observable<Trip[] | void>}
    */
-  findUserTrips = (userId: string): Observable<Trip[]> =>
+  findUserTrips = (query:SortPagin,userId: string): Observable<Trip[]> =>
     from(
       this._tripModel.find({ createdBy: userId }).sort({ createdAt: -1 }),
     ).pipe(
@@ -121,7 +122,7 @@ export class TripsDao {
    *
    * @return {Observable<Trip[] | void>}
    */
-  findTravelerTrips = (userId: string): Observable<Trip[] | void> =>
+  findTravelerTrips = (query:SortPagin,userId: string): Observable<Trip[] | void> =>
     from(
       this._tripModel
         .find({
