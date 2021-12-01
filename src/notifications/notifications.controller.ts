@@ -12,6 +12,7 @@ import {
   Body,
   Headers,
   Delete,
+  Logger,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -56,7 +57,6 @@ export class NotificationsController {
   create(
     @Body() createNotificationDto: CreateNotificationDto,
   ): Observable<NotificationEntity> {
-    console.log(CreateNotificationDto);
     return this._notificationsService.create(createNotificationDto);
   }
 
@@ -99,9 +99,11 @@ export class NotificationsController {
   })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @UseGuards(AuthGuard())
-  @Get(':id')
-  find(@Param() params: HandlerParams): Observable<NotificationEntity> {
-    return this._notificationsService.find(params.id);
+  @Get()
+  find(
+    @Headers('authorization') auth: string,
+  ): Observable<NotificationEntity[]> {
+    return this._notificationsService.find(auth);
   }
 
   /**
@@ -122,7 +124,34 @@ export class NotificationsController {
   @ApiBadRequestResponse({ description: 'Bad request' })
   @UseGuards(AuthGuard())
   @Delete(':id')
-  delete(@Param() params: HandlerParams): Observable<NotificationEntity> {
-    return this._notificationsService.delete(params.id);
+  delete(
+    @Param() params: HandlerParams,
+    @Headers('authorization') auth: string,
+  ): Observable<NotificationEntity> {
+    return this._notificationsService.delete(params.id, auth);
+  }
+
+  /**
+   * Handler to answer in to POST /notifications/:id route
+   *
+   * @param {HandlerParams} params list of route params to take notification id
+   *
+   * @returns Observable<NotificationEntity[] | void>
+   */
+  @ApiOkResponse({
+    description: 'Return an notification',
+    type: NotificationEntity,
+  })
+  @ApiNotFoundResponse({
+    description:
+      'Notification with the given "id" doesn\'t exist in the database',
+  })
+  @ApiBadRequestResponse({ description: 'Bad request' })
+  @UseGuards(AuthGuard())
+  @Get('/count')
+  count(
+    @Headers('authorization') auth: string,
+  ): Observable<NotificationEntity> {
+    return this._notificationsService.count(auth);
   }
 }
