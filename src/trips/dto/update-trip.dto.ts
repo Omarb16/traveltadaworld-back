@@ -119,6 +119,15 @@ export class UpdateTripDto {
   @IsNotEmpty()
   detail: string;
 
+  @ApiProperty({
+    name: 'createdBy',
+    description: 'Created By',
+    example: '61a1885b50cf46588632569a',
+  })
+  @IsString()
+  @IsNotEmpty()
+  createdNameBy: string;
+
   constructor(partial: Partial<TripEntity>) {
     Object.assign(this, partial);
   }

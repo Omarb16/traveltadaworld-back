@@ -226,6 +226,7 @@ export class TripsService {
     trip.createdAt = moment().utc().format();
     trip.photo = filename;
     trip.createdBy = this._jwtService.decode(auth.replace('Bearer ', '')).sub;
+    console.log(trip);
     return this._tripsDao.create(trip).pipe(
       catchError((e) =>
         throwError(() => new UnprocessableEntityException(e.message)),
