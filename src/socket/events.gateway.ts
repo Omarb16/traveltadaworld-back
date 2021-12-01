@@ -19,8 +19,6 @@ export class AppGateway {
 
   @SubscribeMessage('sendToServer')
   handleMessage(client: Socket, notification: Notification): void {
-    console.log(notification);
-    console.log(this.dict);
     this.server
       .to(this.dict[notification.userId])
       .emit('sendNotiftoClient', notification);

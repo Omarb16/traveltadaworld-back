@@ -49,9 +49,9 @@ export class NotificationEntity {
   userId: string;
 
   @ApiProperty({
-    name: 'title',
-    description: 'title',
-    example: 'title',
+    name: 'createdAt',
+    description: 'createdAt',
+    example: 'createdAt',
   })
   @Expose()
   @Type(() => String)

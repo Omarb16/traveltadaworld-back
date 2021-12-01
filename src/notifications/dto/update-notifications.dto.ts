@@ -1,8 +1,16 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsBoolean, IsNotEmpty, IsString } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsString, IsOptional } from 'class-validator';
 import { NotificationEntity } from '../entities/notification.entity';
 
 export class UpdateNotificationDto {
+  @ApiProperty({
+    name: 'id',
+    description: 'id',
+    example: 'id',
+  })
+  @IsOptional()
+  id: string;
+
   @ApiProperty({
     name: 'title',
     description: 'title',
