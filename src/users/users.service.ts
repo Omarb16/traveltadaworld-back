@@ -177,4 +177,28 @@ export class UsersService {
       }),
     );
   };
+  
+  /**
+   * Returns one user of the list matching id in parameter
+   *
+   * @param {string} id of the user
+   *
+   * @returns {Observable<void>}
+   */
+  delete = (id: string): Observable<void> => {
+    const userId = id;
+    return this._usersDao.delete(userId).pipe(
+        catchError((e) =>
+            throwError(() => new UnprocessableEntityException(e.message)),
+        ),
+        mergeMap((_: User) =>
+            !!_
+                ? of(undefined)
+                : throwError(
+                    () => new NotFoundException(`User with id '${id}' not found`),
+                ),
+        ),
+    );
+  };
+
 }

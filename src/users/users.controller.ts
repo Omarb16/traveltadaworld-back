@@ -15,6 +15,7 @@ import {
   UploadedFile,
   Logger,
   Headers,
+  Delete,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -144,5 +145,30 @@ export class UsersController {
   @Get(':id')
   find(@Param() params: HandlerParams): Observable<UserEntity> {
     return this._usersService.find(params.id);
+  }
+
+
+
+  /**
+   * Handler to answer in to POST /user/:id route
+   *
+   * @param {HandlerParams} params list of route params to take person id
+   *
+   * @returns Observable<UserEntity[] | void>
+   */
+  @ApiOkResponse({
+    description: 'Return a user',
+    type: UserEntity,
+  })
+  @ApiNotFoundResponse({
+    description: 'User with the given "id" doesn\'t exist in the database',
+  })
+  @ApiBadRequestResponse({ description: 'Bad request' })
+  @UseGuards(AuthGuard())
+  @Delete('delete/:id')
+  delete(
+      @Param() params: HandlerParams,
+  ): Observable<void> {
+    return this._usersService.delete(params.id);
   }
 }

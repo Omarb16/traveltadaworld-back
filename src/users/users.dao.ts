@@ -81,4 +81,19 @@ export class UsersDao {
       map((doc: UserDocument) => doc.toJSON()),
       defaultIfEmpty(undefined),
     );
+
+  /**
+   * Call mongoose method, call toJSON on each result and returns TripModel[] or undefined
+   *
+   * @param {string} id
+   *
+   * @return {Observable<void>}
+   */
+  delete = (userId: string): Observable<User | void> => {
+    return from(this._userModel.findOneAndRemove({ _id: userId })).pipe(
+        filter((doc: UserDocument) => !!doc),
+        map((doc: UserDocument) => doc.toJSON()),
+        defaultIfEmpty(undefined),
+    );
+  };
 }
