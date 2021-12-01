@@ -137,6 +137,57 @@ export class TripsController {
   })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @UseGuards(AuthGuard())
+  @Get('countusertrips')
+  countUserTrips(@Headers('authorization') auth: string): Observable<number> {
+    return this._tripsService.countUserTrips(auth);
+  }
+  /**
+   * Handler to answer in to GET /trips route
+   *
+   * @returns Observable<TripEntity[] | void>
+   */
+  @ApiOkResponse({
+    description: 'Return trips',
+    type: TripEntity,
+    isArray: true,
+  })
+  @ApiBadRequestResponse({ description: 'Bad request' })
+  @UseGuards(AuthGuard())
+  @Get('counttravelertrips')
+  countTravelerTrips(
+    @Headers('authorization') auth: string,
+  ): Observable<number> {
+    return this._tripsService.countTravelerTrips(auth);
+  }
+
+  /**
+   * Handler to answer in to GET /trips route
+   *
+   * @returns Observable<TripEntity[] | void>
+   */
+  @ApiOkResponse({
+    description: 'Return trips',
+    type: TripEntity,
+    isArray: true,
+  })
+  @ApiBadRequestResponse({ description: 'Bad request' })
+  @Get('firsttree')
+  findFirstTree(): Observable<TripEntity[]> {
+    return this._tripsService.findFirstTree();
+  }
+
+  /**
+   * Handler to answer in to GET /trips route
+   *
+   * @returns Observable<TripEntity[] | void>
+   */
+  @ApiOkResponse({
+    description: 'Return trips',
+    type: TripEntity,
+    isArray: true,
+  })
+  @ApiBadRequestResponse({ description: 'Bad request' })
+  @UseGuards(AuthGuard())
   @Get('travelertrips')
   findTravelerTrips(
     @Headers('authorization') auth: string,

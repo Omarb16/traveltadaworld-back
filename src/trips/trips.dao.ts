@@ -66,6 +66,20 @@ export class TripsDao {
    *
    * @return {Observable<Trip[] | void>}
    */
+  findFirstTree = (): Observable<Trip[] | void> => {
+    return from(this._tripModel.find().sort({ createdAt: -1 }).limit(3)).pipe(
+      filter((docs: TripDocument[]) => !!docs && docs.length > 0),
+      map((docs: TripDocument[]) => docs.map((_: TripDocument) => _.toJSON())),
+      defaultIfEmpty([]),
+    );
+  };
+
+  /**
+   * Call mongoose method, call toJSON on each result and returns TripModel[] or undefined
+   *
+   *
+   * @return {Observable<Trip[] | void>}
+   */
   findUserTrips = (userId: string): Observable<Trip[]> =>
     from(
       this._tripModel.find({ createdBy: userId }).sort({ createdAt: -1 }),
@@ -74,6 +88,32 @@ export class TripsDao {
       map((docs: TripDocument[]) => docs.map((_: TripDocument) => _.toJSON())),
       defaultIfEmpty([]),
     );
+
+  /**
+   * Call mongoose method, call toJSON on each result and returns TripModel[] or undefined
+   *
+   *
+   * @return {Observable<Trip[] | void>}
+   */
+  countUserTrips = (userId: string): Observable<number> =>
+    from(this._tripModel.count({ createdBy: userId })).pipe(
+      defaultIfEmpty(undefined),
+    );
+
+  /**
+   * Call mongoose method, call toJSON on each result and returns TripModel[] or undefined
+   *
+   *
+   * @return {Observable<Trip[] | void>}
+   */
+  countTravelerTrips = (userId: string): Observable<number> =>
+    from(
+      this._tripModel.count({
+        travelers: {
+          $elemMatch: { user: userId, decline: null },
+        },
+      }),
+    ).pipe(defaultIfEmpty(undefined));
 
   /**
    * Call mongoose method, call toJSON on each result and returns TripModel[] or undefined
