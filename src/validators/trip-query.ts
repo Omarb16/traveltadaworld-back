@@ -12,4 +12,16 @@ export class TripQuery {
   @IsString()
   @IsOptional()
   country: string;
+
+  @IsString()
+  @IsOptional()
+  dateBegin: string;
+
+  @IsString()
+  @IsOptional()
+  dateEnd: string;
+
+  @IsString()
+  @IsOptional()
+  price: string;
 }
