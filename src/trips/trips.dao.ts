@@ -47,8 +47,10 @@ export class TripsDao {
     if (query.title) search['title'] = { $regex: query.title, $options: 'i' };
     if (query.city) search['city'] = { $regex: query.city, $options: 'i' };
     if (query.price) search['price'] = { $regex: query.price, $options: 'i' };
-    if (query.dateBegin) search['dateBegin'] = { $regex: query.dateBegin, $options: 'i' };
-    if (query.dateEnd) search['dateEnd'] = { $regex: query.dateEnd, $options: 'i' };
+    if (query.dateBegin)
+      search['dateBegin'] = { $gte: new Date(query.dateBegin).toISOString() };
+    if (query.dateEnd)
+      search['dateEnd'] = { $lte: new Date(query.dateEnd).toISOString() };
     if (query.country)
       search['country'] = { $regex: query.country, $options: 'i' };
     return from(this._tripModel.find(search).sort({ createdAt: -1 })).pipe(
