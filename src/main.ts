@@ -8,9 +8,10 @@ import { UsersModule } from './users/users.module';
 import * as Config from 'config';
 import * as express from 'express';
 import { join } from 'path';
+import { NestExpressApplication } from '@nestjs/platform-express';
 
 async function bootstrap(config: AppConfig, swaggerConfig: SwaggerConfig) {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   await app.enableCors({ origin: config.cors });
 
@@ -35,6 +36,8 @@ async function bootstrap(config: AppConfig, swaggerConfig: SwaggerConfig) {
   SwaggerModule.setup(swaggerConfig.path, app, usersDocument);
 
   app.use('/public', express.static(join(__dirname, '..', 'public')));
+
+  app.useStaticAssets(join(__dirname, '..', 'static'));
 
   await app.listen(config.port, config.host);
   Logger.log(
