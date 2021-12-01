@@ -2,19 +2,13 @@ import { JwtService } from '@nestjs/jwt';
 import { NotificationEntity } from './entities/notification.entity';
 import { Notification } from './notification.shema';
 import {
-  BadRequestException,
-  ConflictException,
   Injectable,
   NotFoundException,
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { map, mergeMap } from 'rxjs/operators';
 import { catchError, Observable, of, throwError } from 'rxjs';
-import * as bcrypt from 'bcrypt';
-import * as moment from 'moment';
-import * as config from 'config';
-import { CreateNotificationDto } from './dto/create-notification.dto';
-import { UpdateNotificationDto } from './dto/update-notifications.dto';
+import { NotificationDto } from './dto/notification.dto';
 import { NotificationsDao } from './notifications.dao';
 const fs = require('fs');
 
@@ -31,13 +25,13 @@ export class NotificationsService {
   ) {}
 
   /**
-   * Returns one notification of the list matching id in parameter
+   * create notification
    *
-   * @param {CreateNotificationDto} notification of the notification
+   * @param {NotificationDto} notification data to create
    *
    * @returns {Observable<NotificationEntity>}
    */
-  create = (notification: CreateNotificationDto) => {
+  create = (notification: NotificationDto) => {
     return this._notificationsDao.create(notification).pipe(
       catchError((e) =>
         throwError(() => new UnprocessableEntityException(e.message)),
@@ -51,16 +45,16 @@ export class NotificationsService {
   };
 
   /**
-   * Returns one notification of the list matching id in parameter
+   * Update notification to seen
    *
-   * @param {string} id of the notification
-   * @param {UpdateNotificationDto} notification of the notification
+   * @param {string} id notification id
+   * @param {NotificationDto} notification data to update
    *
    * @returns {Observable<NotificationEntity>}
    */
   update = (
     id: string,
-    notification: UpdateNotificationDto,
+    notification: NotificationDto,
   ): Observable<NotificationEntity> => {
     notification.seen = true;
     console.log(notification);
@@ -77,11 +71,11 @@ export class NotificationsService {
   };
 
   /**
-   * Returns one notification of the list matching id in parameter
+   * Get user notifications
    *
-   * @param {string} id of the notification
+   * @param {string} auth user authorization
    *
-   * @returns {Observable<NotificationEntity>}
+   * @returns {Observable<NotificationEntity[]>}
    */
   find = (auth: string): Observable<NotificationEntity[]> => {
     const userId = this._jwtService.decode(auth.replace('Bearer ', '')).sub;
@@ -98,32 +92,30 @@ export class NotificationsService {
   };
 
   /**
-   * Returns one notification of the list matching id in parameter
+   * Delete notification
    *
-   * @param {string} id of the notification
+   * @param {string} id notifiaction id
+   * @param {string} auth user notification
    *
-   * @returns {Observable<NotificationEntity>}
+   * @returns {Observable<void>}
    */
-  delete = (id: string, auth: string): Observable<NotificationEntity> => {
+  delete = (id: string, auth: string): Observable<void> => {
     const userId = this._jwtService.decode(auth.replace('Bearer ', '')).sub;
-    return this._notificationsDao.delete(id, userId).pipe(
-      catchError((e) =>
-        throwError(() => new UnprocessableEntityException(e.message)),
-      ),
-      mergeMap((_: Notification) => {
-        return !!_
-          ? of(new NotificationEntity(_))
-          : throwError(() => new NotFoundException(`Not found`));
-      }),
-    );
+    return this._notificationsDao
+      .delete(id, userId)
+      .pipe(
+        catchError((e) =>
+          throwError(() => new UnprocessableEntityException(e.message)),
+        ),
+      );
   };
 
   /**
-   * Returns one notification of the list matching id in parameter
+   * Count user notification
    *
-   * @param {string} id of the notification
+   * @param {string} auth user authorization
    *
-   * @returns {Observable<NotificationEntity>}
+   * @returns {Observable<Number>}
    */
   count = (auth: string): Observable<Number> => {
     const userId = this._jwtService.decode(auth.replace('Bearer ', '')).sub;

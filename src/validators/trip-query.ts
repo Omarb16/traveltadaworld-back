@@ -24,4 +24,12 @@ export class TripQuery {
   @IsString()
   @IsOptional()
   price: string;
+
+  @IsString()
+  @IsNotEmpty()
+  skip: number;
+
+  @IsString()
+  @IsNotEmpty()
+  limit: number;
 }

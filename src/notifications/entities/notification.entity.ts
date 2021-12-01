@@ -5,7 +5,7 @@ import { Exclude, Expose, Type } from 'class-transformer';
 export class NotificationEntity {
   @ApiProperty({
     name: 'id',
-    description: 'Unique identifier in the database',
+    description: 'Identifiant unique',
     example: '5763cd4dc378a38ecd387737',
   })
   @Expose()
@@ -14,35 +14,35 @@ export class NotificationEntity {
 
   @ApiProperty({
     name: 'title',
-    description: 'title',
-    example: 'title',
+    description: 'Titre de la notification',
+    example: 'Demande annulée',
   })
   @Expose()
   @Type(() => String)
   title: string;
 
   @ApiProperty({
-    name: 'title',
-    description: 'title',
-    example: 'title',
+    name: 'content',
+    description: 'Contenu de la notification',
+    example: 'Nom Prenom a annulée sa demande',
   })
   @Expose()
   @Type(() => String)
   content: string;
 
   @ApiProperty({
-    name: 'title',
-    description: 'title',
-    example: 'title',
+    name: 'seen',
+    description: 'Notification vu ou pas',
+    example: 'false',
   })
   @Expose()
   @Type(() => Boolean)
   seen: boolean;
 
   @ApiProperty({
-    name: 'title',
-    description: 'title',
-    example: 'title',
+    name: 'userId',
+    description: "Identifiant de l'utilsateur qui recoit la notification",
+    example: '61a532ddbf07326c95b10906',
   })
   @Expose()
   @Type(() => String)
@@ -50,8 +50,8 @@ export class NotificationEntity {
 
   @ApiProperty({
     name: 'createdAt',
-    description: 'createdAt',
-    example: 'createdAt',
+    description: 'Date de creation de la notification',
+    example: '2020-12-01T00:23:38.000Z',
   })
   @Expose()
   @Type(() => String)

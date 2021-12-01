@@ -210,6 +210,21 @@ export class TripsService {
    *
    * @returns {Observable<TripEntity[]>}
    */
+  count = (): Observable<number> => {
+    return this._tripsDao.count().pipe(
+      catchError((e) =>
+        throwError(() => new UnprocessableEntityException(e.message)),
+      ),
+      defaultIfEmpty(0),
+    );
+  };
+
+  /**
+   * Returns one trip of the list matching id in parameter
+   *
+   *
+   * @returns {Observable<TripEntity[]>}
+   */
   countUserTrips = (auth: string): Observable<number> => {
     const userId = this._jwtService.decode(auth.replace('Bearer ', '')).sub;
     return this._tripsDao.countUserTrips(userId).pipe(

@@ -190,6 +190,21 @@ export class TripsController {
   @ApiOkResponse({
     description: 'Return trips',
     type: TripEntity,
+  })
+  @ApiBadRequestResponse({ description: 'Bad request' })
+  @Get('count')
+  count(): Observable<number> {
+    return this._tripsService.count();
+  }
+
+  /**
+   * Handler to answer in to GET /trips route
+   *
+   * @returns Observable<TripEntity[] | void>
+   */
+  @ApiOkResponse({
+    description: 'Return trips',
+    type: TripEntity,
     isArray: true,
   })
   @ApiBadRequestResponse({ description: 'Bad request' })

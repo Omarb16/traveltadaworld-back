@@ -1,4 +1,4 @@
-import { CreateNotificationDto } from './dto/create-notification.dto';
+import { NotificationDto } from './dto/notification.dto';
 import { NotificationsService } from './notifications.service';
 import {
   ClassSerializerInterceptor,
@@ -12,7 +12,6 @@ import {
   Body,
   Headers,
   Delete,
-  Logger,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -26,7 +25,6 @@ import { HandlerParams } from 'src/validators/handler-params';
 import { Observable } from 'rxjs';
 import { AuthGuard } from '@nestjs/passport';
 import { NotificationEntity } from './entities/notification.entity';
-import { UpdateNotificationDto } from './dto/update-notifications.dto';
 
 @ApiTags('notifications')
 @ApiConsumes('application/json')
@@ -41,61 +39,62 @@ export class NotificationsController {
   constructor(private readonly _notificationsService: NotificationsService) {}
 
   /**
-   * Handler to answer in to POST /notifications/logIn route
+   * Handler to answer in to POST /notifications route
    *
-   * @param {LoginNotificationDto} loginNotificationDto data to login
+   * @param {notificationDto} NotificationDto data to create
    *
    * @returns Observable<NotificationEntity[] | void>
    */
   @ApiOkResponse({
-    description: 'Returns notification id',
+    description: 'Returns NotificationEntity',
     type: NotificationEntity,
   })
   @ApiBadRequestResponse({ description: 'Parameter provided is not good' })
   @UseGuards(AuthGuard())
   @Post()
   create(
-    @Body() createNotificationDto: CreateNotificationDto,
+    @Body() notificationDto: NotificationDto,
   ): Observable<NotificationEntity> {
-    return this._notificationsService.create(createNotificationDto);
+    return this._notificationsService.create(notificationDto);
   }
 
   /**
-   * Handler to answer in to POST /notifications route
+   * Handler to answer in to PUT /notifications/:id route
    *
-   * @param {HandlerParams} params list of route params to take notification id
-   * @param {UpdateNotificationDto} updateNotificationDto data to update
+   * @param {HandlerParams} params notifiaction id
+   * @param {notificationDto} NotificationDto data to update
    *
    * @returns Observable<NotificationEntity[] | void>
    */
   @ApiOkResponse({
-    description: 'Update an notification',
+    description: 'Update a notification',
     type: NotificationEntity,
+  })
+  @ApiNotFoundResponse({
+    description:
+      'Notification with the given "id" doesn\'t exist in the database',
   })
   @ApiBadRequestResponse({ description: 'Parameter provided is not good' })
   @UseGuards(AuthGuard())
   @Put(':id')
   update(
     @Param() params: HandlerParams,
-    @Body() updateNotificationDto: UpdateNotificationDto,
+    @Body() notificationDto: NotificationDto,
   ): Observable<NotificationEntity> {
-    return this._notificationsService.update(params.id, updateNotificationDto);
+    return this._notificationsService.update(params.id, notificationDto);
   }
 
   /**
-   * Handler to answer in to POST /notifications/:id route
+   * Handler to answer in to GET /notifications route
    *
-   * @param {HandlerParams} params list of route params to take notification id
+   * @param {string} auth user authorization
    *
    * @returns Observable<NotificationEntity[] | void>
    */
   @ApiOkResponse({
-    description: 'Return an notification',
+    description: 'Return user notifications',
     type: NotificationEntity,
-  })
-  @ApiNotFoundResponse({
-    description:
-      'Notification with the given "id" doesn\'t exist in the database',
+    isArray: true,
   })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @UseGuards(AuthGuard())
@@ -107,14 +106,15 @@ export class NotificationsController {
   }
 
   /**
-   * Handler to answer in to POST /notifications/:id route
+   * Handler to answer in to DELETE /notifications/:id route
    *
-   * @param {HandlerParams} params list of route params to take notification id
+   * @param {HandlerParams} params notification id
+   * @param {string} auth user authorization
    *
-   * @returns Observable<NotificationEntity[] | void>
+   * @returns Observable<NotificationEntity>
    */
   @ApiOkResponse({
-    description: 'Return an notification',
+    description: 'Delete a notification',
     type: NotificationEntity,
   })
   @ApiNotFoundResponse({
@@ -127,24 +127,20 @@ export class NotificationsController {
   delete(
     @Param() params: HandlerParams,
     @Headers('authorization') auth: string,
-  ): Observable<NotificationEntity> {
+  ): Observable<void> {
     return this._notificationsService.delete(params.id, auth);
   }
 
   /**
-   * Handler to answer in to POST /notifications/:id route
+   * Handler to answer in to Get /notifications/count route
    *
-   * @param {HandlerParams} params list of route params to take notification id
+   * @param {string} auth user authorization
    *
-   * @returns Observable<NotificationEntity[] | void>
+   * @returns Observable<Number>
    */
   @ApiOkResponse({
-    description: 'Return an notification',
+    description: 'Return user notifications length',
     type: NotificationEntity,
-  })
-  @ApiNotFoundResponse({
-    description:
-      'Notification with the given "id" doesn\'t exist in the database',
   })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @UseGuards(AuthGuard())

@@ -53,7 +53,13 @@ export class TripsDao {
       search['dateEnd'] = { $lte: new Date(query.dateEnd).toISOString() };
     if (query.country)
       search['country'] = { $regex: query.country, $options: 'i' };
-    return from(this._tripModel.find(search).sort({ createdAt: -1 })).pipe(
+    return from(
+      this._tripModel
+        .find(search)
+        .sort({ createdAt: -1 })
+        .skip(+query.skip)
+        .limit(+query.limit),
+    ).pipe(
       filter((docs: TripDocument[]) => !!docs && docs.length > 0),
       map((docs: TripDocument[]) => docs.map((_: TripDocument) => _.toJSON())),
       defaultIfEmpty([]),
@@ -84,6 +90,9 @@ export class TripsDao {
     from(this._tripModel.count({ createdBy: userId })).pipe(
       defaultIfEmpty(undefined),
     );
+
+  count = (): Observable<number> =>
+    from(this._tripModel.count()).pipe(defaultIfEmpty(undefined));
 
   /**
    * Call mongoose method, call toJSON on each result and returns TripModel[] or undefined

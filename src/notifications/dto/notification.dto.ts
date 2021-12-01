@@ -2,47 +2,47 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsBoolean, IsNotEmpty, IsString } from 'class-validator';
 import { NotificationEntity } from '../entities/notification.entity';
 
-export class CreateNotificationDto {
+export class NotificationDto {
   @ApiProperty({
     name: 'title',
-    description: 'title',
-    example: 'title',
+    description: 'Titre de la notification',
+    example: 'Demande annulée',
   })
   @IsString()
   @IsNotEmpty()
   title: string;
 
   @ApiProperty({
-    name: 'title',
-    description: 'title',
-    example: 'title',
+    name: 'content',
+    description: 'Contenu de la notification',
+    example: 'Nom Prenom a annulée sa demande',
   })
   @IsString()
   @IsNotEmpty()
   content: string;
 
   @ApiProperty({
-    name: 'title',
-    description: 'title',
-    example: 'title',
+    name: 'seen',
+    description: 'Notification vu ou pas',
+    example: 'false',
   })
   @IsBoolean()
   @IsNotEmpty()
   seen: boolean;
 
   @ApiProperty({
-    name: 'title',
-    description: 'title',
-    example: 'title',
+    name: 'userId',
+    description: "Identifiant de l'utilsateur qui recoit la notification",
+    example: '61a532ddbf07326c95b10906',
   })
   @IsString()
   @IsNotEmpty()
   userId: string;
 
   @ApiProperty({
-    name: 'title',
-    description: 'title',
-    example: 'title',
+    name: 'createdAt',
+    description: 'Date de creation de la notification',
+    example: '2020-12-01T00:23:38.000Z',
   })
   createdAt: string;
 
