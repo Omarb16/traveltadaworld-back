@@ -147,7 +147,6 @@ export class TripsDao {
   findUserTrips = (query: SortPagin, userId: string): Observable<Trip[]> => {
     var sort = {};
     sort[query.active] = query.direction == 'asc' ? 1 : -1;
-    console.log(query);
     return from(
       this._tripModel
         .find({ createdBy: userId })

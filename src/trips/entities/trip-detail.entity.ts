@@ -6,7 +6,7 @@ import { Traveler } from '../trip.shema';
 export class TripDetailEntity {
   @ApiProperty({
     name: 'id',
-    description: 'Unique identifier in the database',
+    description: 'Identifiant',
     example: '5763cd4dc378a38ecd387737',
   })
   @Expose()
@@ -15,8 +15,8 @@ export class TripDetailEntity {
 
   @ApiProperty({
     name: 'title',
-    description: 'Title',
-    example: 'Title',
+    description: 'Titre du voyage',
+    example: 'Voyage a Barcelone',
   })
   @Expose()
   @Type(() => String)
@@ -24,7 +24,7 @@ export class TripDetailEntity {
 
   @ApiProperty({
     name: 'description',
-    description: 'Description',
+    description: 'Description du voyage',
     example: 'Description',
   })
   @Expose()
@@ -33,8 +33,8 @@ export class TripDetailEntity {
 
   @ApiProperty({
     name: 'travelers',
-    description: 'Travelers',
-    example: 'travelers',
+    description: 'Voyageurs',
+    example: '[]',
   })
   @Expose()
   @Type(() => Traveler)
@@ -42,8 +42,8 @@ export class TripDetailEntity {
 
   @ApiProperty({
     name: 'canDemand',
-    description: 'canDemand',
-    example: 'canDemand',
+    description: 'Demander de participer au voyage',
+    example: 'true',
   })
   @Expose()
   @Type(() => Boolean)
@@ -51,8 +51,8 @@ export class TripDetailEntity {
 
   @ApiProperty({
     name: 'canCancel',
-    description: 'canCancel',
-    example: 'canCancel',
+    description: 'Annuler la demande',
+    example: 'false',
   })
   @Expose()
   @Type(() => Boolean)
@@ -60,8 +60,8 @@ export class TripDetailEntity {
 
   @ApiProperty({
     name: 'city',
-    description: 'city',
-    example: 'city',
+    description: 'Ville',
+    example: 'Barcelone',
   })
   @Expose()
   @Type(() => String)
@@ -69,12 +69,48 @@ export class TripDetailEntity {
 
   @ApiProperty({
     name: 'country',
-    description: 'country',
-    example: 'country',
+    description: 'Pays',
+    example: 'Espagne',
   })
   @Expose()
   @Type(() => String)
   country: string;
+
+  @ApiProperty({
+    name: 'dateBegin',
+    description: 'Date de debut du voyage',
+    example: '2020-12-01T00:23:38.000Z',
+  })
+  @Expose()
+  @Type(() => String)
+  dateBegin: string;
+
+  @ApiProperty({
+    name: 'dateEnd',
+    description: 'Date de fin du voyage',
+    example: '2020-12-01T00:23:38.000Z',
+  })
+  @Expose()
+  @Type(() => String)
+  dateEnd: string;
+
+  @ApiProperty({
+    name: 'price',
+    description: 'Prix estimé',
+    example: '50',
+  })
+  @Expose()
+  @Type(() => Number)
+  price: string;
+
+  @ApiProperty({
+    name: 'detail',
+    description: 'Detail du voyage',
+    example: 'Detail',
+  })
+  @Expose()
+  @Type(() => String)
+  detail: string;
 
   @ApiProperty({
     name: 'photo',
@@ -87,8 +123,8 @@ export class TripDetailEntity {
 
   @ApiProperty({
     name: 'createdAt',
-    description: 'Created At',
-    example: '2021-11-27T13:41:48.229Z',
+    description: 'Date de creation du voyage',
+    example: '2020-12-01T00:23:38.000Z',
   })
   @Exclude()
   @Type(() => Date)
@@ -96,48 +132,12 @@ export class TripDetailEntity {
 
   @ApiProperty({
     name: 'createdBy',
-    description: 'Created By',
-    example: '61a1885b50cf46588632569a',
+    description: 'Createur du voyage',
+    example: '61a24cfcbf197afd4214acae',
   })
   @Expose()
   @Type(() => String)
   createdBy: string;
-
-  @ApiProperty({
-    name: 'createdBy',
-    description: 'Created By',
-    example: '61a1885b50cf46588632569a',
-  })
-  @Expose()
-  @Type(() => String)
-  dateBegin: string;
-
-  @ApiProperty({
-    name: 'createdBy',
-    description: 'Created By',
-    example: '61a1885b50cf46588632569a',
-  })
-  @Expose()
-  @Type(() => String)
-  dateEnd: string;
-
-  @ApiProperty({
-    name: 'createdBy',
-    description: 'Created By',
-    example: '61a1885b50cf46588632569a',
-  })
-  @Expose()
-  @Type(() => Number)
-  price: string;
-
-  @ApiProperty({
-    name: 'createdBy',
-    description: 'Created By',
-    example: '61a1885b50cf46588632569a',
-  })
-  @Expose()
-  @Type(() => String)
-  detail: string;
 
   constructor(partial: Partial<TripDetailEntity>) {
     Object.assign(this, partial);

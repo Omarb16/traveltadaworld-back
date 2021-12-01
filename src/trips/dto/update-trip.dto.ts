@@ -14,8 +14,8 @@ import { Traveler } from '../trip.shema';
 export class UpdateTripDto {
   @ApiProperty({
     name: 'title',
-    description: 'Title',
-    example: 'Title',
+    description: 'Titre du voyage',
+    example: 'Voyage a Barcelone',
   })
   @IsString()
   @IsNotEmpty()
@@ -23,7 +23,7 @@ export class UpdateTripDto {
 
   @ApiProperty({
     name: 'description',
-    description: 'Description',
+    description: 'Description du voyage',
     example: 'Description',
   })
   @IsString()
@@ -31,9 +31,27 @@ export class UpdateTripDto {
   description: string;
 
   @ApiProperty({
+    name: 'dateBegin',
+    description: 'Date de debut du voyage',
+    example: '2020-12-01T00:23:38.000Z',
+  })
+  @IsString()
+  @IsNotEmpty()
+  dateBegin: string;
+
+  @ApiProperty({
+    name: 'dateEnd',
+    description: 'Date de fin du voyage',
+    example: '2020-12-01T00:23:38.000Z',
+  })
+  @IsString()
+  @IsNotEmpty()
+  dateEnd: string;
+
+  @ApiProperty({
     name: 'city',
-    description: 'city',
-    example: 'city',
+    description: 'Ville',
+    example: 'Barcelone',
   })
   @IsString()
   @IsNotEmpty()
@@ -41,12 +59,30 @@ export class UpdateTripDto {
 
   @ApiProperty({
     name: 'country',
-    description: 'country',
-    example: 'country',
+    description: 'Pays',
+    example: 'Espagne',
   })
   @IsString()
   @IsNotEmpty()
   country: string;
+
+  @ApiProperty({
+    name: 'detail',
+    description: 'Detail du voyage',
+    example: 'Detail',
+  })
+  @IsString()
+  @IsNotEmpty()
+  detail: string;
+
+  @ApiProperty({
+    name: 'price',
+    description: 'Prix estimé',
+    example: '50',
+  })
+  @IsString()
+  @IsNotEmpty()
+  price: string;
 
   @ApiProperty({
     name: 'photo',
@@ -58,75 +94,39 @@ export class UpdateTripDto {
   photo: string;
 
   @ApiProperty({
-    name: 'Travelers',
-    description: 'TravelersL',
+    name: 'createdNameBy',
+    description: 'Nom du createur',
+    example: 'Nom Prenom',
+  })
+  @IsString()
+  @IsNotEmpty()
+  createdNameBy: string;
+
+  @ApiProperty({
+    name: 'travelers',
+    description: 'Voyageurs',
     example: '[]',
   })
   @IsOptional()
   travelers: Traveler[];
 
   @ApiProperty({
-    name: 'createdAt',
-    description: 'Created At',
-    example: '',
+    name: 'updatedAt',
+    description: 'Date de modification',
+    example: '2020-12-01T00:23:38.000Z',
   })
   @IsString()
   @IsOptional()
   updatedAt: string;
 
   @ApiProperty({
-    name: 'createdBy',
-    description: 'Created By',
+    name: 'updatedBy',
+    description: '',
     example: '61a24cfcbf197afd4214acae',
   })
   @IsString()
   @IsOptional()
   updatedBy: string;
-
-  @ApiProperty({
-    name: 'createdBy',
-    description: 'Created By',
-    example: '61a1885b50cf46588632569a',
-  })
-  @IsString()
-  @IsNotEmpty()
-  dateBegin: string;
-
-  @ApiProperty({
-    name: 'createdBy',
-    description: 'Created By',
-    example: '61a1885b50cf46588632569a',
-  })
-  @IsString()
-  @IsNotEmpty()
-  dateEnd: string;
-
-  @ApiProperty({
-    name: 'createdBy',
-    description: 'Created By',
-    example: '61a1885b50cf46588632569a',
-  })
-  @IsString()
-  @IsNotEmpty()
-  price: string;
-
-  @ApiProperty({
-    name: 'createdBy',
-    description: 'Created By',
-    example: '61a1885b50cf46588632569a',
-  })
-  @IsString()
-  @IsNotEmpty()
-  detail: string;
-
-  @ApiProperty({
-    name: 'createdBy',
-    description: 'Created By',
-    example: '61a1885b50cf46588632569a',
-  })
-  @IsString()
-  @IsNotEmpty()
-  createdNameBy: string;
 
   constructor(partial: Partial<TripEntity>) {
     Object.assign(this, partial);

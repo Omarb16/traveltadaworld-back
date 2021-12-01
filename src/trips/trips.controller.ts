@@ -49,11 +49,11 @@ export class TripsController {
   constructor(private readonly _tripsService: TripsService) {}
 
   /**
-   * Handler to answer in to GET /trips/:id route
+   * Handler to answer in to GET /trips/find/:id route
    *
-   * @param {HandlerParams} params list of route params to take person id
+   * @param {HandlerParams} params trip id
    *
-   * @returns Observable<TripEntity| void>
+   * @returns Observable<TripEntity>
    */
   @ApiOkResponse({
     description: 'Return a trip',
@@ -69,15 +69,16 @@ export class TripsController {
   }
 
   /**
-   * Handler to answer in to GET /trips/:id route
+   * Handler to answer in to GET /trips/finddetail/:id route
    *
-   * @param {HandlerParams} params list of route params to take person id
+   * @param {HandlerParams} params trip id
+   * @param {string} auth user authorization
    *
-   * @returns Observable<TripEntity| void>
+   * @returns Observable<TripEntity>
    */
   @ApiOkResponse({
     description: 'Return a trip',
-    type: TripEntity,
+    type: TripDetailEntity,
   })
   @ApiNotFoundResponse({
     description: 'Trip with the given "id" doesn\'t exist in the database',
@@ -94,7 +95,9 @@ export class TripsController {
   /**
    * Handler to answer in to GET /trips route
    *
-   * @returns Observable<TripEntity[] | void>
+   * @param {TripQuery} query search query
+   *
+   * @returns Observable<TripEntity[]>
    */
   @ApiOkResponse({
     description: 'Return trips',
@@ -108,13 +111,16 @@ export class TripsController {
   }
 
   /**
-   * Handler to answer in to GET /trips route
+   * Handler to answer in to GET /trips/usertrips route
    *
-   * @returns Observable<TripEntity[] | void>
+   * @param {SortPagin} query sort and pagination query
+   * @param {string} auth user authorization
+   *
+   * @returns Observable<TripEntity[]>
    */
   @ApiOkResponse({
-    description: 'Return trips',
-    type: TripEntity,
+    description: 'Return user trips',
+    type: TripFunderEntity,
     isArray: true,
   })
   @ApiBadRequestResponse({ description: 'Bad request' })
@@ -130,11 +136,14 @@ export class TripsController {
   /**
    * Handler to answer in to GET /trips route
    *
-   * @returns Observable<TripEntity[] | void>
+   * @param {SortPagin} query sort and pagination query
+   * @param {string} auth user authorization
+   *
+   * @returns Observable<TripEntity[]>
    */
   @ApiOkResponse({
-    description: 'Return trips',
-    type: TripEntity,
+    description: 'Return traveler trips',
+    type: TripTravelerEntity,
     isArray: true,
   })
   @ApiBadRequestResponse({ description: 'Bad request' })
@@ -148,14 +157,15 @@ export class TripsController {
   }
 
   /**
-   * Handler to answer in to GET /trips route
+   * Handler to answer in to GET /trips/countusertrips route
    *
-   * @returns Observable<TripEntity[] | void>
+   * @param {string} auth user authorization
+   *
+   * @returns Observable<number>
    */
   @ApiOkResponse({
-    description: 'Return trips',
-    type: TripEntity,
-    isArray: true,
+    description: 'Return user trips length',
+    type: Number,
   })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @UseGuards(AuthGuard())
@@ -164,14 +174,15 @@ export class TripsController {
     return this._tripsService.countUserTrips(auth);
   }
   /**
-   * Handler to answer in to GET /trips route
+   * Handler to answer in to GET /trips/counttravelertrips route
    *
-   * @returns Observable<TripEntity[] | void>
+   * @param {string} auth user authorization
+   *
+   * @returns Observable<number>
    */
   @ApiOkResponse({
-    description: 'Return trips',
-    type: TripEntity,
-    isArray: true,
+    description: 'Return traveler trips length',
+    type: Number,
   })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @UseGuards(AuthGuard())
@@ -183,13 +194,13 @@ export class TripsController {
   }
 
   /**
-   * Handler to answer in to GET /trips route
+   * Handler to answer in to GET /trips/count route
    *
-   * @returns Observable<TripEntity[] | void>
+   * @returns Observable<number>
    */
   @ApiOkResponse({
-    description: 'Return trips',
-    type: TripEntity,
+    description: 'Return trips length',
+    type: Number,
   })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @Get('count')
@@ -198,9 +209,9 @@ export class TripsController {
   }
 
   /**
-   * Handler to answer in to GET /trips route
+   * Handler to answer in to GET /trips/firsttree route
    *
-   * @returns Observable<TripEntity[] | void>
+   * @returns Observable<TripEntity[]>
    */
   @ApiOkResponse({
     description: 'Return trips',
@@ -214,11 +225,13 @@ export class TripsController {
   }
 
   /**
-   * Handler to answer in to POST /trips/:id route
+   * Handler to answer in to POST /trips route
    *
-   * @param {TripDto} trip data to create
+   * @param {CreateTripDto} tripDto data to create
+   * @param {Express.Multer.File} file file to upload
+   * @param {string} auth user authorization
    *
-   * @returns Observable<TripEntity[] | void>
+   * @returns Observable<TripEntity>
    */
   @ApiOkResponse({
     description: 'Create a trip',

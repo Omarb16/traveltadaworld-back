@@ -9,11 +9,15 @@ export type TripDocument = Trip & Document;
 export class Traveler {
   @Prop({
     type: String,
+    required: true,
+    trim: true,
   })
   user: string;
 
   @Prop({
     type: String,
+    required: true,
+    trim: true,
   })
   name: string;
 
@@ -40,7 +44,6 @@ export const TravelerSchema = SchemaFactory.createForClass(Traveler);
   toJSON: {
     virtuals: true,
     transform: (doc: any, ret: any) => {
-      // delete obsolete data
       delete ret._id;
     },
   },
@@ -96,54 +99,63 @@ export class Trip {
   @Prop({
     type: Date,
     required: true,
+    trim: true,
   })
   createdAt: string;
 
   @Prop({
     type: String,
     required: true,
+    trim: true,
   })
   createdBy: string;
 
   @Prop({
     type: String,
     required: true,
+    trim: true,
   })
   createdNameBy: string;
 
   @Prop({
     type: Date,
     required: false,
+    trim: true,
   })
   updatedAt: string;
 
   @Prop({
     type: String,
     required: false,
+    trim: true,
   })
   updatedBy: string;
 
   @Prop({
-    type: String,
+    type: Date,
     required: true,
+    trim: true,
   })
   dateBegin: string;
 
   @Prop({
-    type: String,
+    type: Date,
     required: true,
+    trim: true,
   })
   dateEnd: string;
 
   @Prop({
     type: String,
     required: true,
+    trim: true,
   })
   price: string;
 
   @Prop({
     type: String,
     required: true,
+    trim: true,
   })
   detail: string;
 }

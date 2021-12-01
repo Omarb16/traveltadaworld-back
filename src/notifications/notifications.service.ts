@@ -57,7 +57,6 @@ export class NotificationsService {
     notification: NotificationDto,
   ): Observable<NotificationEntity> => {
     notification.seen = true;
-    console.log(notification);
     return this._notificationsDao.update(id, notification).pipe(
       catchError((e) =>
         throwError(() => new UnprocessableEntityException(e.message)),

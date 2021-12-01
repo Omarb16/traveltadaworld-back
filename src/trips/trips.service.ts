@@ -73,7 +73,9 @@ export class TripsService {
         var t = new TripDetailEntity(_);
         t.canDemand =
           t.createdBy != userId && !t.travelers.some((e) => e.user == userId);
-        t.canCancel = t.travelers.some((e) => e.user == userId);
+        t.canCancel = t.travelers.some(
+          (e) => e.user == userId && e.accept == null && e.decline == null,
+        );
         return !!_
           ? of(t)
           : throwError(
@@ -181,7 +183,14 @@ export class TripsService {
           } else {
             __.photo = null;
           }
-          return new TripTravelerEntity(__);
+          var t = new TripTravelerEntity(__);
+          t.canCancel = __.travelers.some(
+            (e) => e.user == userId && e.accept == null && e.decline == null,
+          );
+          t.accepted = __.travelers.some(
+            (e) => e.user == userId && e.accept == true,
+          );
+          return t;
         }),
       ),
       defaultIfEmpty(undefined),
@@ -310,7 +319,6 @@ export class TripsService {
     trip.createdAt = moment().utc().format();
     trip.photo = filename;
     trip.createdBy = this._jwtService.decode(auth.replace('Bearer ', '')).sub;
-    console.log(trip);
     return this._tripsDao.create(trip).pipe(
       catchError((e) =>
         throwError(() => new UnprocessableEntityException(e.message)),
