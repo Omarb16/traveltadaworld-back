@@ -113,6 +113,6 @@ supprimer voyage.
 Integrer un voyage.
 Telecharger devis en pdf.
 Tris de l'affichage.
-et bien d'autres....
+et bien d'autres... On vous laisse découvrir seul.
 
 ```
