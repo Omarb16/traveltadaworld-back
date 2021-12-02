@@ -29,7 +29,20 @@
 ## Installation
 
 ```bash
-$ npm install
+# Cloner le projet du git 
+$ git clone https://github.com/Omarb16/traveltadaworld-back
+
+# Aller sur le dossier
+$ cd traveltadaworld-back
+
+#Ouvrir un terminal et lancer ces commandes
+$ docker-compose up
+$ docker-compose start
+$ sudo systemctl start mongod
+
+#Telecharger le logiciel ROBOT 3T et l'ouvrir
+  -Creer une base de données appelé "traveltadaword".
+  -Lancer e  <a href="src/scripts/init.mongo.js">script</a>
 ```
 
 ## Running the app
