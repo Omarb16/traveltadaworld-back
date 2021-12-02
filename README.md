@@ -51,6 +51,8 @@ $ cd traveltadaworld-back
 #Ouvrir un terminal et lancer ces commandes
 $ docker-compose up
 $ docker-compose start
+$docker pull mongo:latest
+$docker run -d -p 27017:27017 --name tadaweb mongo:latest
 $ sudo systemctl start mongod
 ```
 
