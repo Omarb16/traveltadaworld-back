@@ -21,7 +21,7 @@ import {
 import {
   ApiBadRequestResponse,
   ApiNotFoundResponse,
-  ApiOkResponse,
+  ApiOkResponse, ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
 import { HttpInterceptor } from 'src/interceptors/http.interceptor';
@@ -37,10 +37,12 @@ import { editFileName, imageFileFilter } from 'src/validators/file-helper';
 import { TripTravelerEntity } from './entities/trip-traveler.entity';
 import { TripDetailEntity } from './entities/trip-detail.entity';
 
+
 @ApiTags('trips')
 @Controller('trips')
 @UseInterceptors(ClassSerializerInterceptor)
 @UseInterceptors(HttpInterceptor)
+
 export class TripsController {
   /**
    * Class constructor
@@ -55,14 +57,20 @@ export class TripsController {
    *
    * @returns Observable<TripEntity>
    */
-  @ApiOkResponse({
+    @ApiOkResponse({
     description: 'Return a trip',
     type: TripEntity,
   })
   @ApiNotFoundResponse({
     description: 'Trip with the given "id" doesn\'t exist in the database',
   })
-  @ApiBadRequestResponse({ description: 'Bad request' })
+    @ApiBadRequestResponse({ description: 'Bad request' })
+    @ApiParam({
+      name: 'id',
+      description: 'Unique identifier of the person in the database',
+      type: String,
+      allowEmptyValue: false,
+    })
   @Get('find/:id')
   find(@Param() params: HandlerParams): Observable<TripEntity> {
     return this._tripsService.find(params.id);

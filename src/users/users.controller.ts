@@ -21,6 +21,7 @@ import {
   ApiConsumes,
   ApiNotFoundResponse,
   ApiOkResponse,
+  ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
 import { HttpInterceptor } from 'src/interceptors/http.interceptor';
@@ -144,6 +145,13 @@ export class UsersController {
     description: 'User with the given "id" doesn\'t exist in the database',
   })
   @ApiBadRequestResponse({ description: 'Bad request' })
+  @ApiBadRequestResponse({ description: 'Bad request' })
+  @ApiParam({
+    name: 'id',
+    description: 'Unique identifier of the person in the database',
+    type: String,
+    allowEmptyValue: false,
+  })
   @UseGuards(AuthGuard())
   @Get(':id')
   find(@Param() params: HandlerParams): Observable<UserEntity> {
