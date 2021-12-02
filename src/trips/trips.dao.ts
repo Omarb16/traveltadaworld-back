@@ -1,14 +1,13 @@
 import { SortPagin } from './../validators/sort-pagin';
 import { TripQuery } from './../validators/trip-query';
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { defaultIfEmpty, from, Observable } from 'rxjs';
-import { filter, map, tap } from 'rxjs/operators';
+import { filter, map } from 'rxjs/operators';
 import { CreateTripDto } from './dto/create-trip.dto';
 import { UpdateTripDto } from './dto/update-trip.dto';
-import { Trip, TripDocument, Traveler } from './trip.shema';
-const ObjectId = require('mongodb').ObjectID;
+import { Trip, TripDocument } from './trip.shema';
 
 @Injectable()
 export class TripsDao {
