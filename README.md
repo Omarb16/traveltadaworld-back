@@ -100,19 +100,4 @@ $ nest start
 
 http://0.0.0.0:3000/documentation/
 
-## Fonctionnalités 
 
-```bash
-Creation de compte.
-Authentification.
-Editer compte.
-Supprimer compte.
-Creation d'un voyage.
-Edite voyage.
-supprimer voyage.
-Integrer un voyage.
-Telecharger devis en pdf.
-Tris de l'affichage.
-et bien d'autres... On vous laisse découvrir seul.
-
-```
