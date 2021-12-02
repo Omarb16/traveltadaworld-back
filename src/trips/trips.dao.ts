@@ -23,7 +23,7 @@ export class TripsDao {
   ) {}
 
   /**
-   * Call mongoose method, call toJSON on each result and returns TripModel or undefined
+   * find trip by id
    *
    * @param {string} id
    *
@@ -37,8 +37,9 @@ export class TripsDao {
     );
 
   /**
-   * Call mongoose method, call toJSON on each result and returns TripModel[] or undefined
+   * find alla trips
    *
+   * @param {TripQuery} query search query
    *
    * @return {Observable<Trip[] | void>}
    */
@@ -67,7 +68,7 @@ export class TripsDao {
   };
 
   /**
-   * Call mongoose method, call toJSON on each result and returns TripModel[] or undefined
+   * find first tree trips
    *
    *
    * @return {Observable<Trip[] | void>}
@@ -81,10 +82,11 @@ export class TripsDao {
   };
 
   /**
-   * Call mongoose method, call toJSON on each result and returns TripModel[] or undefined
+   * count user trips
    *
+   * @param {string} userId user id
    *
-   * @return {Observable<Trip[] | void>}
+   * @return {Observable<number>}
    */
   countUserTrips = (userId: string): Observable<number> =>
     from(this._tripModel.count({ createdBy: userId })).pipe(
@@ -95,10 +97,11 @@ export class TripsDao {
     from(this._tripModel.count()).pipe(defaultIfEmpty(undefined));
 
   /**
-   * Call mongoose method, call toJSON on each result and returns TripModel[] or undefined
+   * count travelers trips
    *
+   * @param {string} userId user id
    *
-   * @return {Observable<Trip[] | void>}
+   * @return {Observable<number}
    */
   countTravelerTrips = (userId: string): Observable<number> =>
     from(
@@ -110,8 +113,10 @@ export class TripsDao {
     ).pipe(defaultIfEmpty(undefined));
 
   /**
-   * Call mongoose method, call toJSON on each result and returns TripModel[] or undefined
+   * find traveler trips
    *
+   * @param {SortPagin} query search query
+   * @param {string} userId user id
    *
    * @return {Observable<Trip[] | void>}
    */
@@ -139,10 +144,13 @@ export class TripsDao {
   };
 
   /**
-   * Call mongoose method, call toJSON on each result and returns TripModel[] or undefined
+   * find user trips
+   *
+   * @param {SortPagin} query search query
+   * @param {string} userId user id
    *
    *
-   * @return {Observable<Trip[] | void>}
+   * @return {Observable<Trip[]>}
    */
   findUserTrips = (query: SortPagin, userId: string): Observable<Trip[]> => {
     var sort = {};
@@ -161,9 +169,9 @@ export class TripsDao {
   };
 
   /**
-   * Call mongoose method, call toJSON on each result and returns TripModel[] or undefined
+   * create a trip
    *
-   * @param {TripDto} trip
+   * @param {CreateTripDto} trip
    *
    * @return {Observable<Trip | void>}
    */
@@ -175,10 +183,11 @@ export class TripsDao {
   };
 
   /**
-   * Call mongoose method, call toJSON on each result and returns TripModel[] or undefined
+   * update a trip
    *
-   * @param {string} id
-   * @param {TripDto} trip
+   * @param {string} id trip id
+   * @param {UpdateTripDto} trip trip to update
+   * @param {string} user user id
    *
    * @return {Observable<Trip | void>}
    */
@@ -199,14 +208,18 @@ export class TripsDao {
     );
 
   /**
-   * Call mongoose method, call toJSON on each result and returns TripModel[] or undefined
+   * delete a trip
    *
-   * @param {string} id
+   * @param {string} id trip id
+   *
+   * @param {string} userId user id
    *
    * @return {Observable<void>}
    */
   delete = (id: string, userId: string): Observable<Trip | void> => {
-    return from(this._tripModel.findOneAndRemove({ _id: id })).pipe(
+    return from(
+      this._tripModel.findOneAndRemove({ _id: id, createdBy: userId }),
+    ).pipe(
       filter((doc: TripDocument) => !!doc),
       map((doc: TripDocument) => doc.toJSON()),
       defaultIfEmpty(undefined),

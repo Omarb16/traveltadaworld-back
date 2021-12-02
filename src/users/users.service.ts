@@ -33,9 +33,9 @@ export class UsersService {
   ) {}
 
   /**
-   * Returns one user of the list matching id in parameter
+   * Log in an user
    *
-   * @param {LoginUserDto} user of the user
+   * @param {LoginUserDto} user user to log
    *
    * @returns {Observable<AccessToken>}
    */
@@ -67,9 +67,10 @@ export class UsersService {
   };
 
   /**
-   * Returns one user of the list matching id in parameter
+   * Sign in an user
    *
-   * @param {CreateUserDto} user of the user
+   * @param {CreateUserDto} user user to sign in
+   * @param {string} filename file name
    *
    * @returns {Observable<UserEntity>}
    */
@@ -110,10 +111,12 @@ export class UsersService {
   };
 
   /**
-   * Returns one user of the list matching id in parameter
+   * update an user
    *
-   * @param {string} id of the user
-   * @param {UpdateUserDto} user of the user
+   * @param {string} id user id
+   * @param {UpdateUserDto} user user to update
+   * @param {Express.Multer.File} file file to upload
+   * @param {string} auth user authorization
    *
    * @returns {Observable<UserEntity>}
    */
@@ -145,9 +148,9 @@ export class UsersService {
   };
 
   /**
-   * Returns one user of the list matching id in parameter
+   * find an user
    *
-   * @param {string} id of the user
+   * @param {string} id user id
    *
    * @returns {Observable<UserEntity>}
    */
@@ -179,9 +182,10 @@ export class UsersService {
   };
 
   /**
-   * Returns one user of the list matching id in parameter
+   * delete an user
    *
    * @param {string} id of the user
+   * @param {string} auth user authorization
    *
    * @returns {Observable<void>}
    */

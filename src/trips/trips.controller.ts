@@ -258,15 +258,17 @@ export class TripsController {
   }
 
   /**
-   * Handler to answer in to POST /trips/:id route
+   * Handler to answer in to PUT /trips/update/:id route
    *
-   * @param {HandlerParams} params list of route params to take person id
-   * @param {TripDto} trip data to update
+   * @param {HandlerParams} params trip id
+   * @param {UpdateTripDto} trip data to update
+   * @param {Express.Multer.File} file fie to upload
+   * @param {string} auth user authorization
    *
-   * @returns Observable<TripEntity[] | void>
+   * @returns Observable<TripEntity>
    */
   @ApiOkResponse({
-    description: 'Return a trip',
+    description: 'Update a trip',
     type: TripEntity,
   })
   @ApiNotFoundResponse({
@@ -294,15 +296,15 @@ export class TripsController {
   }
 
   /**
-   * Handler to answer in to POST /trips/:id route
+   * Handler to answer in to POST /delete/:id route
    *
-   * @param {HandlerParams} params list of route params to take person id
+   * @param {HandlerParams} params trip id
+   * @param {string} auth user authorization
    *
-   * @returns Observable<TripEntity[] | void>
+   * @returns Observable<void>
    */
   @ApiOkResponse({
     description: 'Return a trip',
-    type: TripEntity,
   })
   @ApiNotFoundResponse({
     description: 'Trip with the given "id" doesn\'t exist in the database',
@@ -318,9 +320,10 @@ export class TripsController {
   }
 
   /**
-   * Handler to answer in to POST /trips/:id route
+   * Handler to answer in to DELETE /trips/cancel/:id route
    *
-   * @param {HandlerParams} params list of route params to take person id
+   * @param {HandlerParams} params trip id
+   * @param {string} auth user authorization
    *
    * @returns Observable<TripEntity[] | void>
    */
@@ -342,11 +345,13 @@ export class TripsController {
   }
 
   /**
-   * Handler to answer in to POST /trips/:id route
+   * Handler to answer in to POST /trips/demand/:id route
    *
-   * @param {HandlerParams} params list of route params to take person id
+   * @param {HandlerParams} params trip id
+   * @param {HandlerName} body name
+   * @param {string} auth user authorization
    *
-   * @returns Observable<TripEntity[] | void>
+   * @returns Observable<TripEntity | void>
    */
   @ApiOkResponse({
     description: 'Return a trip',
@@ -367,11 +372,13 @@ export class TripsController {
   }
 
   /**
-   * Handler to answer in to POST /trips/:id route
+   * Handler to answer in to POST /trips/accept/:id route
    *
-   * @param {HandlerParams} params list of route params to take person id
+   * @param {HandlerParams} params trip id
+   * @param {HandlerParams} user user accepted id
+   * @param {string} auth user authoriazation
    *
-   * @returns Observable<TripEntity[] | void>
+   * @returns Observable<TripEntity | void>
    */
   @ApiOkResponse({
     description: 'Return a trip',
@@ -392,9 +399,11 @@ export class TripsController {
   }
 
   /**
-   * Handler to answer in to POST /trips/:id route
+   * Handler to answer in to PUT /trips/decline/:id route
    *
-   * @param {HandlerParams} params list of route params to take person id
+   * @param {HandlerParams} params trip id
+   * @param {HandlerParams} user id user declined
+   * @param {HandlerParams} auth user authorization
    *
    * @returns Observable<TripEntity[] | void>
    */

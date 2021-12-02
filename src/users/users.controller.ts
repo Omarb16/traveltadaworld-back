@@ -13,7 +13,6 @@ import {
   UseInterceptors,
   Body,
   UploadedFile,
-  Logger,
   Headers,
   Delete,
 } from '@nestjs/common';
@@ -32,6 +31,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { editFileName, imageFileFilter } from 'src/validators/file-helper';
+import { AccessToken } from './entities/access-token.entity';
 
 @ApiTags('users')
 @ApiConsumes('application/json')
@@ -49,12 +49,13 @@ export class UsersController {
    * Handler to answer in to POST /users/signIn route
    *
    * @param {CreateUserDto} createUserDto data to create
+   * @param {Express.Multer.File} file file to upload
    *
-   * @returns Observable<UserEntity[] | void>
+   * @returns Observable<AccessToken>
    */
   @ApiOkResponse({
     description: 'Returns user access token',
-    type: UserEntity,
+    type: AccessToken,
   })
   @ApiBadRequestResponse({ description: 'Parameter provided is not good' })
   @ApiConsumes('multipart/form-data')
@@ -71,7 +72,7 @@ export class UsersController {
   signIn(
     @Body() createUserDto: CreateUserDto,
     @UploadedFile() file: Express.Multer.File,
-  ) {
+  ): Observable<AccessToken> {
     return this._usersService.signIn(createUserDto, file.filename);
   }
 
@@ -80,25 +81,27 @@ export class UsersController {
    *
    * @param {LoginUserDto} loginUserDto data to login
    *
-   * @returns Observable<UserEntity[] | void>
+   * @returns Observable<AccessToken>
    */
   @ApiOkResponse({
-    description: 'Returns user id',
-    type: UserEntity,
+    description: 'Returns Access token',
+    type: AccessToken,
   })
   @ApiBadRequestResponse({ description: 'Parameter provided is not good' })
   @Post('logIn')
-  logIn(@Body() loginUserDto: LoginUserDto) {
+  logIn(@Body() loginUserDto: LoginUserDto): Observable<AccessToken> {
     return this._usersService.logIn(loginUserDto);
   }
 
   /**
-   * Handler to answer in to POST /users route
+   * Handler to answer in to PUT /users/:id route
    *
-   * @param {HandlerParams} params list of route params to take user id
+   * @param {HandlerParams} params user id
    * @param {UpdateUserDto} updateUserDto data to update
+   * @param {Express.Multer.File} file file to upload
+   * @param {string} auht user authorization
    *
-   * @returns Observable<UserEntity[] | void>
+   * @returns Observable<UserEntity>
    */
   @ApiOkResponse({
     description: 'Update an user',
@@ -127,9 +130,9 @@ export class UsersController {
   }
 
   /**
-   * Handler to answer in to POST /users/:id route
+   * Handler to answer in to GET /users/:id route
    *
-   * @param {HandlerParams} params list of route params to take user id
+   * @param {HandlerParams} params user id
    *
    * @returns Observable<UserEntity[] | void>
    */
@@ -148,15 +151,14 @@ export class UsersController {
   }
 
   /**
-   * Handler to answer in to POST /user/:id route
+   * Handler to answer in to DELETE /user/:id route
    *
-   * @param {HandlerParams} params list of route params to take person id
+   * @param {HandlerParams} params user id
    *
-   * @returns Observable<UserEntity[] | void>
+   * @returns Observable<void>
    */
   @ApiOkResponse({
     description: 'Return a user',
-    type: UserEntity,
   })
   @ApiNotFoundResponse({
     description: 'User with the given "id" doesn\'t exist in the database',

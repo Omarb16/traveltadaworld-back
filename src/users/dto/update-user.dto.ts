@@ -110,7 +110,7 @@ export class UpdateUserDto {
   @ApiProperty({
     name: 'updatedAt',
     description: 'Updated At',
-    example: '',
+    example: '2020-12-01T00:23:38.000Z',
   })
   @IsOptional()
   @IsString()

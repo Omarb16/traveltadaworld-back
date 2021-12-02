@@ -126,7 +126,7 @@ export class CreateUserDto {
   @ApiProperty({
     name: 'createdAt',
     description: 'Created At',
-    example: '',
+    example: '2020-12-01T00:23:38.000Z',
   })
   @IsOptional()
   @IsString()

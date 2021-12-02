@@ -46,9 +46,10 @@ export class TripsService {
   ) {}
 
   /**
-   * Returns one trip of the list matching id in parameter
+   * find detail trip
    *
-   * @param {string} id of the trip
+   * @param {string} id trip id
+   * @param {string} auth user authorization
    *
    * @returns {Observable<TripEntity>}
    */
@@ -86,9 +87,9 @@ export class TripsService {
   };
 
   /**
-   * Returns one trip of the list matching id in parameter
+   * find trip by id
    *
-   * @param {string} id of the trip
+   * @param {string} id trip id
    *
    * @returns {Observable<TripEntity>}
    */
@@ -118,10 +119,12 @@ export class TripsService {
     );
 
   /**
-   * Returns one trip of the list matching id in parameter
+   * find user trips
    *
+   * @param {SortPagin} query query to sort and pagination
+   * @param {string} auth user authorization
    *
-   * @returns {Observable<TripEntity[]>}
+   * @returns {Observable<TripFunderEntity[]>}
    *
    */
   findUserTrips = (
@@ -156,10 +159,12 @@ export class TripsService {
   };
 
   /**
-   * Returns one trip of the list matching id in parameter
+   * find traveler trips
    *
+   * @param {SortPagin} query query to sort and pagination
+   * @param {string} auth user authorization
    *
-   * @returns {Observable<TripEntity[]>}
+   * @returns {Observable<TripTravelerEntity[]>}
    */
   findTravelerTrips = (
     query: SortPagin,
@@ -198,10 +203,11 @@ export class TripsService {
   };
 
   /**
-   * Returns one trip of the list matching id in parameter
+   * count traveler trip
    *
+   * @param {string} auth user authorization
    *
-   * @returns {Observable<TripEntity[]>}
+   * @returns {Observable<number>}
    */
   countTravelerTrips = (auth: string): Observable<number> => {
     const userId = this._jwtService.decode(auth.replace('Bearer ', '')).sub;
@@ -214,10 +220,9 @@ export class TripsService {
   };
 
   /**
-   * Returns one trip of the list matching id in parameter
+   * count trips
    *
-   *
-   * @returns {Observable<TripEntity[]>}
+   * @returns {Observable<number>}
    */
   count = (): Observable<number> => {
     return this._tripsDao.count().pipe(
@@ -229,10 +234,11 @@ export class TripsService {
   };
 
   /**
-   * Returns one trip of the list matching id in parameter
+   * count user trip
    *
+   * @param {string} auth user authorization
    *
-   * @returns {Observable<TripEntity[]>}
+   * @returns {Observable<number>}
    */
   countUserTrips = (auth: string): Observable<number> => {
     const userId = this._jwtService.decode(auth.replace('Bearer ', '')).sub;
@@ -245,8 +251,9 @@ export class TripsService {
   };
 
   /**
-   * Returns one trip of the list matching id in parameter
+   * find all trips
    *
+   * @param {TripQuery} query query to search and pagination
    *
    * @returns {Observable<TripEntity[]>}
    */
@@ -275,7 +282,7 @@ export class TripsService {
     );
 
   /**
-   * Returns one trip of the list matching id in parameter
+   * fidn first tree trips
    *
    *
    * @returns {Observable<TripEntity[]>}
@@ -305,9 +312,11 @@ export class TripsService {
     );
 
   /**
-   * Returns one trip of the list matching id in parameter
+   * create trip
    *
-   * @param {TripDto} trip of the trip
+   * @param {CreateTripDto} trip trip to create
+   * @param {string} filename file name
+   * @param {string} auth user authorization
    *
    * @returns {Observable<TripEntity>}
    */
@@ -328,11 +337,12 @@ export class TripsService {
   };
 
   /**
-   * Returns one trip of the list matching id in parameter
+   * update a trip
    *
-   * @param {string} id of the trip
-   * @param {TripDto} trip of the trip
-   *
+   * @param {string} id trip id
+   * @param {UpdateTripDto} trip trip to update
+   * @param {Express.Multer.File} file file to upload
+   * @param {string} auth user authorization
    * @returns {Observable<TripEntity>}
    */
   update = (
@@ -364,10 +374,10 @@ export class TripsService {
   };
 
   /**
-   * Returns one trip of the list matching id in parameter
+   * cancel request to join a trip
    *
-   * @param {string} id of the trip
-   * @param {TripDto} trip of the trip
+   * @param {string} id trip id
+   * @param {string} auth user authorization
    *
    * @returns {Observable<TripEntity>}
    */
@@ -396,9 +406,10 @@ export class TripsService {
   };
 
   /**
-   * Returns one trip of the list matching id in parameter
+   * delete a trip
    *
    * @param {string} id of the trip
+   * @param {string} auth user authorization
    *
    * @returns {Observable<void>}
    */
@@ -419,9 +430,11 @@ export class TripsService {
   };
 
   /**
-   * Returns one trip of the list matching id in parameter
+   * request to join a trip
    *
-   * @param {string} id of the trip
+   * @param {string} id trip id
+   * @param {string} name name of the traveler
+   * @param {string} auth user authorization
    *
    * @returns {Observable<void>}
    */
@@ -458,9 +471,11 @@ export class TripsService {
   };
 
   /**
-   * Returns one trip of the list matching id in parameter
+   * accept a traveler into a trip
    *
-   * @param {string} id of the trip
+   * @param {string} id trip id
+   * @param {string} userAccepted traveler id to accept
+   * @param {string} auth user authorization
    *
    * @returns {Observable<void>}
    */
@@ -496,9 +511,11 @@ export class TripsService {
   };
 
   /**
-   * Returns one trip of the list matching id in parameter
+   * decline a traveler to join a trip
    *
-   * @param {string} id of the trip
+   * @param {string} id trip id
+   * @param {string} userDeclined traveler id to decline
+   * @param {string} auth user authorization
    *
    * @returns {Observable<void>}
    */

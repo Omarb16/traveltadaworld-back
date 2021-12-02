@@ -23,7 +23,7 @@ export class UsersDao {
   /**
    * Log in an user
    *
-   * @param {LoginUserDto} user
+   * @param {LoginUserDto} user user to log in
    *
    * @return {Observable<User | void>}
    */
@@ -35,9 +35,9 @@ export class UsersDao {
     );
 
   /**
-   * Create a user in users list
+   * SignIn an user
    *
-   * @param {CreateUserDto} user
+   * @param {CreateUserDto} user user to sign in
    *
    * @return {Observable<User | void>}
    */
@@ -49,10 +49,10 @@ export class UsersDao {
     );
   };
   /**
-   * Update a user in users list
+   * Update an user
    *
-   * @param {string} id
-   * @param {UpdateUserDto} user
+   * @param {string} id user id
+   * @param {UpdateUserDto} user user to update
    *
    * @return {Observable<User | void>}
    */
@@ -69,9 +69,9 @@ export class UsersDao {
     );
 
   /**
-   * Call mongoose method, call toJSON on each result and returns UserModel or undefined
+   * find a user
    *
-   * @param {string} id
+   * @param {string} id user id
    *
    * @return {Observable<User | void>}
    */
@@ -83,11 +83,11 @@ export class UsersDao {
     );
 
   /**
-   * Call mongoose method, call toJSON on each result and returns TripModel[] or undefined
+   * delete an user
    *
    * @param {string} id
    *
-   * @return {Observable<void>}
+   * @return {Observable<User | void>}
    */
   delete = (id: string, userId: string): Observable<User | void> => {
     return from(
