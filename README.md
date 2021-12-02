@@ -42,7 +42,7 @@ $ sudo systemctl start mongod
 
 #Telecharger le logiciel ROBOT 3T et l'ouvrir
   -Creer une base de données appelé "traveltadaword".
-  -Lancer e  <a href="src/scripts/init.mongo.js">script</a>
+  -Lancer e  [a relative link](src/scripts/init.mongo.js)
 ```
 
 ## Running the app
