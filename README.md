@@ -88,7 +88,7 @@ cli version                : 8.1.5
 
 
 ```bash
-# Installation des dependances de deux façon :
+# Installation des dependances de deux façons :
 $ npm install
 # ou
 $ yarn install
