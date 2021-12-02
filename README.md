@@ -40,10 +40,15 @@ $ docker-compose start
 $ sudo systemctl start mongod
 ```
 
-Telecharger le logiciel ROBOT 3T et l'ouvrir
+Telecharger le logiciel ROBOT 3T et l'ouvrir 
+
+```bash
+
   -Creer une base de données appelé "traveltadaword".
+  ```
   
-  -Lancer le [script](https://github.com/Omarb16/traveltadaworld-back/blob/main/scripts/init.mongo.js)
+Lancer le [script](https://github.com/Omarb16/traveltadaworld-back/blob/main/scripts/init.mongo.js)
+  
   
 ## Installation de dependances:
 ```bash
