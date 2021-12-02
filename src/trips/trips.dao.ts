@@ -45,15 +45,20 @@ export class TripsDao {
    */
   findAll = (query: TripQuery): Observable<Trip[] | void> => {
     var search = {};
+    console.log(query);
     if (query.title) search['title'] = { $regex: query.title, $options: 'i' };
     if (query.city) search['city'] = { $regex: query.city, $options: 'i' };
-    if (query.price) search['price'] = { $regex: query.price, $options: 'i' };
+    if (query.pricemin && query.pricemax)
+      search['price'] = { $gte: +query.pricemin, $lte: +query.pricemax };
+    else if (query.pricemax) search['price'] = { $lte: +query.pricemax };
+    else if (query.pricemin) search['price'] = { $gte: +query.pricemin };
     if (query.dateBegin)
       search['dateBegin'] = { $gte: new Date(query.dateBegin).toISOString() };
     if (query.dateEnd)
       search['dateEnd'] = { $lte: new Date(query.dateEnd).toISOString() };
     if (query.country)
       search['country'] = { $regex: query.country, $options: 'i' };
+    console.log(search);
     return from(
       this._tripModel
         .find(search)

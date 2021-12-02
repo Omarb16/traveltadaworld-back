@@ -23,7 +23,11 @@ export class TripQuery {
 
   @IsString()
   @IsOptional()
-  price: string;
+  pricemin: string;
+
+  @IsString()
+  @IsOptional()
+  pricemax: string;
 
   @IsString()
   @IsNotEmpty()

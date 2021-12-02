@@ -54,7 +54,11 @@ export class TripsService {
    * @returns {Observable<TripEntity>}
    */
   findDetail = (id: string, auth: string): Observable<TripDetailEntity> => {
-    var userId = this._jwtService.decode(auth.replace('Bearer ', '')).sub;
+    const jwt = this._jwtService.decode(auth.replace('Bearer ', ''));
+    var userId = '0';
+    if (jwt) {
+      userId = jwt.sub;
+    }
     return this._tripsDao.find(id).pipe(
       catchError((e) =>
         throwError(() => new UnprocessableEntityException(e.message)),
