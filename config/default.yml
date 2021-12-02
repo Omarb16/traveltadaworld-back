@@ -10,6 +10,6 @@ swagger:
   tag:
   path: documentation
 mongodb:
-  uri: mongodb://localhost:27017/tadaweb
+  uri: mongodb://localhost:27017/traveltadaworld
 jwt:
   secret: $2a$12$Jx1fXSuaVSJEZGfcxeJNWuUrMAJx6p7Mjqz4s56QgcfxGqR/SqfQG
