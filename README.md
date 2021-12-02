@@ -48,6 +48,41 @@ Telecharger le logiciel ROBOT 3T et l'ouvrir
   
 ## Installation de dependances:
 ```bash
+
+ _   _             _      ___  _____  _____  _     _____
+| \ | |           | |    |_  |/  ___|/  __ \| |   |_   _|
+|  \| |  ___  ___ | |_     | |\ `--. | /  \/| |     | |
+| . ` | / _ \/ __|| __|    | | `--. \| |    | |     | |
+| |\  ||  __/\__ \| |_ /\__/ //\__/ /| \__/\| |_____| |_
+\_| \_/ \___||___/ \__|\____/ \____/  \____/\_____/\___/
+
+
+[System Information]
+OS Version     : Linux 5.11
+NodeJS Version : v16.13.0
+YARN Version    : 1.22.15 
+
+[Nest CLI]
+Nest CLI Version : 8.1.5 
+
+[Nest Platform Information]
+platform-socket.io version : 8.2.3
+platform-express version   : 8.2.3
+platform-fastify version   : 8.2.3
+websockets version         : 8.2.3
+schematics version         : 8.0.5
+mongoose version           : 9.0.1
+passport version           : 8.0.1
+swagger version            : 5.1.5
+testing version            : 8.2.3
+common version             : 8.2.3
+core version               : 8.2.3
+jwt version                : 8.0.0
+cli version                : 8.1.5
+```
+
+
+```bash
 # Installation des dependances de deux façon :
 $ npm install
 # ou
@@ -60,6 +95,7 @@ $ nest start
 ## Acces aux API
 
 http://0.0.0.0:3000/documentation/
+
 
 ```bash
 # development
