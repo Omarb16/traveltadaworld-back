@@ -26,13 +26,76 @@
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
-## Installation
+## Installation du projet
 
 ```bash
-$ npm install
+# Cloner le projet du git 
+$ git clone https://github.com/Omarb16/traveltadaworld-back
+
+# Aller sur le dossier
+$ cd traveltadaworld-back
+
+#Ouvrir un terminal et lancer ces commandes
+$ docker-compose up
+$ docker-compose start
+$ sudo systemctl start mongod
 ```
 
-## Running the app
+Telecharger le logiciel ROBOT 3T et l'ouvrir
+  -Creer une base de données appelé "traveltadaword".
+  
+  -Lancer le [script](https://github.com/Omarb16/traveltadaworld-back/blob/main/scripts/init.mongo.js)
+  
+## Installation de dependances:
+```bash
+
+ _   _             _      ___  _____  _____  _     _____
+| \ | |           | |    |_  |/  ___|/  __ \| |   |_   _|
+|  \| |  ___  ___ | |_     | |\ `--. | /  \/| |     | |
+| . ` | / _ \/ __|| __|    | | `--. \| |    | |     | |
+| |\  ||  __/\__ \| |_ /\__/ //\__/ /| \__/\| |_____| |_
+\_| \_/ \___||___/ \__|\____/ \____/  \____/\_____/\___/
+
+
+[System Information]
+OS Version     : Linux 5.11
+NodeJS Version : v16.13.0
+YARN Version    : 1.22.15 
+
+[Nest CLI]
+Nest CLI Version : 8.1.5 
+
+[Nest Platform Information]
+platform-socket.io version : 8.2.3
+platform-express version   : 8.2.3
+platform-fastify version   : 8.2.3
+websockets version         : 8.2.3
+schematics version         : 8.0.5
+mongoose version           : 9.0.1
+passport version           : 8.0.1
+swagger version            : 5.1.5
+testing version            : 8.2.3
+common version             : 8.2.3
+core version               : 8.2.3
+jwt version                : 8.0.0
+cli version                : 8.1.5
+```
+
+
+```bash
+# Installation des dependances de deux façon :
+$ npm install
+# ou
+$ yarn install
+
+# Lancement du projet
+$ nest start
+```
+
+## Acces aux API
+
+http://0.0.0.0:3000/documentation/
+
 
 ```bash
 # development
