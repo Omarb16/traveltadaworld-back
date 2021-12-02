@@ -26,7 +26,20 @@
 Projet TravelTadaWorld pour organiser et participer à des voyages.
 Réalisé par Nada MADAD et Omar BOUAYAD.
 
-## Installation du projet
+## Instllation du projet
+  
+  Configuration de la machine 
+  ```bash
+  
+# Installation de  yarn
+  $ yarn install
+
+# Installer @nestjs/cl grâce à Yarn en tapant dans votre terminal 
+$ yarn global add @nestjs/cl
+  
+  ```
+  
+  Lancement du projet 
 
 ```bash
 # Cloner le projet du git 
