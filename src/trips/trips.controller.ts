@@ -233,6 +233,22 @@ export class TripsController {
   }
 
   /**
+   * Handler to answer in to GET /trips/recommandation/:id route
+   *
+   * @returns Observable<TripEntity[]>
+   */
+  @ApiOkResponse({
+    description: 'Return trips',
+    type: TripEntity,
+    isArray: true,
+  })
+  @ApiBadRequestResponse({ description: 'Bad request' })
+  @Get('recommandation/:id')
+  findRecommandation(): Observable<TripEntity[]> {
+    return this._tripsService.findFirstTree();
+  }
+
+  /**
    * Handler to answer in to POST /trips route
    *
    * @param {CreateTripDto} tripDto data to create

@@ -282,13 +282,44 @@ export class TripsService {
     );
 
   /**
-   * fidn first tree trips
+   * find first tree trips
    *
    *
    * @returns {Observable<TripEntity[]>}
    */
   findFirstTree = (): Observable<TripEntity[]> =>
     this._tripsDao.findFirstTree().pipe(
+      catchError((e) =>
+        throwError(() => new UnprocessableEntityException(e.message)),
+      ),
+      map((_: Trip[]) =>
+        _.map((__: Trip) => {
+          if (fs.existsSync('public/' + __.photo)) {
+            __.photo =
+              'http://' +
+              config.server.host +
+              ':' +
+              config.server.port +
+              '/public/' +
+              __.photo;
+          } else {
+            __.photo = null;
+          }
+          return new TripEntity(__);
+        }),
+      ),
+      defaultIfEmpty(undefined),
+    );
+
+  /**
+   * find recommanded trip
+   *
+   * @param {string} id trip id
+   *
+   * @returns {Observable<TripEntity[]>}
+   */
+  findRecommendation = (id: string): Observable<TripEntity[]> =>
+    this._tripsDao.findRecommendation(id).pipe(
       catchError((e) =>
         throwError(() => new UnprocessableEntityException(e.message)),
       ),
