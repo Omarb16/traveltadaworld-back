@@ -18,6 +18,7 @@ import {
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
+  ApiBearerAuth,
   ApiConsumes,
   ApiNotFoundResponse,
   ApiOkResponse,
@@ -109,8 +110,15 @@ export class UsersController {
     type: UserEntity,
   })
   @ApiBadRequestResponse({ description: 'Parameter provided is not good' })
-  @UseGuards(AuthGuard())
+  @ApiParam({
+    name: 'id',
+    description: 'Unique identifier',
+    type: String,
+    allowEmptyValue: false,
+  })
   @ApiConsumes('multipart/form-data')
+  @UseGuards(AuthGuard())
+  @ApiBearerAuth('JWT')
   @UseInterceptors(
     FileInterceptor('file', {
       storage: diskStorage({
@@ -148,7 +156,7 @@ export class UsersController {
   @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiParam({
     name: 'id',
-    description: 'Unique identifier of the person in the database',
+    description: 'Unique identifier',
     type: String,
     allowEmptyValue: false,
   })

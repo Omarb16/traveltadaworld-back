@@ -6,7 +6,7 @@ export class LoginUserDto {
   @ApiProperty({
     name: 'email',
     description: 'Email',
-    example: 'Mclaughlin.Cochran@undefined.com',
+    example: 'mclaughlin.cochran@gmail.com',
   })
   @IsEmail()
   email: string;
@@ -14,7 +14,7 @@ export class LoginUserDto {
   @ApiProperty({
     name: 'password',
     description: 'Password',
-    example: 'P4ssw0rd',
+    example: 'aaAA12**',
   })
   @Matches('^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$')
   password: string;

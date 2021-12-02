@@ -4,10 +4,10 @@ server:
   cors:
     - 'http://localhost:4200'
 swagger:
-  title: Server
-  description: The API description
+  title: traveltadaworld
+  description: Travel site
   version: 1.0
-  tag:
+  tag: travel
   path: documentation
 mongodb:
   uri: mongodb://localhost:27017/traveltadaworld

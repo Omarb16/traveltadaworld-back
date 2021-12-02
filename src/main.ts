@@ -1,3 +1,5 @@
+import { JwtModule } from '@nestjs/jwt';
+import { NotificationsModule } from './notifications/notifications.module';
 import { TripsModule } from './trips/trips.module';
 import { NestFactory } from '@nestjs/core';
 import { Logger, ValidationPipe } from '@nestjs/common';
@@ -27,10 +29,20 @@ async function bootstrap(config: AppConfig, swaggerConfig: SwaggerConfig) {
     .setDescription(swaggerConfig.description)
     .setVersion(swaggerConfig.version)
     .addTag(swaggerConfig.tag)
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        name: 'JWT',
+        description: 'Enter JWT token',
+        in: 'header',
+      },
+      'JWT',
+    )
     .build();
 
   const usersDocument = SwaggerModule.createDocument(app, options, {
-    include: [UsersModule, TripsModule],
+    include: [UsersModule, TripsModule, NotificationsModule, JwtModule],
   });
 
   SwaggerModule.setup(swaggerConfig.path, app, usersDocument);

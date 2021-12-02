@@ -29,7 +29,7 @@ export class UpdateUserDto {
   @ApiProperty({
     name: 'photo',
     description: 'Photo URL',
-    example: '',
+    example: 'zz',
   })
   @IsString()
   @IsOptional()
