@@ -24,6 +24,7 @@
 
 ## Description
 Projet TravelTadaWorld pour organiser et participer à des voyages.
+Réalisé par Nada MADAD et Omar BOUAYAD.
 
 ## Installation du projet
 
