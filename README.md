@@ -26,7 +26,7 @@
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
-## Installation
+## Installation du projet
 
 ```bash
 # Cloner le projet du git 
@@ -43,9 +43,23 @@ $ sudo systemctl start mongod
 
 Telecharger le logiciel ROBOT 3T et l'ouvrir
   -Creer une base de données appelé "traveltadaword".
+  
   -Lancer le [script](https://github.com/Omarb16/traveltadaworld-back/blob/main/scripts/init.mongo.js)
+  
+## Installation de dependances:
+```bash
+# Installation des dependances de deux façon :
+$ npm install
+# ou
+$ yarn install
 
-## Running the app
+# Lancement du projet
+$ nest start
+```
+
+## Acces aux API
+
+http://0.0.0.0:3000/documentation/
 
 ```bash
 # development
