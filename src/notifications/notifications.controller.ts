@@ -15,6 +15,7 @@ import {
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
+  ApiBearerAuth,
   ApiConsumes,
   ApiNotFoundResponse,
   ApiOkResponse,
@@ -51,6 +52,7 @@ export class NotificationsController {
   })
   @ApiBadRequestResponse({ description: 'Parameter provided is not good' })
   @UseGuards(AuthGuard())
+  @ApiBearerAuth()
   @Post()
   create(
     @Body() notificationDto: NotificationDto,
@@ -76,6 +78,7 @@ export class NotificationsController {
   })
   @ApiBadRequestResponse({ description: 'Parameter provided is not good' })
   @UseGuards(AuthGuard())
+  @ApiBearerAuth()
   @Put(':id')
   update(
     @Param() params: HandlerParams,
@@ -98,6 +101,7 @@ export class NotificationsController {
   })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @UseGuards(AuthGuard())
+  @ApiBearerAuth()
   @Get()
   find(
     @Headers('authorization') auth: string,
@@ -123,6 +127,7 @@ export class NotificationsController {
   })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @UseGuards(AuthGuard())
+  @ApiBearerAuth()
   @Delete(':id')
   delete(
     @Param() params: HandlerParams,
@@ -144,6 +149,7 @@ export class NotificationsController {
   })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @UseGuards(AuthGuard())
+  @ApiBearerAuth()
   @Get('/count')
   count(@Headers('authorization') auth: string): Observable<Number> {
     return this._notificationsService.count(auth);

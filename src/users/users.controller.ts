@@ -118,7 +118,8 @@ export class UsersController {
   })
   @ApiConsumes('multipart/form-data')
   @UseGuards(AuthGuard())
-  @ApiBearerAuth('JWT')
+  @ApiBearerAuth()
+  @ApiBearerAuth()
   @UseInterceptors(
     FileInterceptor('file', {
       storage: diskStorage({
@@ -161,6 +162,7 @@ export class UsersController {
     allowEmptyValue: false,
   })
   @UseGuards(AuthGuard())
+  @ApiBearerAuth()
   @Get(':id')
   find(@Param() params: HandlerParams): Observable<UserEntity> {
     return this._usersService.find(params.id);
@@ -181,6 +183,7 @@ export class UsersController {
   })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @UseGuards(AuthGuard())
+  @ApiBearerAuth()
   @Delete('delete/:id')
   delete(
     @Param() params: HandlerParams,

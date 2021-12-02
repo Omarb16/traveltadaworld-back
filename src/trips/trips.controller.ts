@@ -20,6 +20,7 @@ import {
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
+  ApiBearerAuth,
   ApiHeader,
   ApiNotFoundResponse,
   ApiOkResponse,
@@ -133,6 +134,7 @@ export class TripsController {
   })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @UseGuards(AuthGuard())
+  @ApiBearerAuth()
   @Get('usertrips')
   findUserTrips(
     @Query() query: SortPagin,
@@ -156,6 +158,7 @@ export class TripsController {
   })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @UseGuards(AuthGuard())
+  @ApiBearerAuth()
   @Get('travelertrips')
   findTravelerTrips(
     @Query() query: SortPagin,
@@ -177,6 +180,7 @@ export class TripsController {
   })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @UseGuards(AuthGuard())
+  @ApiBearerAuth()
   @Get('countusertrips')
   countUserTrips(@Headers('authorization') auth: string): Observable<number> {
     return this._tripsService.countUserTrips(auth);
@@ -194,6 +198,7 @@ export class TripsController {
   })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @UseGuards(AuthGuard())
+  @ApiBearerAuth()
   @Get('counttravelertrips')
   countTravelerTrips(
     @Headers('authorization') auth: string,
@@ -263,6 +268,7 @@ export class TripsController {
   })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @UseGuards(AuthGuard())
+  @ApiBearerAuth()
   @UseInterceptors(
     FileInterceptor('file', {
       storage: diskStorage({
@@ -300,6 +306,7 @@ export class TripsController {
   })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @UseGuards(AuthGuard())
+  @ApiBearerAuth()
   @UseInterceptors(
     FileInterceptor('file', {
       storage: diskStorage({
@@ -335,6 +342,7 @@ export class TripsController {
   })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @UseGuards(AuthGuard())
+  @ApiBearerAuth()
   @Delete('delete/:id')
   delete(
     @Param() params: HandlerParams,
@@ -360,6 +368,7 @@ export class TripsController {
   })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @UseGuards(AuthGuard())
+  @ApiBearerAuth()
   @Delete('cancel/:id')
   cancel(
     @Param() params: HandlerParams,
@@ -386,6 +395,7 @@ export class TripsController {
   })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @UseGuards(AuthGuard())
+  @ApiBearerAuth()
   @Put('demand/:id')
   demand(
     @Param() params: HandlerParams,
@@ -413,6 +423,7 @@ export class TripsController {
   })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @UseGuards(AuthGuard())
+  @ApiBearerAuth()
   @Put('accept/:id')
   accept(
     @Param() params: HandlerParams,
@@ -440,6 +451,7 @@ export class TripsController {
   })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @UseGuards(AuthGuard())
+  @ApiBearerAuth()
   @Put('decline/:id')
   decline(
     @Param() params: HandlerParams,

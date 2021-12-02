@@ -29,16 +29,7 @@ async function bootstrap(config: AppConfig, swaggerConfig: SwaggerConfig) {
     .setDescription(swaggerConfig.description)
     .setVersion(swaggerConfig.version)
     .addTag(swaggerConfig.tag)
-    .addBearerAuth(
-      {
-        type: 'http',
-        scheme: 'bearer',
-        name: 'JWT',
-        description: 'Enter JWT token',
-        in: 'header',
-      },
-      'JWT',
-    )
+    .addBearerAuth()
     .build();
 
   const usersDocument = SwaggerModule.createDocument(app, options, {
