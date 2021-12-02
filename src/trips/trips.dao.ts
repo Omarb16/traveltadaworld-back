@@ -70,11 +70,31 @@ export class TripsDao {
   /**
    * find first tree trips
    *
+   * @param {string} id trip id
    *
    * @return {Observable<Trip[] | void>}
    */
   findFirstTree = (): Observable<Trip[] | void> => {
     return from(this._tripModel.find().sort({ createdAt: -1 }).limit(3)).pipe(
+      filter((docs: TripDocument[]) => !!docs && docs.length > 0),
+      map((docs: TripDocument[]) => docs.map((_: TripDocument) => _.toJSON())),
+      defaultIfEmpty([]),
+    );
+  };
+
+  /**
+   * find trip to recommand
+   *
+   *
+   * @return {Observable<Trip[] | void>}
+   */
+  findRecommendation = (id: string): Observable<Trip[] | void> => {
+    return from(
+      this._tripModel
+        .find({ _id: { $ne: id } })
+        .sort({ createdAt: -1 })
+        .limit(3),
+    ).pipe(
       filter((docs: TripDocument[]) => !!docs && docs.length > 0),
       map((docs: TripDocument[]) => docs.map((_: TripDocument) => _.toJSON())),
       defaultIfEmpty([]),
